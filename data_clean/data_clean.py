@@ -3,8 +3,8 @@ import os
 import re
 
 #input and output directory
-input_dir = 'C:\temporanei\CSV_progetto'
-output_dir = 'C:\Users\ricca\Desktop\UNIVERSITY\ANNO3\TWEB\Progetto_TWEB\clean_csv'
+input_dir = r'C:\temporanei\CSV_progetto'
+output_dir = r'C:\Users\ricca\Desktop\UNIVERSITY\ANNO3\TWEB\Progetto_TWEB\clean_csv'
 
 #ensure output directory exists
 os.makedirs(output_dir, exist_ok=True)
@@ -16,6 +16,7 @@ def clean_actors_csv(input_path, output_path):
     try:
         #reading file CSV
         df = pd.read_csv(input_path)
+        df.columns = df.columns.str.strip()
     except Exception as e:
         print("Error reading file {input_path}: {e}")
         return
@@ -47,6 +48,7 @@ def clean_countries_csv(input_path, output_path):
     try:
         #reading file CSV
         df = pd.read_csv(input_path)
+        df.columns = df.columns.str.strip()
     except Exception as e:
         print("Error reading file {input_path}: {e}")
         return
@@ -63,8 +65,8 @@ def clean_countries_csv(input_path, output_path):
     df = df[pd.to_numeric(df['id_country'], errors='coerce').notnull()]
     df['id_country'] = df['id_country'].astype(int)
 
-    # remove rows where country is not String type
-    df = df[df['country'].apply(lambda x: isinstance(x, str) and x.isalpha())]
+    # remove rows where country is not a valid String
+    df = df[df['country'].apply(lambda x: isinstance(x, str) and bool(re.match(r"^[a-zA-Z\s'’-]+$", x)))]
 
     # save clean data in a new CSV file with path "output_path"
     df.to_csv(output_path, index=False)
@@ -77,6 +79,7 @@ def clean_crew_csv(input_path, output_path):
     try:
         # reading file CSV
         df = pd.read_csv(input_path)
+        df.columns = df.columns.str.strip()
     except Exception as e:
         print("Error reading file {input_path}: {e}")
         return
@@ -109,6 +112,7 @@ def clean_genres_csv(input_path, output_path):
     try:
         # reading file CSV
         df = pd.read_csv(input_path)
+        df.columns = df.columns.str.strip()
     except Exception as e:
         print("Error reading file {input_path}: {e}")
         return
@@ -139,6 +143,7 @@ def clean_languages_csv(input_path, output_path):
     try:
         # reading file CSV
         df = pd.read_csv(input_path)
+        df.columns = df.columns.str.strip()
     except Exception as e:
         print("Error reading file {input_path}: {e}")
         return
@@ -170,6 +175,7 @@ def clean_movies_csv(input_path, output_path):
     try:
         # reading file CSV
         df = pd.read_csv(input_path)
+        df.columns = df.columns.str.strip()
     except Exception as e:
         print(f"Error reading file {input_path}: {e}")
         return
@@ -221,6 +227,7 @@ def clean_posters_csv(input_path, output_path):
     try:
         # reading file CSV
         df = pd.read_csv(input_path)
+        df.columns = df.columns.str.strip()
     except Exception as e:
         print("Error reading file {input_path}: {e}")
         return
@@ -265,6 +272,7 @@ def clean_releases_csv(input_path, output_path):
     try:
         # reading file CSV
         df = pd.read_csv(input_path)
+        df.columns = df.columns.str.strip()
     except Exception as e:
         print("Error reading file {input_path}: {e}")
         return
@@ -282,7 +290,7 @@ def clean_releases_csv(input_path, output_path):
     df['id_release'] = df['id_release'].astype(int)
 
     # remove rows where country is not a string
-    df = df[df['country'].apply(lambda x: isinstance(x, str) and bool(re.match(r'^[a-zA-Z\s]+$', x)))]
+    df = df[df['country'].apply(lambda x: isinstance(x, str) and bool(re.match(r"^[a-zA-Z\s'’-]+$", x)))]
 
     #remove rows where data is not format YYYY-MM-DD
     df = df[df['date'].apply(lambda x: isinstance(x, str) and bool(re.match(r'^\d{4}-\d{2}-\d{2}$', x)))]
@@ -305,6 +313,7 @@ def clean_studios_csv(input_path, output_path):
     try:
         # reading file CSV
         df = pd.read_csv(input_path)
+        df.columns = df.columns.str.strip()
     except Exception as e:
         print("Error reading file {input_path}: {e}")
         return
@@ -322,7 +331,7 @@ def clean_studios_csv(input_path, output_path):
     df['id_studio'] = df['id_studio'].astype(int)
 
     # remove rows where studio is not a valid string
-    df = df[df['studio'].apply(lambda x: isinstance(x, str) and bool(re.match(r"^[a-zA-Z0-9\s&.,'!?-]+$", x)))]
+    df = df[df['studio'].apply(lambda x: isinstance(x, str))]
 
     # save clean data in a new CSV file with path "output_path"
     df.to_csv(output_path, index=False)
@@ -335,6 +344,7 @@ def clean_themes_csv(input_path, output_path):
     try:
         # reading file CSV
         df = pd.read_csv(input_path)
+        df.columns = df.columns.str.strip()
     except Exception as e:
         print("Error reading file {input_path}: {e}")
         return
@@ -365,6 +375,7 @@ def clean_the_oscar_awards(input_path, output_path):
     try:
         # reading file CSV
         df = pd.read_csv(input_path)
+        df.columns = df.columns.str.strip()
     except Exception as e:
         print("Error reading file {input_path}: {e}")
         return
@@ -397,10 +408,42 @@ def clean_the_oscar_awards(input_path, output_path):
     df = df[df['film'].apply(lambda x: pd.isna(x) or isinstance(x, str))]
 
     #remove rows where winner is not boolean type
-    df = df[df['winner'].apply(lambda x: isinstance(x, bool) or str(x).lower() in ['True', 'False'])]
-    df['winner'] = df['winner'].apply(lambda x: True if str(x).lower() == 'True' else False)
+    df = df[df['winner'].apply(lambda x: str(x).lower() in ['true', 'false'])]
+    df['winner'] = df['winner'].apply(lambda x: True if str(x).lower() == 'true' else False)
 
     # save clean data in a new CSV file with path "output_path"
     df.to_csv(output_path, index=False)
 
     print(f"Cleaned themes.csv saved to {output_path}")
+
+def main():
+    input_dir = r'C:\\temporanei\\CSV_progetto'
+    output_dir = r'C:\\Users\\ricca\\Desktop\\UNIVERSITY\\ANNO3\\TWEB\\Progetto_TWEB\\clean_csv'
+
+    # control the existence of output directory
+    os.makedirs(output_dir, exist_ok=True)
+
+    # files to clean
+    files_to_clean = {
+        'actors.csv': clean_actors_csv,
+        'countries.csv': clean_countries_csv,
+        'crew.csv': clean_crew_csv,
+        'genres.csv': clean_genres_csv,
+        'languages.csv': clean_languages_csv,
+        'movies.csv': clean_movies_csv,
+        'posters.csv': clean_posters_csv,
+        'releases.csv': clean_releases_csv,
+        'studios.csv': clean_studios_csv,
+        'themes.csv': clean_themes_csv,
+        'the_oscar_awards.csv': clean_the_oscar_awards,
+    }
+
+    # cleaning each file
+    for file_name, clean_function in files_to_clean.items():
+        input_path = os.path.join(input_dir, file_name)
+        output_path = os.path.join(output_dir, file_name)
+        print(f"Processing {file_name}...")
+        clean_function(input_path, output_path)
+
+if __name__ == "__main__":
+    main()
