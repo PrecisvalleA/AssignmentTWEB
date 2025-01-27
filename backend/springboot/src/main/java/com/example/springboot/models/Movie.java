@@ -1,24 +1,48 @@
-package com.example.reviewsite.entity;
+package com.example.yourprojectname.model;
 
-import jakarta.persistence.*;
-import java.time.LocalDate;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import java.util.Date;
 
 @Entity
-@Table(name = "movies")
+@Table(name = "movies") // Table name
 public class Movie {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
     private String title;
 
-    private String director;
+    @Column(name = "release_date")
+    private Date releaseDate;
 
-    private LocalDate releaseDate;
+    // Getter e Setter
+    public Long getId() {
+        return id;
+    }
 
-    private Double rating;
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-    // Getters and Setters
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public Date getReleaseDate() {
+        return releaseDate;
+    }
+
+    public void setReleaseDate(Date releaseDate) {
+        this.releaseDate = releaseDate;
+    }
 }
