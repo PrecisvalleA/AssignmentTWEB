@@ -1,3 +1,5 @@
+import csv
+import numpy as np
 import pandas as pd
 import os
 import re
@@ -9,23 +11,44 @@ output_dir = r'C:\Users\ricca\Desktop\UNIVERSITY\ANNO3\TWEB\Progetto_TWEB\clean_
 #ensure output directory exists
 os.makedirs(output_dir, exist_ok=True)
 
+#dictionary of DataFrames
+dataframes = {}
+
+def load_csv_files(input_dir, files):
+    for file_name in files:
+        try:
+            file_path = os.path.join(input_dir, file_name)
+            print(f'Downloading {file_name} in a DataFrame...')
+            dataframes[file_name] = pd.read_csv(file_path)
+        except Exception as e:
+            print(f'Error during downloading of {file_name}: {e}')
+
+def save_cleaned_dataframes(output_dir):
+    for file_name, df in dataframes.items():
+        try:
+            output_path = os.path.join(output_dir, file_name)
+            df.to_csv(output_path, index=False)
+            print(f'Saved {file_name} to {output_path}')
+        except Exception as e:
+            print(f'Error during saving {file_name}: {e}')
 
 def clean_actors_csv(input_path, output_path):
-    print('Cleaning file: {actors.csv}')
+    print(f'Cleaning file: actors.csv')
+
 
     try:
         #reading file CSV
         df = pd.read_csv(input_path)
-        df.columns = df.columns.str.strip()
+        df.columns = df.columns.str.strip().str.replace(';;', '', regex=False)
     except Exception as e:
-        print("Error reading file {input_path}: {e}")
+        print(f"Error reading file {input_path}: {e}")
         return
 
     #remove duplicates
     df = df.drop_duplicates()
 
     #remove rows with NULL or missing values in any column
-    df = df.dropna(subset=['id_actor', 'name', 'role'])
+    df = df.dropna(subset=['id_actor','name','role'])
 
 #remove rows with invalid types:
 
@@ -43,14 +66,15 @@ def clean_actors_csv(input_path, output_path):
     print(f"Cleaned actors.csv saved to {output_path}")
 
 def clean_countries_csv(input_path, output_path):
-    print('Cleaning file: {countries.csv}')
+    print(f'Cleaning file: countries.csv')
+
 
     try:
         #reading file CSV
         df = pd.read_csv(input_path)
         df.columns = df.columns.str.strip()
     except Exception as e:
-        print("Error reading file {input_path}: {e}")
+        print(f"Error reading file {input_path}: {e}")
         return
 
     # remove duplicates
@@ -74,14 +98,15 @@ def clean_countries_csv(input_path, output_path):
     print(f"Cleaned countries.csv saved to {output_path}")
 
 def clean_crew_csv(input_path, output_path):
-    print('Cleaning file: {crew.csv}')
+    print(f'Cleaning file: crew.csv')
+
 
     try:
         # reading file CSV
         df = pd.read_csv(input_path)
         df.columns = df.columns.str.strip()
     except Exception as e:
-        print("Error reading file {input_path}: {e}")
+        print(f"Error reading file {input_path}: {e}")
         return
 
     # remove duplicates
@@ -107,14 +132,15 @@ def clean_crew_csv(input_path, output_path):
 
 
 def clean_genres_csv(input_path, output_path):
-    print('Cleaning file: {genres.csv}')
+    print(f'Cleaning file: genres.csv')
+
 
     try:
         # reading file CSV
         df = pd.read_csv(input_path)
         df.columns = df.columns.str.strip()
     except Exception as e:
-        print("Error reading file {input_path}: {e}")
+        print(f"Error reading file {input_path}: {e}")
         return
 
     # remove duplicates
@@ -125,7 +151,7 @@ def clean_genres_csv(input_path, output_path):
 
 # remove rows with invalid types:
 
-    # remove rows where id_country is not INT type
+    # remove rows where id_genre is not INT type
     df = df[pd.to_numeric(df['id_genre'], errors='coerce').notnull()]
     df['id_genre'] = df['id_genre'].astype(int)
 
@@ -138,14 +164,15 @@ def clean_genres_csv(input_path, output_path):
     print(f"Cleaned genres.csv saved to {output_path}")
 
 def clean_languages_csv(input_path, output_path):
-    print('Cleaning file: {languages.csv}')
+    print(f'Cleaning file: languages.csv')
+
 
     try:
         # reading file CSV
         df = pd.read_csv(input_path)
         df.columns = df.columns.str.strip()
     except Exception as e:
-        print("Error reading file {input_path}: {e}")
+        print(f"Error reading file {input_path}: {e}")
         return
 
     # remove duplicates
@@ -169,8 +196,114 @@ def clean_languages_csv(input_path, output_path):
 
     print(f"Cleaned languages.csv saved to {output_path}")
 
+
+
 def clean_movies_csv(input_path, output_path):
-    print('Cleaning file: {movies.csv}')
+    print(f'Cleaning file: movies.csv')
+
+    try:
+        # reading file CSV with error handling
+        df = pd.read_csv(input_path,
+                         sep=',',
+                         quotechar='"',
+                         engine='python',
+                         on_bad_lines='skip',  # Skip problematic lines
+                         skip_blank_lines=True,
+                         dtype=str,  # Read all columns as strings initially
+                         na_values=['NULL', 'NaN'],  # Values to consider as NaN
+                         keep_default_na=False, # not include default NaN
+                         skipinitialspace=True)
+        df.columns = df.columns.str.strip()     #remove spaces into column names
+        df = df.apply(lambda col: col.str.strip() if col.dtype == "object" else col)  # remove unwanted spaces
+    except FileNotFoundError:
+        print(f"File {input_path} hasn't been found.")
+        return
+    except Exception as e:
+        print(f"Error reading file {input_path}: {e}")
+        return
+
+    print("Nomi delle colonne prima della pulizia nel DataFrame:")
+    for col in df.columns:
+        print(repr(col))
+
+    df.columns = df.columns.str.replace(';', '').str.strip()
+
+    print("Nomi delle colonne dopo la pulizia:")
+    for col in df.columns:
+        print(repr(col))
+
+    def is_valid_string(value):
+        if not isinstance(value, str):
+            return False
+        # Permette lettere (inclusi Unicode), numeri, spazi e i seguenti caratteri speciali: @, ., _, :, &, \-',.!?()[]–—
+        return bool(re.match(r"^[\w\s@._:&\-',.!¡?‘’~°%®|ç§éè^“”=*#+$£/·()\[\]–—・★☆…]+$", value, re.UNICODE))
+
+    # Conteggio iniziale delle righe
+    initial_row_count = len(df)
+    print(f"Numero iniziale di righe: {initial_row_count}")
+
+    # remove duplicates
+    df = df.drop_duplicates()
+    after_duplicates = len(df)
+    print(
+        f"Righe dopo la rimozione dei duplicati: {after_duplicates} (Saltate {initial_row_count - after_duplicates} righe)")
+
+    # remove rows with NULL or missing values in any column
+    required_columns = ['id_movie', 'name', 'date', 'tagline', 'description', 'minute']
+    df = df.dropna(subset=required_columns)
+    after_dropna = len(df)
+    print(
+        f"Righe dopo la rimozione di righe con valori mancanti: {after_dropna} (Saltate {after_duplicates - after_dropna} righe)")
+
+
+    # remove rows with invalid types
+    before_id_movie = len(df)
+    df = df[pd.to_numeric(df['id_movie'], errors='coerce').notnull()]
+    df['id_movie'] = df['id_movie'].astype(int)
+    after_id_movie = len(df)
+    print(
+        f"Righe dopo la conversione e filtraggio di 'id_movie': {after_id_movie} (Saltate {before_id_movie - after_id_movie} righe)")
+
+    before_name = len(df)
+    valid_name_mask = df['name'].apply(is_valid_string)
+    df_valid_name = df[valid_name_mask]
+    df_invalid_name = df[~valid_name_mask]
+    after_name = len(df_valid_name)
+    print(f"Righe dopo il filtro su 'name': {after_name} (Saltate {before_name - after_name} righe)")
+    if not df_invalid_name.empty:
+        print("Esempi di righe rimosse dal filtro 'name':")
+        print(df_invalid_name.head())
+
+
+    df = df[pd.to_numeric(df['date'], errors='coerce').notnull()]
+    df['date'] = df['date'].astype(int)
+    df = df[(df['date'] >= 1800) & (df['date'] <= 2100)]
+
+    df = df[df['tagline'].apply(is_valid_string)]
+    df = df[df['description'].apply(is_valid_string)]
+
+    df['minute'] = df['minute'].str.replace(',', '').str.strip()
+    df = df[pd.to_numeric(df['minute'], errors='coerce').notnull()]
+    df['minute'] = df['minute'].astype(float)
+    df = df[df['minute'] > 0]
+
+
+    df['rating'] = df['rating'].str.replace(';', '').str.strip()
+    df['rating'] = pd.to_numeric(df['rating'], errors='coerce')
+    df['rating'] = df['rating'].fillna(0.0)  # Riempire i NaN con 0.0
+    df = df[(df['rating'].isna()) | ((df['rating'] >= 0) & (df['rating'] <= 5))]
+
+    # save clean data in a new CSV file with path "output_path"
+    df.to_csv(output_path, index=False)
+
+    df_sorted = df.sort_values(by='id_movie', ascending=True)
+    print(df_sorted.head())
+    print(f"Cleaned movies.csv saved to {output_path}")
+
+
+def clean_posters_csv(input_path, output_path):
+    print(f'Cleaning file: posters.csv')
+
 
     try:
         # reading file CSV
@@ -178,58 +311,6 @@ def clean_movies_csv(input_path, output_path):
         df.columns = df.columns.str.strip()
     except Exception as e:
         print(f"Error reading file {input_path}: {e}")
-        return
-
-    # remove duplicates
-    df = df.drop_duplicates()
-
-    # remove rows with NULL or missing values in any column
-    df = df.dropna(subset=['id_movie', 'name', 'date', 'tagline', 'description', 'minute'])
-
-# remove rows with invalid types:
-
-    # remove rows where id_movie is not INT type
-    df = df[pd.to_numeric(df['id_movie'], errors='coerce').notnull()]
-    df['id_movie'] = df['id_movie'].astype(int)
-
-    #remove rows where date isn't INT and not represents a valid year (1800-2100)
-    df = df[pd.to_numeric(df['date'], errors='coerce').notnull()]
-    df['date'] = df['date'].astype(int)
-    df = df[(df['date']>=1800) & (df['date']<=2100)]
-
-    #remove rows where minute is not a valid number
-    df = df[pd.to_numeric(df['minute'], errors='coerce').notnull()]
-    df['minute'] = df['minute'].astype(float)
-
-    #remove rows where rating is not in range [0-10]
-    df['rating'] = pd.to_numeric(df['rating'], errors='coerce')
-    df = df[(df['rating'] >= 0) & (df['rating'] <= 10)]
-
-    #remove rows where name or tagline or description is not string type
-    def is_valid_string(value):
-        if not isinstance(value, str):
-            return False
-        # Allow only letters, numbers, and spaces
-        return bool(re.match(r'^[a-zA-Z0-9\s@._-]+$', value))
-
-    df = df[df['name'].apply(is_valid_string)]
-    df = df[df['tagline'].apply(is_valid_string)]
-    df = df[df['description'].apply(is_valid_string)]
-
-    # save clean data in a new CSV file with path "output_path"
-    df.to_csv(output_path, index=False)
-
-    print(f"Cleaned languages.csv saved to {output_path}")
-
-def clean_posters_csv(input_path, output_path):
-    print('Cleaning file: {posters.csv}')
-
-    try:
-        # reading file CSV
-        df = pd.read_csv(input_path)
-        df.columns = df.columns.str.strip()
-    except Exception as e:
-        print("Error reading file {input_path}: {e}")
         return
 
     # remove duplicates
@@ -267,14 +348,15 @@ def clean_posters_csv(input_path, output_path):
 
 
 def clean_releases_csv(input_path, output_path):
-    print('Cleaning file: {releases.csv}')
+    print(f'Cleaning file: releases.csv')
+
 
     try:
         # reading file CSV
         df = pd.read_csv(input_path)
         df.columns = df.columns.str.strip()
     except Exception as e:
-        print("Error reading file {input_path}: {e}")
+        print(f"Error reading file {input_path}: {e}")
         return
 
     # remove duplicates
@@ -300,22 +382,23 @@ def clean_releases_csv(input_path, output_path):
 
     # remove rows where rating is not in range [0-10]
     df['rating'] = pd.to_numeric(df['rating'], errors='coerce')
-    df = df[(df['rating'] >= 0) & (df['rating'] <= 10)]
+    df = df[(df['rating'].isna()) | ((df['rating'] >= 0) & (df['rating'] <= 10))]
 
     # save clean data in a new CSV file with path "output_path"
     df.to_csv(output_path, index=False)
 
-    print(f"Cleaned posters.csv saved to {output_path}")
+    print(f"Cleaned releases.csv saved to {output_path}")
 
 def clean_studios_csv(input_path, output_path):
-    print('Cleaning file: {studios.csv}')
+    print(f'Cleaning file: studios.csv')
+
 
     try:
         # reading file CSV
         df = pd.read_csv(input_path)
-        df.columns = df.columns.str.strip()
+        df.columns = df.columns.str.strip().str.replace(';', '') #correction column name
     except Exception as e:
-        print("Error reading file {input_path}: {e}")
+        print(f"Error reading file {input_path}: {e}")
         return
 
     # remove duplicates
@@ -329,6 +412,7 @@ def clean_studios_csv(input_path, output_path):
     # remove rows where id_studio is not INT type
     df = df[pd.to_numeric(df['id_studio'], errors='coerce').notnull()]
     df['id_studio'] = df['id_studio'].astype(int)
+    df = df[df['studio'].apply(lambda x: isinstance(x, str) and len(x.strip()) > 0)] #verify that 'studio' is a valid type and not NULL
 
     # remove rows where studio is not a valid string
     df = df[df['studio'].apply(lambda x: isinstance(x, str))]
@@ -339,14 +423,15 @@ def clean_studios_csv(input_path, output_path):
     print(f"Cleaned studios.csv saved to {output_path}")
 
 def clean_themes_csv(input_path, output_path):
-    print('Cleaning file: {themes.csv}')
+    print(f'Cleaning file: themes.csv')
+
 
     try:
         # reading file CSV
         df = pd.read_csv(input_path)
         df.columns = df.columns.str.strip()
     except Exception as e:
-        print("Error reading file {input_path}: {e}")
+        print(f"Error reading file {input_path}: {e}")
         return
 
     # remove duplicates
@@ -370,14 +455,15 @@ def clean_themes_csv(input_path, output_path):
     print(f"Cleaned themes.csv saved to {output_path}")
 
 def clean_the_oscar_awards(input_path, output_path):
-    print('Cleaning file: {the_oscar_awards.csv}')
+    print(f'Cleaning file: the_oscar_awards.csv')
+
 
     try:
         # reading file CSV
         df = pd.read_csv(input_path)
         df.columns = df.columns.str.strip()
     except Exception as e:
-        print("Error reading file {input_path}: {e}")
+        print(f"Error reading file {input_path}: {e}")
         return
 
     # remove duplicates
@@ -414,11 +500,11 @@ def clean_the_oscar_awards(input_path, output_path):
     # save clean data in a new CSV file with path "output_path"
     df.to_csv(output_path, index=False)
 
-    print(f"Cleaned themes.csv saved to {output_path}")
+    print(f"Cleaned the_oscar_awards.csv saved to {output_path}")
 
 def main():
-    input_dir = r'C:\\temporanei\\CSV_progetto'
-    output_dir = r'C:\\Users\\ricca\\Desktop\\UNIVERSITY\\ANNO3\\TWEB\\Progetto_TWEB\\clean_csv'
+    input_dir = r'C:\temporanei\CSV_progetto'
+    output_dir = r'C:\Users\ricca\Desktop\UNIVERSITY\ANNO3\TWEB\Progetto_TWEB\clean_csv'
 
     # control the existence of output directory
     os.makedirs(output_dir, exist_ok=True)
@@ -438,12 +524,18 @@ def main():
         'the_oscar_awards.csv': clean_the_oscar_awards,
     }
 
+
+
     # cleaning each file
     for file_name, clean_function in files_to_clean.items():
         input_path = os.path.join(input_dir, file_name)
         output_path = os.path.join(output_dir, file_name)
         print(f"Processing {file_name}...")
-        clean_function(input_path, output_path)
+        try:
+            clean_function(input_path, output_path)
+            print(f"Successfully cleaned {file_name}")
+        except Exception as e:
+            print(f"Error to clean {file_name}: {e}")
 
 if __name__ == "__main__":
     main()
