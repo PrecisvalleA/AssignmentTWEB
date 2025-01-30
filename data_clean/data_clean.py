@@ -215,6 +215,7 @@ def clean_movies_csv(input_path, output_path):
                          skipinitialspace=True)
         df.columns = df.columns.str.strip()     #remove spaces into column names
         df = df.apply(lambda col: col.str.strip() if col.dtype == "object" else col)  # remove unwanted spaces
+        df = df.applymap(lambda x: x.strip('"') if isinstance(x, str) else x)
     except FileNotFoundError:
         print(f"File {input_path} hasn't been found.")
         return
