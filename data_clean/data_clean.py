@@ -242,12 +242,9 @@ def clean_movies_csv(input_path, output_path):
 
         # Function to validate movie names
         def is_valid_string(value):
-            """ Validates if the given value is a proper movie name,
-                allowing letters, numbers, spaces, and common punctuation. """
             if not isinstance(value, str):
                 return False
-            pattern = r"^[\w\s.,&'!?()-]+$"
-            return bool(re.match(pattern, value))
+            return bool(re.match(r"^[\w\s@._:&\-',.!¡?‘’~°%®|ç§éè^“”=*#+$£/·()\[\]–—・★☆…]+$", value, re.UNICODE))
 
         # Apply name validation
         df = df[df['name'].apply(is_valid_string)]
