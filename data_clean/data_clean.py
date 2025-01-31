@@ -199,108 +199,84 @@ def clean_languages_csv(input_path, output_path):
 
 
 def clean_movies_csv(input_path, output_path):
-    print(f'Cleaning file: movies.csv')
+    print(f'Cleaning file: {input_path}')
+
+    # Check if the file exists
+    if not os.path.exists(input_path):
+        print(f"ERROR: The file '{input_path}' does not exist. Check the path.")
+        return
 
     try:
-        # reading file CSV with error handling
+        # Read the CSV with proper handling of quotes and separators
         df = pd.read_csv(input_path,
                          sep=',',
                          quotechar='"',
+                         quoting=csv.QUOTE_ALL,  # Ensures correct handling of quoted fields
                          engine='python',
-                         on_bad_lines='skip',  # Skip problematic lines
-                         skip_blank_lines=True,
                          dtype=str,  # Read all columns as strings initially
-                         na_values=['NULL', 'NaN'],  # Values to consider as NaN
-                         keep_default_na=False, # not include default NaN
-                         skipinitialspace=True)
-        df.columns = df.columns.str.strip()     #remove spaces into column names
-        df = df.apply(lambda col: col.str.strip() if col.dtype == "object" else col)  # remove unwanted spaces
-        df = df.applymap(lambda x: x.strip('"') if isinstance(x, str) else x)
-    except FileNotFoundError:
-        print(f"File {input_path} hasn't been found.")
-        return
+                         on_bad_lines="skip")  # Skip problematic lines with warnings
+
+        # Clean column names
+        df.columns = df.columns.str.replace(';', '', regex=False).str.strip()
+
+        # Remove extra surrounding quotes in values
+        df = df.map(lambda x: x.strip('"') if isinstance(x, str) and x.startswith('"') and x.endswith('"') else x)
+
+        # Remove duplicate rows
+        df = df.drop_duplicates()
+
+        # Remove rows with missing essential values
+        required_columns = ['id_movie', 'name', 'date', 'description', 'minute']
+        df = df.dropna(subset=required_columns)
+
+        # Convert numerical columns
+        df['id_movie'] = pd.to_numeric(df['id_movie'], errors='coerce').astype("Int64")
+        df['date'] = pd.to_numeric(df['date'], errors='coerce').astype("Int64")
+        df['minute'] = pd.to_numeric(df['minute'], errors='coerce').astype("Float64")
+
+        # Ensure 'rating' column exists and is processed safely
+        if 'rating' in df.columns:
+            df['rating'] = df['rating'].astype(str)  # Ensure it's a string before using .str
+            df['rating'] = df['rating'].str.replace(';', '', regex=False).str.strip()
+            df['rating'] = pd.to_numeric(df['rating'], errors='coerce').fillna(0.0)
+
+        # Function to validate movie names
+        def is_valid_string(value):
+            """ Validates if the given value is a proper movie name,
+                allowing letters, numbers, spaces, and common punctuation. """
+            if not isinstance(value, str):
+                return False
+            pattern = r"^[\w\s.,&'!?()-]+$"
+            return bool(re.match(pattern, value))
+
+        # Apply name validation
+        df = df[df['name'].apply(is_valid_string)]
+
+        # Ensure valid dates within a reasonable range
+        df = df[(df['date'] >= 1800) & (df['date'] <= 2100)]
+
+        # Validate 'tagline' and 'description' fields
+        df = df[df['tagline'].astype(str).apply(is_valid_string)]
+        df = df[df['description'].astype(str).apply(is_valid_string)]
+
+        # Ensure 'minute' column has valid values
+        df['minute'] = df['minute'].astype(str).str.replace(',', '').str.strip()
+        df = df[pd.to_numeric(df['minute'], errors='coerce').notnull()]
+        df['minute'] = df['minute'].astype(float)
+        df = df[df['minute'] > 0]
+
+        # Sort by movie ID
+        df = df.sort_values(by='id_movie', ascending=True)
+
+        print("\nFirst 20 rows of the cleaned dataset:")
+        print(df.head(20))
+
+        # Save cleaned data
+        df.to_csv(output_path, index=False)
+        print(f"Cleaned movies.csv saved to {output_path}")
+
     except Exception as e:
-        print(f"Error reading file {input_path}: {e}")
-        return
-
-    print("Nomi delle colonne prima della pulizia nel DataFrame:")
-    for col in df.columns:
-        print(repr(col))
-
-    df.columns = df.columns.str.replace(';', '').str.strip()
-
-    print("Nomi delle colonne dopo la pulizia:")
-    for col in df.columns:
-        print(repr(col))
-
-    def is_valid_string(value):
-        if not isinstance(value, str):
-            return False
-        # Permette lettere (inclusi Unicode), numeri, spazi e i seguenti caratteri speciali: @, ., _, :, &, \-',.!?()[]–—
-        return bool(re.match(r"^[\w\s@._:&\-',.!¡?‘’~°%®|ç§éè^“”=*#+$£/·()\[\]–—・★☆…]+$", value, re.UNICODE))
-
-    # Conteggio iniziale delle righe
-    initial_row_count = len(df)
-    print(f"Numero iniziale di righe: {initial_row_count}")
-
-    # remove duplicates
-    df = df.drop_duplicates()
-    after_duplicates = len(df)
-    print(
-        f"Righe dopo la rimozione dei duplicati: {after_duplicates} (Saltate {initial_row_count - after_duplicates} righe)")
-
-    # remove rows with NULL or missing values in any column
-    required_columns = ['id_movie', 'name', 'date', 'tagline', 'description', 'minute']
-    df = df.dropna(subset=required_columns)
-    after_dropna = len(df)
-    print(
-        f"Righe dopo la rimozione di righe con valori mancanti: {after_dropna} (Saltate {after_duplicates - after_dropna} righe)")
-
-
-    # remove rows with invalid types
-    before_id_movie = len(df)
-    df = df[pd.to_numeric(df['id_movie'], errors='coerce').notnull()]
-    df['id_movie'] = df['id_movie'].astype(int)
-    after_id_movie = len(df)
-    print(
-        f"Righe dopo la conversione e filtraggio di 'id_movie': {after_id_movie} (Saltate {before_id_movie - after_id_movie} righe)")
-
-    before_name = len(df)
-    valid_name_mask = df['name'].apply(is_valid_string)
-    df_valid_name = df[valid_name_mask]
-    df_invalid_name = df[~valid_name_mask]
-    after_name = len(df_valid_name)
-    print(f"Righe dopo il filtro su 'name': {after_name} (Saltate {before_name - after_name} righe)")
-    if not df_invalid_name.empty:
-        print("Esempi di righe rimosse dal filtro 'name':")
-        print(df_invalid_name.head())
-
-
-    df = df[pd.to_numeric(df['date'], errors='coerce').notnull()]
-    df['date'] = df['date'].astype(int)
-    df = df[(df['date'] >= 1800) & (df['date'] <= 2100)]
-
-    df = df[df['tagline'].apply(is_valid_string)]
-    df = df[df['description'].apply(is_valid_string)]
-
-    df['minute'] = df['minute'].str.replace(',', '').str.strip()
-    df = df[pd.to_numeric(df['minute'], errors='coerce').notnull()]
-    df['minute'] = df['minute'].astype(float)
-    df = df[df['minute'] > 0]
-
-
-    df['rating'] = df['rating'].str.replace(';', '').str.strip()
-    df['rating'] = pd.to_numeric(df['rating'], errors='coerce')
-    df['rating'] = df['rating'].fillna(0.0)  # Riempire i NaN con 0.0
-    df = df[(df['rating'].isna()) | ((df['rating'] >= 0) & (df['rating'] <= 5))]
-
-    # save clean data in a new CSV file with path "output_path"
-    df.to_csv(output_path, index=False)
-
-    df_sorted = df.sort_values(by='id_movie', ascending=True)
-    print(df_sorted.head())
-    print(f"Cleaned movies.csv saved to {output_path}")
-
+        print(f"ERROR while processing the file: {e}")
 
 def clean_posters_csv(input_path, output_path):
     print(f'Cleaning file: posters.csv')
