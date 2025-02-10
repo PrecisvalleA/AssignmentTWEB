@@ -3,7 +3,9 @@ import pandas.io.sql as psql
 import psycopg2 as ps
 from sqlalchemy.sql import text
 
-def get_db_engine():
+#functions to connect PyCharm to PostgreSQL
+
+def get_db_engine(): #Create the connection
     db_username = "riccardocutro"
     db_password = "riccardo"
     db_host = "localhost"
@@ -16,7 +18,7 @@ def get_db_engine():
 
 engine = get_db_engine()
 
-try:
+try: #test if the connection is established
     with engine.connect() as conn:
         print("Connection!")
 
@@ -24,7 +26,7 @@ except Exception as e:
     print(f"Error {e}")
 
 
-def execute_query(sql):
+def execute_query(sql): #execute the SQL query in the files ipynb
     engine = get_db_engine()
 
 

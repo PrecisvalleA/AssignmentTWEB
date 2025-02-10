@@ -1,10 +1,12 @@
 from pymongo import MongoClient
 
+#functions to connect PyCharm to MongoDB
+
 def get_mongo_client():
     #Connect  to MongoDB and returns the client
     try:
         client = MongoClient('localhost', 27017)
-        client.admin.command('ping')  # Test di connessione
+        client.admin.command('ping')  # Connection test
         print("MongoDB connection established!")
         return client
     except Exception as e:
