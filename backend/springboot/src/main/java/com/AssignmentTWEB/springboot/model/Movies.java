@@ -15,5 +15,8 @@ public class Movies {
     @Column(columnDefinition = "TEXT") //TEXT type
     private String description;
 
-
+<<<<<<<
+=======
+    
+>>>>>>> recupero-commit
 }
