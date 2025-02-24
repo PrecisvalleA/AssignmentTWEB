@@ -24,7 +24,7 @@ public class Movie {
 
     public Movie(){}
 
-    public Movie(Long id_movie, String name, String description, String tagline, double minute, double rating) {
+    public Movie(int id_movie, String name, String description, String tagline, double minute, double rating) {
         this.id_movie = id_movie;
         this.name = name;
         this.description = description;
@@ -33,8 +33,8 @@ public class Movie {
         this.rating = rating;
     }
 
-    public Long getId_movie(){return id_movie;}
-    public void setId_movie(Long id_movie){this.id_movie = id_movie;}
+    public int getId_movie(){return id_movie;}
+    public void setId_movie(int id_movie){this.id_movie = id_movie;}
 
     public String getName(){return name;}
     public void setName(String name){this.name = name;}
