@@ -7,7 +7,7 @@ import jakarta.persistence.*; //JPA annotations
 public class Movie {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY) //auto-increment ID
-    private Long id_movie;
+    private int id_movie;
 
     @Column(nullable = false) //Not Null
     private String name;

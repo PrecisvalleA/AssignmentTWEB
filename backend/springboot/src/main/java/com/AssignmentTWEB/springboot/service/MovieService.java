@@ -30,9 +30,9 @@ public class MovieService{
     }
 
     //delete a movie by id
-    public void deleteMovie(int id) {
-        return movieRepository.deleteById(id);
-    }
+    //public void deleteMovie(int id) {
+    //    return movieRepository.deleteById(id);
+    //}
 
     //search a movie by a keyword insert by user
     public List<Movie> findMoviesByName(String keyword) {return movieRepository.findByNameContaining(keyword);}
@@ -50,4 +50,5 @@ public class MovieService{
     //find movies with duration between two values insert by user
     public List<Movie> getMoviesByDurationRange(int min, int max) {
         return movieRepository.findByMinuteBetween(min, max);
+    }
 }
