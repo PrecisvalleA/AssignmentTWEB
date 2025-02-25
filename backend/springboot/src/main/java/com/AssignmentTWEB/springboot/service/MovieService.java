@@ -20,6 +20,7 @@ public class MovieService{
         return movieRepository.findAll();
     }
 
+    //find movie by ID
     public Optional<Movie> getMovieById(int id) {
         return movieRepository.findById(id);
     }
@@ -30,25 +31,23 @@ public class MovieService{
     }
 
     //delete a movie by id
-    //public void deleteMovie(int id) {
-    //    return movieRepository.deleteById(id);
-    //}
+    public void deleteMovie(int id) {movieRepository.deleteById(id);}
 
     //search a movie by a keyword insert by user
     public List<Movie> findMoviesByName(String keyword) {return movieRepository.findByNameContaining(keyword);}
 
     // find movies with duration >= to a value insert by user
-    public List<Movie> getMoviesByDuration(int minute) {
+    public List<Movie> getMoviesByDuration(float minute) {
         return movieRepository.findByMinuteGreaterThanEqual(minute);
     }
 
     //find movies with rating between two values insert by user
-    public List<Movie> getMovieByRatingRange(double min, double max) {
+    public List<Movie> getMovieByRatingRange(float min, float max) {
         return movieRepository.findByRatingBetween(min, max);
     }
 
     //find movies with duration between two values insert by user
-    public List<Movie> getMoviesByDurationRange(int min, int max) {
+    public List<Movie> getMoviesByDurationRange(float min, float max) {
         return movieRepository.findByMinuteBetween(min, max);
     }
 }
