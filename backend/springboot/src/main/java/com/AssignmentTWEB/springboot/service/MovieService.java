@@ -37,17 +37,22 @@ public class MovieService{
     public List<Movie> findMoviesByName(String keyword) {return movieRepository.findByNameContaining(keyword);}
 
     // find movies with duration >= to a value insert by user
-    public List<Movie> getMoviesByDuration(float minute) {
+    public List<Movie> getMoviesByDuration(double minute) {
         return movieRepository.findByMinuteGreaterThanEqual(minute);
     }
 
     //find movies with rating between two values insert by user
-    public List<Movie> getMovieByRatingRange(float min, float max) {
+    public List<Movie> getMovieByRatingRange(double min, double max) {
         return movieRepository.findByRatingBetween(min, max);
     }
 
     //find movies with duration between two values insert by user
-    public List<Movie> getMoviesByDurationRange(float min, float max) {
+    public List<Movie> getMoviesByDurationRange(double min, double max) {
         return movieRepository.findByMinuteBetween(min, max);
+    }
+
+    //find best movies by rating
+    public List<Movie> findTopMovies() {
+        return movieRepository.findAllByOrderByRatingDesc();
     }
 }

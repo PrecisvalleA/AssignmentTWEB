@@ -1,7 +1,6 @@
 package com.AssignmentTWEB.springboot.controller;
 
 import com.AssignmentTWEB.springboot.model.Movie;
-import com.AssignmentTWEB.springboot.model.Movie;
 import com.AssignmentTWEB.springboot.service.MovieService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -22,7 +21,7 @@ public class MovieController {
     }
 
     //Endpoint: to get a film by ID
-    @GetMapping
+    @GetMapping("/{id}")
     public Optional<Movie> getMovieById(@PathVariable int id) {
         return movieService.getMovieById(id);
     }
@@ -35,7 +34,7 @@ public class MovieController {
 
     //Endpoint: delete a film by id
     @DeleteMapping("/{id}")
-    public void deleteMovie(@PathVariable int id) {
+    public void deleteById(@PathVariable int id) {
         movieService.deleteMovie(id);
     }
 
@@ -47,27 +46,32 @@ public class MovieController {
 
     //Endpoint: search film with rating >= value
     @GetMapping("/rating/{value}")
-    public List<Movie> findByRating(@PathVariable float value) {
+    public List<Movie> findByRating(@PathVariable double value) {
         return movieService.getMovieByRatingRange(value, 5);
     }
 
     //Endpoint: search film with duration >= value
     @GetMapping("/minute/{value}")
-    public List<Movie> findByMinute(@PathVariable float value) {
+    public List<Movie> findByMinute(@PathVariable double value) {
         return movieService.getMoviesByDuration(value);
     }
 
     //Endpoint: search film with rating between 2 values
     @GetMapping("/ratingRange")
-    public List<Movie> findByRatingRange(@RequestParam float min, @RequestParam float max) {
+    public List<Movie> findByRatingRange(@RequestParam double min, @RequestParam double max) {
         return movieService.getMovieByRatingRange(min, max);
     }
 
     //Endpoint: search film with duration between 2 values
     @GetMapping("/durationRange")
-    public List<Movie> findByDurationRange(@RequestParam float min, @RequestParam float max) {
+    public List<Movie> findByDurationRange(@RequestParam double min, @RequestParam double max) {
         return movieService.getMoviesByDurationRange(min, max);
     }
 
+    //Endpoint: search top films by rating
+    @GetMapping("/top")
+    public List<Movie> findTopMovies() {
+        return movieService.findTopMovies();
+    }
 
 }
