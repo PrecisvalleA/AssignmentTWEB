@@ -1,39 +1,54 @@
 from sqlalchemy import create_engine
-import pandas.io.sql as psql
+import pandas as pd
 import psycopg2 as ps
 from sqlalchemy.sql import text
 
-#functions to connect PyCharm to PostgreSQL
 
-def get_db_engine(): #Create the connection
-    db_username = "riccardocutro"
-    db_password = "riccardo"
+# Function to create the engine
+def get_db_engine():
+    db_username = "postgres"
+    db_password = "precisvalle"  # Ricordati di non committare mai la password su GitHub
     db_host = "localhost"
     db_port = "5432"
     db_name = "Progetto_TWEB"
 
-    engine = create_engine(f"postgresql://{db_username}:{db_password}@{db_host}:{db_port}/{db_name}?client_encoding=utf8")
+    engine = create_engine(
+        f"postgresql://{db_username}:{db_password}@{db_host}:{db_port}/{db_name}?client_encoding=utf8")
 
     return engine
 
+
+# Test the connection
 engine = get_db_engine()
 
-try: #test if the connection is established
+try:
     with engine.connect() as conn:
-        print("Connection!")
-
+        print("✅ Connection Successful!")
 except Exception as e:
-    print(f"Error {e}")
+    print(f"❌ Error: {e}")
 
 
-def execute_query(sql): #execute the SQL query in the files ipynb
+# Function to execute INSERT/UPDATE/DELETE queries
+def execute_query(sql):
     engine = get_db_engine()
-
 
     try:
         with engine.connect() as conn:
             conn.execute(text(sql))
             conn.commit()
-            print("Success!")
+            print("✅ Query Executed Successfully!")
     except Exception as e:
-        print(f"Error {e}")
+        print(f"❌ Error: {e}")
+
+
+# Function to SELECT and return DataFrame
+def get_dataframe(query):
+    engine = get_db_engine()
+
+    try:
+        with engine.connect() as conn:
+            df = pd.read_sql(query, conn)
+            return df
+    except Exception as e:
+        print(f"❌ Error: {e}")
+        return None
