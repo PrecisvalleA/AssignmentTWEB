@@ -1,44 +1,31 @@
 package com.AssignmentTWEB.springboot.model;
 
+import com.AssignmentTWEB.springboot.primarykey.ActorPrimaryKey;
 import jakarta.persistence.*;
 
 @Entity
 @Table(name = "actors")
 public class Actor {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY) //auto-increment
-    private Integer id_actor;
+    @EmbeddedId
+    private ActorPrimaryKey id_actor; //primary key
 
     @ManyToOne //one film has more than 1 actor
+    @MapsId("id_movie") //use movie for primary key FK
     @JoinColumn(name = "id_movie", nullable = false) //foreign key link movie
     private Movie movie;
 
-    @Column(nullable = false)
-    private String name;
-
-    @Column
-    private String role;
-
     public Actor() {}
 
-    public Actor(Integer id_actor, Movie movie, String name, String role) {
-        this.id_actor = id_actor;
+    public Actor(Movie movie, String name, String role) {
+        this.id_actor = new ActorPrimaryKey(movie.getId_movie(), name, role);
         this.movie = movie;
-        this.name = name;
-        this.role = role;
     }
 
-    public Integer getId_actor() {return id_actor;}
-    public void setId_actor(Integer id_actor) {this.id_actor = id_actor;}
+    public ActorPrimaryKey getId_actor() {return id_actor;}
+    public void setId_actor(ActorPrimaryKey id_actor) {this.id_actor = id_actor;}
 
     public Movie getMovie() {return movie;}
     public void setMovie(Movie movie) {this.movie = movie;}
-
-    public String getName() {return name;}
-    public void setName(String name) {this.name = name;}
-
-    public String getRole() {return role;}
-    public void setRole(String role) {this.role = role;}
 
 }

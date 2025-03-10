@@ -1,8 +1,8 @@
 package com.AssignmentTWEB.springboot.service;
 
-
 import com.AssignmentTWEB.springboot.model.Actor;
 import com.AssignmentTWEB.springboot.model.Movie;
+import com.AssignmentTWEB.springboot.primarykey.ActorPrimaryKey;
 import com.AssignmentTWEB.springboot.repository.ActorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,9 +23,8 @@ public class ActorService {
 
         List<Actor> actors = actorRepository.findByMovie(movie);
 
-        return actors.stream().map(Actor -> Actor.getName() + " - " + Actor.getRole)
-                .collect(Collectors.toList()); // stream().map() is used to extract name and role and format them as String
+        return actors.stream()
+                .map(actor -> actor.getId_actor().getName() + " - " + actor.getId_actor().getRole())
+                .collect(Collectors.toList());
     }
-
-
 }
