@@ -2,15 +2,18 @@ from sqlalchemy import create_engine
 import pandas as pd
 import psycopg2 as ps
 from sqlalchemy.sql import text
+from dotenv import load_dotenv
+import os
 
+load_dotenv()
 
 # Function to create the engine
 def get_db_engine():
-    db_username = "postgres"
-    db_password = "precisvalle"  # Ricordati di non committare mai la password su GitHub
-    db_host = "localhost"
-    db_port = "5432"
-    db_name = "Progetto_TWEB"
+    db_username = os.getenv("DB_USERNAME")
+    db_password = os.getenv("DB_PASSWORD")
+    db_host = os.getenv("DB_HOST")
+    db_port = os.getenv("DB_PORT")
+    db_name = os.getenv("DB_NAME")
 
     engine = create_engine(
         f"postgresql://{db_username}:{db_password}@{db_host}:{db_port}/{db_name}?client_encoding=utf8")
