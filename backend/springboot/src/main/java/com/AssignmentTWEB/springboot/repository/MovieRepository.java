@@ -12,11 +12,11 @@ public interface MovieRepository extends JpaRepository<Movie, Integer>{ //extend
 
     List<Movie> findByNameContaining(String name); // return all film where name contains String name
 
-    List<Movie> findByMinuteGreaterThanEqual(double minute); //return all film where minute is >= than a value
+    List<Movie> findByMinuteGreaterThanEqual(Double minute); //return all film where minute is >= than a value
 
-    List<Movie> findByMinuteBetween(double min, double max); //return all film where minute is between 2 values
+    List<Movie> findByMinuteBetween(Double min, Double max); //return all film where minute is between 2 values
 
-    List<Movie> findByRatingBetween(double min, double max); //return all film where rating is between 2 values
+    List<Movie> findByRatingBetween(Double min, Double max); //return all film where rating is between 2 values
 
     List<Movie> findAllByOrderByRatingDesc(); //return best movies by rating
 }

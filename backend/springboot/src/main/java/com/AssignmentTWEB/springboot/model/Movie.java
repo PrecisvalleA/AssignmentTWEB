@@ -24,7 +24,7 @@ public class Movie {
 
     public Movie(){}
 
-    public Movie(Integer id_movie, String name, String description, String tagline, double minute, double rating) {
+    public Movie(Integer id_movie, String name, String description, String tagline, Double minute, Double rating) {
         this.id_movie = id_movie;
         this.name = name;
         this.description = description;
@@ -46,8 +46,8 @@ public class Movie {
     public void setTagline(String tagline){this.tagline = tagline;}
 
     public double getMinute(){return minute;}
-    public void setMinute(double minute){this.minute = minute;}
+    public void setMinute(Double minute){this.minute = minute;}
 
     public double getRating(){return rating;}
-    public void setRating(double rating){this.rating = rating;}
+    public void setRating(Double rating){this.rating = rating;}
 }
