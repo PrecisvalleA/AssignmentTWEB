@@ -26,9 +26,9 @@ engine = get_db_engine()
 
 try:
     with engine.connect() as conn:
-        print("✅ Connection Successful!")
+        print("Connection Successful!")
 except Exception as e:
-    print(f"❌ Error: {e}")
+    print(f"Error: {e}")
 
 
 # Function to execute INSERT/UPDATE/DELETE queries
@@ -39,9 +39,9 @@ def execute_query(sql):
         with engine.connect() as conn:
             conn.execute(text(sql))
             conn.commit()
-            print("✅ Query Executed Successfully!")
+            print("Query Executed Successfully!")
     except Exception as e:
-        print(f"❌ Error: {e}")
+        print(f"Error: {e}")
 
 
 # Function to SELECT and return DataFrame
@@ -53,5 +53,5 @@ def get_dataframe(query):
             df = pd.read_sql(query, conn)
             return df
     except Exception as e:
-        print(f"❌ Error: {e}")
+        print(f"Error: {e}")
         return None
