@@ -12,6 +12,8 @@ public class Movie {
     @Column(nullable = false) //Not Null
     private String name;
 
+    private String date;
+
     @Column(columnDefinition = "TEXT") //TEXT type
     private String description;
 
@@ -24,9 +26,10 @@ public class Movie {
 
     public Movie(){}
 
-    public Movie(Integer id_movie, String name, String description, String tagline, Double minute, Double rating) {
+    public Movie(Integer id_movie, String name, String date, String description, String tagline, Double minute, Double rating) {
         this.id_movie = id_movie;
         this.name = name;
+        this.date = date;
         this.description = description;
         this.tagline = tagline;
         this.minute = minute;
@@ -38,6 +41,9 @@ public class Movie {
 
     public String getName(){return name;}
     public void setName(String name){this.name = name;}
+
+    public String getDate(){return date;}
+    public void setDate(String date){this.date = date;}
 
     public String getDescription(){return description;}
     public void setDescription(String description){this.description = description;}

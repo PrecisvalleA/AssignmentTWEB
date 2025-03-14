@@ -45,6 +45,11 @@ public class MovieController {
         return movieService.findMoviesByName(keyword);
     }
 
+    @GetMapping("/date")
+    public List<Movie> findByDate(@RequestParam String date) {
+        return movieService.findMoviesByDate(date);
+    }
+
     //Endpoint: search film with rating >= value
     @GetMapping("/rating/{value}")
     public List<Movie> findByRating(@PathVariable Double value) {

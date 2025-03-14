@@ -34,7 +34,10 @@ public class MovieService{
     public void deleteMovie(Integer id) {movieRepository.deleteById(id);}
 
     //search a movie by a keyword insert by user
-    public List<Movie> findMoviesByName(String keyword) {return movieRepository.findByNameContaining(keyword);}
+    public List<Movie> findMoviesByName(String keyword) {return movieRepository.findByNameContainingIgnoreCase(keyword);}
+
+    //search movies with date >= than a value insert by user
+    public List<Movie> findMoviesByDate(String date) {return movieRepository.findByDateContaining(date);}
 
     // find movies with duration >= to a value insert by user
     public List<Movie> getMoviesByDuration(Double minute) {

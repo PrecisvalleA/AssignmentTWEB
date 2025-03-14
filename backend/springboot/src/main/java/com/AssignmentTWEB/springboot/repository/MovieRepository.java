@@ -10,7 +10,9 @@ import java.util.List; // list is necessary for function which return many resul
 
 public interface MovieRepository extends JpaRepository<Movie, Integer>{ //extends JpaRepository for Movie entity with Long ID
 
-    List<Movie> findByNameContaining(String name); // return all film where name contains String name
+    List<Movie> findByNameContainingIgnoreCase(String title); // return all film where name contains String name
+
+    List<Movie> findByDateContaining(String date); // return all films where date is >= than a value
 
     List<Movie> findByMinuteGreaterThanEqual(Double minute); //return all film where minute is >= than a value
 
