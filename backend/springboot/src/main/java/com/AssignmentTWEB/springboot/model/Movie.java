@@ -7,11 +7,13 @@ import jakarta.persistence.*; //JPA annotations
 public class Movie {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY) //auto-increment ID
+    @Column(name = "id_movie")
     private Integer id_movie;
 
     @Column(nullable = false) //Not Null
     private String name;
 
+    @Column(columnDefinition = "TEXT") //TEXT type
     private String date;
 
     @Column(columnDefinition = "TEXT") //TEXT type
@@ -20,9 +22,9 @@ public class Movie {
     @Column(columnDefinition = "TEXT") //TEXT type
     private String tagline;
 
-    private double minute;
+    private Double minute;
 
-    private double rating;
+    private Double rating;
 
     public Movie(){}
 
@@ -36,7 +38,7 @@ public class Movie {
         this.rating = rating;
     }
 
-    public int getId_movie(){return id_movie;}
+    public Integer getId_movie(){return id_movie;}
     public void setId_movie(Integer id_movie){this.id_movie = id_movie;}
 
     public String getName(){return name;}

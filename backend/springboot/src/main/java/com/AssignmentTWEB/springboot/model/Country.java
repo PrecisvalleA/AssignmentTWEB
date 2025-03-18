@@ -1,5 +1,6 @@
 package com.AssignmentTWEB.springboot.model;
 
+import com.AssignmentTWEB.springboot.primarykey.ActorPrimaryKey;
 import com.AssignmentTWEB.springboot.primarykey.CountryPrimaryKey;
 import jakarta.persistence.*;
 
@@ -15,15 +16,17 @@ public class Country {
     @JoinColumn(name = "id_movie", nullable = false)
     private Movie movie;
 
-    @Column(nullable = false)
-    private String country;
-
     public Country() {}
 
     public Country(Movie movie, String country) {
         this.id_country= new CountryPrimaryKey(movie.getId_movie(), country);
         this.movie = movie;
-        this.country = country;
     }
+
+    public CountryPrimaryKey getId_country() {return id_country;}
+    public void setCountry(CountryPrimaryKey id_country) {this.id_country = id_country;}
+
+    public Movie getMovie() {return movie;}
+    public void setMovie(Movie movie) {this.movie = movie;}
 
 }
