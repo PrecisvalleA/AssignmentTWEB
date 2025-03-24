@@ -1,0 +1,30 @@
+package com.AssignmentTWEB.springboot.service;
+
+import com.AssignmentTWEB.springboot.model.Crew;
+import com.AssignmentTWEB.springboot.model.Movie;
+import com.AssignmentTWEB.springboot.primarykey.CrewPrimaryKey;
+import com.AssignmentTWEB.springboot.repository.CrewRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import java.util.List;
+import java.util.stream.Collectors;
+
+@Service
+public class CrewService {
+
+    @Autowired
+    private CrewRepository crewRepository;
+
+    //get all crews
+    public List<String> getCrewByMovie(Integer id_movie) {
+
+        Movie movie = new Movie();
+        movie.setId_movie(id_movie);
+
+        List<Crew> crews = crewRepository.findByMovie(movie);
+
+        return crews.stream()
+                .map(crew -> crew.getId_crew().getRole() + " - " + crew.getId_crew().getName())
+                .collect(Collectors.toList());
+    }
+}

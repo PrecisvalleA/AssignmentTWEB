@@ -8,7 +8,7 @@ import jakarta.persistence.*;
 public class Actor {
 
     @EmbeddedId
-    private ActorPrimaryKey id_actor; //primary key
+       private ActorPrimaryKey id_actor; //primary key
 
     @ManyToOne //one film has more than 1 actor
     @MapsId("id_movie") //use movie for primary key FK
