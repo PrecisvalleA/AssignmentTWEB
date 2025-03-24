@@ -16,7 +16,7 @@ public class CrewService {
     private CrewRepository crewRepository;
 
     //get all crews
-    public List<String> getCrewByMovie(Integer id_movie) {
+    public List<String> getCrewsByMovie(Integer id_movie) {
 
         Movie movie = new Movie();
         movie.setId_movie(id_movie);

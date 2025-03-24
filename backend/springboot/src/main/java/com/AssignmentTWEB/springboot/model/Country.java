@@ -1,6 +1,5 @@
 package com.AssignmentTWEB.springboot.model;
 
-import com.AssignmentTWEB.springboot.primarykey.ActorPrimaryKey;
 import com.AssignmentTWEB.springboot.primarykey.CountryPrimaryKey;
 import jakarta.persistence.*;
 
@@ -24,7 +23,7 @@ public class Country {
     }
 
     public CountryPrimaryKey getId_country() {return id_country;}
-    public void setCountry(CountryPrimaryKey id_country) {this.id_country = id_country;}
+    public void setId_country(CountryPrimaryKey id_country) {this.id_country = id_country;}
 
     public Movie getMovie() {return movie;}
     public void setMovie(Movie movie) {this.movie = movie;}
