@@ -4,7 +4,7 @@ import com.AssignmentTWEB.springboot.primarykey.GenrePrimaryKey;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "genre")
+@Table(name = "genres")
 public class Genre {
 
     @EmbeddedId
