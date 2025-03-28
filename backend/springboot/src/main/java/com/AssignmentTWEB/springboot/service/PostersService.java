@@ -23,7 +23,7 @@ public class PostersService {
         List<Posters> posters = postersRepository.findByMovie(movie);
 
         return posters.stream()
-                .map(poster -> poster.getId_posters().getPosters())
+                .map(poster -> poster.getId_posters().getLink())
                 .collect(Collectors.toList());
     }
 }

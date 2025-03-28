@@ -7,13 +7,15 @@ import java.util.Objects;
 @Embeddable
 public class PostersPrimaryKey implements Serializable {
     private Integer id_movie;
-    private String posters;
+
+    @Column(length = 512)
+    private String link;
 
     public PostersPrimaryKey() {}
 
-    public PostersPrimaryKey(Integer id_movie, String posters) {
+    public PostersPrimaryKey(Integer id_movie, String link) {
         this.id_movie = id_movie;
-        this.posters = posters;
+        this.link = link;
     }
 
     public Integer getMovie() {
@@ -22,11 +24,11 @@ public class PostersPrimaryKey implements Serializable {
     public void setMovie(Integer id_movie) {
         this.id_movie = id_movie;
     }
-    public String getPosters() {
-        return posters;
+    public String getLink() {
+        return link;
     }
-    public void setPosters(String posters) {
-        this.posters = posters;
+    public void setLink(String link) {
+        this.link = link;
     }
 
     @Override
@@ -35,11 +37,11 @@ public class PostersPrimaryKey implements Serializable {
         if (o == null || getClass() != o.getClass()) return false;
         PostersPrimaryKey postersPrimaryKey = (PostersPrimaryKey) o;
         return Objects.equals(id_movie, postersPrimaryKey.id_movie)
-                && Objects.equals(posters, postersPrimaryKey.posters);
+                && Objects.equals(link, postersPrimaryKey.link);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id_movie, posters);
+        return Objects.hash(id_movie, link);
     }
 }

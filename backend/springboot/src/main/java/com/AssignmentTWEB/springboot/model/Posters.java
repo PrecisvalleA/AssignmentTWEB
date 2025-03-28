@@ -17,8 +17,8 @@ public class Posters {
 
     public Posters() {}
 
-    public Posters(Movie movie, String posters) {
-        this.id_posters= new PostersPrimaryKey(movie.getId_movie(), posters);
+    public Posters(Movie movie, String link) {
+        this.id_posters= new PostersPrimaryKey(movie.getId_movie(), link);
         this.movie = movie;
     }
 
