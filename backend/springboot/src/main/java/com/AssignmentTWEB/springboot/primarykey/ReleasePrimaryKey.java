@@ -5,27 +5,34 @@ import java.io.Serializable;
 import java.util.Objects;
 import java.time.LocalDateTime;
 
+
 @Embeddable
 public class ReleasePrimaryKey implements Serializable {
-    private Long id_movie;
+    private Integer id_movie;
     private String country;
     private LocalDateTime date;
     private String type;
 
-    public ReleasePrimaryKey(Integer idMovie, String date, String country, String type) {}
-
-    public ReleasePrimaryKey(Long id_movie, LocalDateTime date, String country, String type) {
+    public ReleasePrimaryKey(Integer id_movie, LocalDateTime date, String country, String type) {
         this.id_movie = id_movie;
         this.date = date;
         this.country = country;
         this.type = type;
     }
 
-    public Long getId_movie() { return id_movie; }
-    public void setId_movie(Long id_movie) { this.id_movie = id_movie; }
+    public ReleasePrimaryKey() {
+
+    }
 
     public LocalDateTime getDate() { return date; }
     public void setDate(LocalDateTime date) { this.date = date; }
+
+
+    public Integer getId_movie() { return id_movie; }
+    public void setId_movie(Integer id_movie) { this.id_movie = id_movie; }
+
+    public String getDate() { return date; }
+    public void setDate(LocalDateTime date) { this.date = String.valueOf(date); }
 
     public String getCountry() { return country; }
     public void setCountry(String country) { this.country = country; }

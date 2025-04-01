@@ -2,6 +2,8 @@ package com.AssignmentTWEB.springboot.model;
 
 import com.AssignmentTWEB.springboot.primarykey.ReleasePrimaryKey;
 import jakarta.persistence.*;
+import java.time.LocalDateTime;
+
 
 @Entity
 @Table(name = "releases")
@@ -19,11 +21,13 @@ public class Release {
 
     public Release() {}
 
-    public Release(Movie movie, String country, String type, String date, String rating) {
+    public Release(Movie movie, String country, String type, LocalDateTime date, String rating) {
         this.id_release = new ReleasePrimaryKey(movie.getId_movie(), date, country, type);
         this.movie = movie;
         this.rating = rating;
     }
+
+
 
     public ReleasePrimaryKey getId_release() { return id_release; }
     public void setId_release(ReleasePrimaryKey id_release) { this.id_release = id_release; }

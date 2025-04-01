@@ -21,6 +21,11 @@ public class ReleaseService {
 
     // Get all releases for a specific movie ID
     public List<Release> getReleasesByMovie(Long id_movie) {
-        return releaseRepository.findByIdRelease_IdMovie(id_movie);
+        List<Release> releases = releaseRepository.findByIdRelease_IdMovie(id_movie);
+        if (releases.isEmpty()) {
+            throw new RuntimeException("No releases found for movie with ID " + id_movie);
+        }
+        return releases;
     }
+
 }
