@@ -40,8 +40,8 @@ public class MovieController {
     }
 
     //Endpoint: search a film by name
-    @GetMapping("/search")
-    public List<Movie> findByName(@RequestParam String keyword) {
+    @GetMapping("/search/{keyword}")
+    public List<Movie> findByName(@PathVariable String keyword) {
         return movieService.findMoviesByName(keyword);
     }
 

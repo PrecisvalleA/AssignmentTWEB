@@ -53,9 +53,9 @@ public class Movie {
     public String getTagline(){return tagline;}
     public void setTagline(String tagline){this.tagline = tagline;}
 
-    public double getMinute(){return minute;}
+    public Double getMinute(){return minute;}
     public void setMinute(Double minute){this.minute = minute;}
 
-    public double getRating(){return rating;}
+    public Double getRating(){return rating;}
     public void setRating(Double rating){this.rating = rating;}
 }
