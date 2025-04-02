@@ -1,6 +1,7 @@
 package com.AssignmentTWEB.springboot.model;
 
 import jakarta.persistence.*;
+import jakarta.persistence.criteria.CriteriaBuilder;
 
 @Entity
 @Table(name = "the_oscar_awards")
@@ -11,10 +12,10 @@ public class OscarAward {
     private Integer id_oscar_award;
 
     @Column(nullable = false)
-    private String year_film;
+    private Integer year_film;
 
     @Column(nullable = false)
-    private String year_ceremony;
+    private Integer year_ceremony;
 
     @Column(nullable = false)
     private Integer ceremony;
@@ -26,7 +27,7 @@ public class OscarAward {
     private String name;
 
     @Column(nullable = false)
-    private String movie_name;
+    private String film;
 
     @Column(nullable = false)
     private Boolean winner;
@@ -36,11 +37,11 @@ public class OscarAward {
     public Integer getId_oscar_award() {return id_oscar_award;}
     public void setId_oscar_award(Integer id_oscar_award) {this.id_oscar_award = id_oscar_award;}
 
-    public String getYear_film() {return year_film;}
-    public void setYear_film(String year_film) {this.year_film = year_film;}
+    public Integer getYear_film() {return year_film;}
+    public void setYear_film(Integer year_film) {this.year_film = year_film;}
 
-    public String getYear_ceremony() {return year_ceremony;}
-    public void setYear_ceremony(String year_ceremony) {this.year_ceremony = year_ceremony;}
+    public Integer getYear_ceremony() {return year_ceremony;}
+    public void setYear_ceremony(Integer year_ceremony) {this.year_ceremony = year_ceremony;}
 
     public Integer getCeremony() {return ceremony;}
     public void setCeremony(Integer ceremony) {this.ceremony = ceremony;}
@@ -51,8 +52,8 @@ public class OscarAward {
     public String getName() {return name;}
     public void setName(String name) {this.name = name;}
 
-    public String getMovie_name() {return movie_name;}
-    public void setMovie_name(String movie_name) {this.movie_name = movie_name;}
+    public String getFilm() {return film;}
+    public void setFilm(String film) {this.film = film;}
 
     public Boolean getWinner() {return winner;}
     public void setWinner(Boolean winner) {this.winner = winner;}

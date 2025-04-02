@@ -14,13 +14,8 @@ public class ReleaseController {
     @Autowired
     private ReleaseService releaseService;
 
-    @GetMapping
-    public List<Release> getAllReleases() {
-        return releaseService.getAllReleases();
-    }
-
     @GetMapping("/movies/{id_movie}")
-    public List<Release> getReleasesByMovie(@PathVariable Long id_movie) {
-        return releaseService.getReleasesByMovie(id_movie);
+    public List<String> getReleasesByMovie(@PathVariable Integer id_movie) {
+        return releaseService.getReleaseByMovie(id_movie);
     }
 }

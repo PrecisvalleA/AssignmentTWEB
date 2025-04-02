@@ -7,5 +7,5 @@ import java.util.List;
 
 @Repository
 public interface OscarAwardRepository extends JpaRepository<OscarAward, Integer>{
-    List<OscarAward> findByMovieName(String movieName);
+    List<OscarAward> findByFilm(String film);
 }

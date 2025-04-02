@@ -11,8 +11,8 @@ public class OscarAwardService {
     @Autowired
     private OscarAwardRepository oscarAwardRepository;
 
-    public List<OscarAward> getByMovieName(String movieName) {
-        return oscarAwardRepository.findByMovieName(movieName);
+    public List<OscarAward> getByMovieName(String film) {
+        return oscarAwardRepository.findByFilm(film);
     }
 
     public List<OscarAward> getAll() {

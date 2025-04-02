@@ -10,10 +10,10 @@ import java.time.LocalDateTime;
 public class ReleasePrimaryKey implements Serializable {
     private Integer id_movie;
     private String country;
-    private LocalDateTime date;
+    private String date;
     private String type;
 
-    public ReleasePrimaryKey(Integer id_movie, LocalDateTime date, String country, String type) {
+    public ReleasePrimaryKey(Integer id_movie, String date, String country, String type) {
         this.id_movie = id_movie;
         this.date = date;
         this.country = country;
@@ -24,15 +24,11 @@ public class ReleasePrimaryKey implements Serializable {
 
     }
 
-    public LocalDateTime getDate() { return date; }
-    public void setDate(LocalDateTime date) { this.date = date; }
-
+    public String getDate() { return date; }
+    public void setDate(String date) { this.date = date; }
 
     public Integer getId_movie() { return id_movie; }
     public void setId_movie(Integer id_movie) { this.id_movie = id_movie; }
-
-    public String getDate() { return date; }
-    public void setDate(LocalDateTime date) { this.date = String.valueOf(date); }
 
     public String getCountry() { return country; }
     public void setCountry(String country) { this.country = country; }
@@ -44,11 +40,11 @@ public class ReleasePrimaryKey implements Serializable {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        ReleasePrimaryKey that = (ReleasePrimaryKey) o;
-        return Objects.equals(id_movie, that.id_movie) &&
-                Objects.equals(date, that.date) &&
-                Objects.equals(country, that.country) &&
-                Objects.equals(type, that.type);
+        ReleasePrimaryKey releasePrimaryKey = (ReleasePrimaryKey) o;
+        return Objects.equals(id_movie, releasePrimaryKey.id_movie)
+                && Objects.equals(date, releasePrimaryKey.date)
+                && Objects.equals(country, releasePrimaryKey.country)
+                && Objects.equals(type, releasePrimaryKey.type);
     }
 
     @Override

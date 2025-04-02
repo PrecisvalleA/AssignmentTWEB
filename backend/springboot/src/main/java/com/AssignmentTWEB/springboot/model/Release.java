@@ -21,7 +21,7 @@ public class Release {
 
     public Release() {}
 
-    public Release(Movie movie, String country, String type, LocalDateTime date, String rating) {
+    public Release(Movie movie, String country, String type, String date, String rating) {
         this.id_release = new ReleasePrimaryKey(movie.getId_movie(), date, country, type);
         this.movie = movie;
         this.rating = rating;
