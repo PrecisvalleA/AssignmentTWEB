@@ -46,4 +46,7 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 
+const reviewsRouter = require('./routes/reviews');
+app.use('/reviews', reviewsRouter);
+
 module.exports = app;

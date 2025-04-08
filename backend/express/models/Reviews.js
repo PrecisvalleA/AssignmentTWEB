@@ -1,5 +1,4 @@
 //import mongoose to connect MongoDB
-const mongoose = require('mongoose');
 const module = require("node:module");
 const mongoose = require("mongoose");
 
