@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const Reviews = require('../models/Reviews');
 
-
+//get all reviews
 router.get('/', async (req, res) => {
   try {
     const reviews = await Reviews.find();
@@ -12,6 +12,7 @@ router.get('/', async (req, res) => {
   }
 });
 
+//get reviews by movie title
 router.get('/:title', async (req, res) => {
     try {
         const reviews = await Reviews.find({movie_title: new RegExp(req.params.title, 'i')});
@@ -21,6 +22,7 @@ router.get('/:title', async (req, res) => {
     }
 })
 
+//post new review
 router.post('/', async (req, res) => {
     try {
         const review = new Reviews(req.body);
