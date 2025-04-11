@@ -11,7 +11,7 @@ var app = express();
 
 const mongoose = require('mongoose');
 
-mongoose.connect('mongodb://localhost:27017/riccardo_cutro', {
+mongoose.connect('mongodb://localhost:27017/reviews', {
   useNewUrlParser: true,
   useUnifiedTopology: true
 })
