@@ -13,9 +13,19 @@ router.get('/', async (req, res) => {
 });
 
 //get reviews by movie title
-router.get('/:title', async (req, res) => {
+router.get('/movie/:title', async (req, res) => {
     try {
         const reviews = await Reviews.find({movie_title: new RegExp(req.params.title, 'i')});
+        res.json(reviews);
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+})
+
+//get critic's reviews by name
+router.get('/critic/:name', async (req, res) => {
+    try {
+        const reviews = await Reviews.find({critic_name: new RegExp(req.params.name, 'i')});
         res.json(reviews);
     } catch (err) {
         res.status(500).json({ message: err.message });

@@ -7,7 +7,7 @@ const reviewSchema = new mongoose.Schema({
     top_critic: Boolean,
     publisher_name: String,
     review_type: String,
-    review_score: Number,
+    review_score: String,
     review_date: Date,
     review_content: String
 });
