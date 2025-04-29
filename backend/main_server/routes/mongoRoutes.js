@@ -2,15 +2,24 @@ const express = require('express');
 const axios = require('axios');
 const router = express.Router();
 
-const MONGO_SERVER_URL = 'http://localhost:3000'; // porta del server Express MongoDB
-
-router.get('/reviews', async (req, res) => {
+// Inoltra tutte le richieste a /mongo/* al server MongoDB
+router.use('/', async (req, res) => {
   try {
-    const response = await axios.get(`${MONGO_SERVER_URL}/reviews`);
-    res.json(response.data);
+    const mongoURL = `http://localhost:3000${req.originalUrl.replace('/mongo', '')}`;
+
+    const response = await axios({
+      method: req.method,
+      url: mongoURL,
+      headers: req.headers,
+      data: req.body
+    });
+
+    res.status(response.status).json(response.data);
   } catch (error) {
-    console.error('Errore Mongo:', error.message);
-    res.status(500).json({ error: 'Errore dal server MongoDB' });
+    res.status(error.response?.status || 500).json({
+      message: 'Errore nel proxy verso il server MongoDB',
+      error: error.message
+    });
   }
 });
 
