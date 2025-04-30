@@ -15,6 +15,10 @@ public class ActorService {
     @Autowired
     private ActorRepository actorRepository;
 
+    public List<Actor> getAllActors() {
+        return actorRepository.findAll();
+    }
+
     //get all actors
     public List<String> getActorsByMovie(Integer id_movie) {
 
