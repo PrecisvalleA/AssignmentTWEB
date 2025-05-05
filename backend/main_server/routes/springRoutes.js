@@ -4,13 +4,24 @@ const router = express.Router();
 
 const SPRING_SERVER_URL = 'http://localhost:8080'; // porta di Spring Boot
 
-router.get('/films', async (req, res) => {
+// Inoltra tutte le richieste a /spring/* verso il server Spring Boot con la rotta corretta
+router.use('/', async (req, res) => {
   try {
-    const response = await axios.get(`${SPRING_SERVER_URL}/films`);
-    res.json(response.data);
+    const springUrl = SPRING_SERVER_URL + req.originalUrl.replace('/spring', '');
+
+    const response = await axios({
+      method: req.method,
+      url: springUrl,
+      headers: req.headers,
+      data: req.body
+    });
+
+    res.status(response.status).json(response.data);
   } catch (error) {
-    console.error('Errore Spring:', error.message);
-    res.status(500).json({ error: 'Errore dal server Spring' });
+    res.status(error.response?.status || 500).json({
+      message: 'Errore nel proxy verso Spring Boot',
+      error: error.message
+    });
   }
 });
 
