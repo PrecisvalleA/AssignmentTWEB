@@ -1,12 +1,16 @@
 package com.AssignmentTWEB.springboot.controller;
 
 import com.AssignmentTWEB.springboot.model.Movie;
-import com.AssignmentTWEB.springboot.service.MovieService;
-import jakarta.persistence.criteria.CriteriaBuilder;
+import com.AssignmentTWEB.springboot.model.OscarAward;
+import com.AssignmentTWEB.springboot.model.Posters;
+import com.AssignmentTWEB.springboot.repository.OscarAwardRepository;
+import com.AssignmentTWEB.springboot.repository.PostersRepository;
+import com.AssignmentTWEB.springboot.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import java.util.List;
-import java.util.Optional;
+
+import java.util.*;
+
 
 @RestController
 @RequestMapping("/movies") //endpoint
@@ -14,6 +18,36 @@ public class MovieController {
 
     @Autowired
     private MovieService movieService;
+
+    @Autowired
+    private ActorService actorService;
+
+    @Autowired
+    private CrewService crewService;
+
+    @Autowired
+    private CountryService countryService;
+
+    @Autowired
+    private PostersRepository posterRepository;
+
+    @Autowired
+    private OscarAwardRepository oscarAwardRepository;
+
+    @Autowired
+    private GenreService genreService;
+
+    @Autowired
+    private ReleaseService releaseService;
+
+    @Autowired
+    private StudioService studioService;
+
+    @Autowired
+    private ThemeService themeService;
+    @Autowired
+    private PostersService postersService;
+
 
     //Endpoint: to get all film
     @GetMapping
@@ -80,4 +114,50 @@ public class MovieController {
         return movieService.findTopMovies();
     }
 
+    @GetMapping("/details/{id}")
+    public Map<String, Object> getMovieDetails(@PathVariable Integer id) {
+        Map<String, Object> response = new HashMap<>();
+
+        Optional<Movie> optionalMovie = movieService.getMovieById(id);
+        if (optionalMovie.isEmpty()) {
+            response.put("error", "Movie not found");
+            return response;
+        }
+
+        Movie movie = optionalMovie.get();
+        response.put("movie", movie);
+        response.put("actors", actorService.getActorsByMovie(id));
+        response.put("crew", crewService.getCrewsByMovie(id));
+        response.put("countries", countryService.getCountriesByMovie(id));
+        response.put("genres", genreService.getGenreById(id));
+        response.put("releases", releaseService.getReleaseByMovie(id));
+        response.put("studios", studioService.getStudioByMovie(id));
+        response.put("themes", themeService.getThemeById(id));
+        response.put("posters", postersService.getPostersByMovie(id));
+
+        List<OscarAward> oscars = oscarAwardRepository.findByFilm(movie.getName());
+        response.put("oscars", oscars);
+
+        return response;
+    }
+
+    @GetMapping("/details/top")
+    public List<Map<String, Object>> getTopMovieDetails() {
+        List<Movie> topMovies = movieService.findTopMovies();
+        List<Map<String, Object>> result = new ArrayList<>();
+
+        for (Movie movie : topMovies) {
+            Map<String, Object> details = new HashMap<>();
+            details.put("movie", movie);
+
+            Posters poster = posterRepository.findByMovie(movie);
+            if (poster != null) {
+                details.put("poster", poster.getId_posters().getLink());
+            }
+
+            result.add(details);
+        }
+
+        return result;
+    }
 }

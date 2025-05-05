@@ -16,14 +16,16 @@ public class PostersService {
     private PostersRepository postersRepository;
 
     //get all posters by an id_movie
-    public List<String> getPostersByMovie(Integer id_movie) {
+    public String getPostersByMovie(Integer id_movie) {
         Movie movie = new Movie();
         movie.setId_movie(id_movie);
 
-        List<Posters> posters = postersRepository.findByMovie(movie);
+        Posters posters = postersRepository.findByMovie(movie);
 
-        return posters.stream()
-                .map(poster -> poster.getId_posters().getLink())
-                .collect(Collectors.toList());
+        if (posters != null && posters.getId_posters() != null) {
+            return posters.getId_posters().getLink();
+        } else {
+            return null;
+        }
     }
 }

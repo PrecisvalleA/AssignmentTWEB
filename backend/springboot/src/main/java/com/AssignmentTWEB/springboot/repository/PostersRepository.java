@@ -11,5 +11,5 @@ import java.util.List;
 public interface PostersRepository extends JpaRepository <Posters, PostersPrimaryKey>{
 
     //find all countries where a film has been produced
-    List<Posters> findByMovie(Movie movie);
+    Posters findByMovie(Movie movie);
 }

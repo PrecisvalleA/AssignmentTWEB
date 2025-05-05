@@ -54,8 +54,10 @@ public class MovieService{
         return movieRepository.findByMinuteBetween(min, max);
     }
 
-    //find best movies by rating
+    //find best movies by rating and date <= 2025
     public List<Movie> findTopMovies() {
-        return movieRepository.findAllByOrderByRatingDesc();
+        return movieRepository.findTop50ByRatingBefore2025();
     }
+
+
 }

@@ -2,6 +2,7 @@ package com.AssignmentTWEB.springboot.repository; // package class
 
 import com.AssignmentTWEB.springboot.model.Movie; // import movie entity which represents "movies" table
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List; // list is necessary for function which return many results
@@ -21,4 +22,10 @@ public interface MovieRepository extends JpaRepository<Movie, Integer>{ //extend
     List<Movie> findByRatingBetween(Double min, Double max); //return all film where rating is between 2 values
 
     List<Movie> findAllByOrderByRatingDesc(); //return best movies by rating
+
+    @Query(value = "SELECT * FROM movies WHERE CAST(date AS FLOAT) <= 2025 ORDER BY rating DESC NULLS LAST LIMIT 50", nativeQuery = true)
+    List<Movie> findTop50ByRatingBefore2025();
+
+
+
 }

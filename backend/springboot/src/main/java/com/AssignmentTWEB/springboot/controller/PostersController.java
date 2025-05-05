@@ -16,7 +16,7 @@ public class PostersController {
     private PostersService postersService;
 
     @GetMapping("/movies/{id_movie}")
-    public List<String> getAllposters(@PathVariable Integer id_movie) {
+    public String getAllposters(@PathVariable Integer id_movie) {
         return postersService.getPostersByMovie(id_movie);
     }
 }
