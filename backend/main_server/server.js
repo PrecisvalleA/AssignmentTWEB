@@ -11,4 +11,4 @@ app.use(express.json());
 app.use('/spring', springRoutes);
 app.use('/mongo', mongoRoutes);
 
-module.exports = app; // ✅ export app
+module.exports = app;
