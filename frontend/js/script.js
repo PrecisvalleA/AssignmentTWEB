@@ -2,19 +2,19 @@ document.addEventListener('DOMContentLoaded', () => {
     const container = document.getElementById('movies-list');
     const searchInput = document.getElementById('search-bar');
 
-    fetch('http://localhost:8080/movies/details/top')
+    fetch('http://localhost:8080/movies/details/paginated')
         .then(response => response.json())
         .then(data => {
             data.forEach(item => {
                 const movie = item.movie;
-                const poster = item.poster;
+                const posters = item.posters;
 
                 const col = document.createElement('div');
                 col.className = 'col-md-2'; // 5 card per riga
 
                 col.innerHTML = `
                     <div class="card mb-4 h-100">
-                        <img src="${poster}" class="card-img-top object-fit-contain" style="height: 300px" alt="Poster di ${movie.name}">
+                        <img src="${posters}" class="card-img-top object-fit-contain" style="height: 300px" alt="Poster di ${movie.name}">
                         <div class="card-body d-flex flex-column justify-content-between">
                             <h6 class="card-title">${movie.name}</h6>
                             <p class="card-text">Rating: ${movie.rating ?? 'N/A'}</p>

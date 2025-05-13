@@ -25,7 +25,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                         col.innerHTML = `
                           <div class="card mb-4 h-100">
-                            <img src="${details.poster}" class="card-img-top" alt="Poster di ${details.movie.name}">
+                            <img src="${details.posters}" class="card-img-top" alt="Poster di ${details.movie.name}">
                             <div class="card-body">
                               <h5 class="card-title">${details.movie.name}</h5>
                               <p class="card-text">Rating: ${details.movie.rating ?? 'N/A'}</p>
