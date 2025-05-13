@@ -1,6 +1,10 @@
 package com.AssignmentTWEB.springboot.Movies; // package class
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
@@ -52,10 +56,16 @@ public class MovieService{
         return movieRepository.findByMinuteBetween(min, max);
     }
 
-    //find best movies by rating and date <= 2025
+    //find best movies by rating
     public List<Movie> findTopMovies() {
-        return movieRepository.findTop50ByRatingBefore2025();
+        return movieRepository.findAllByOrderByRatingDesc();
     }
+
+    public Page<Movie> getPaginatedMoviesPage(int limit, int offset) {
+        Pageable pageable = PageRequest.of(offset / limit, limit);
+        return movieRepository.findMoviesReleasedBefore2026(pageable);
+    }
+
 
 
 }

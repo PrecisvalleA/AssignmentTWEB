@@ -1,5 +1,7 @@
 package com.AssignmentTWEB.springboot.Movies; // package class
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -22,9 +24,7 @@ public interface MovieRepository extends JpaRepository<Movie, Integer>{ //extend
 
     List<Movie> findAllByOrderByRatingDesc(); //return best movies by rating
 
-    @Query(value = "SELECT * FROM movies WHERE CAST(date AS FLOAT) <= 2025 ORDER BY rating DESC NULLS LAST LIMIT 50", nativeQuery = true)
-    List<Movie> findTop50ByRatingBefore2025();
-
-
+    @Query("SELECT m FROM Movie m WHERE m.date <= '2025' AND m.rating IS NOT NULL ORDER BY m.rating DESC")
+    Page<Movie> findMoviesReleasedBefore2026(Pageable pageable);
 
 }

@@ -13,6 +13,10 @@ import com.AssignmentTWEB.springboot.Releases.ReleaseService;
 import com.AssignmentTWEB.springboot.Studios.StudioService;
 import com.AssignmentTWEB.springboot.Themes.ThemeService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
@@ -166,4 +170,32 @@ public class MovieController {
 
         return result;
     }
+
+    @GetMapping("/details/paginated")
+    public List<Map<String, Object>> getPaginatedMovieDetails(
+            @RequestParam(defaultValue = "50") int limit,
+            @RequestParam(defaultValue = "0") int offset) {
+        Pageable pageable = PageRequest.of(offset / limit, limit, Sort.by("rating").descending());
+        Page<Movie> page = movieService.getPaginatedMoviesPage(limit, offset);
+
+        List<Map<String, Object>> result = new ArrayList<>();
+        for (Movie movie : page.getContent()) {
+            Map<String, Object> details = new HashMap<>();
+            details.put("movie", movie);
+            details.put("actors", actorService.getActorsByMovie(movie.getId_movie()));
+            details.put("crew", crewService.getCrewsByMovie(movie.getId_movie()));
+            details.put("countries", countryService.getCountriesByMovie(movie.getId_movie()));
+            details.put("genres", genreService.getGenreById(movie.getId_movie()));
+            details.put("releases", releaseService.getReleaseByMovie(movie.getId_movie()));
+            details.put("studios", studioService.getStudioByMovie(movie.getId_movie()));
+            details.put("themes", themeService.getThemeById(movie.getId_movie()));
+            details.put("posters", postersService.getPostersByMovie(movie.getId_movie()));
+            details.put("oscars", oscarAwardRepository.findByFilm(movie.getName()));
+
+            result.add(details);
+        }
+
+        return result;
+    }
+
 }
