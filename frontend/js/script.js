@@ -10,15 +10,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 const posters = item.posters;
 
                 const col = document.createElement('div');
-                col.className = 'col-md-2'; // 5 card per riga
+                col.className = 'col-12 col-sm-6 col-md-3 mt-3'; // 5 card per riga
 
                 col.innerHTML = `
                     <div class="card mb-4 h-100">
                         <img src="${posters}" class="card-img-top object-fit-contain" style="height: 300px" alt="Poster di ${movie.name}">
-                        <div class="card-body d-flex flex-column justify-content-between">
-                            <h6 class="card-title">${movie.name}</h6>
-                            <p class="card-text">Rating: ${movie.rating ?? 'N/A'}</p>
-                            <p class="card-text">Release Date: ${movie.date}</p>
+                        <div class="card-body">
+                            <h6 class="card-title text-center">${movie.name}</h6>
+                            <div class="card-text mt-3">Rating: ${movie.rating ?? 'N/A'}</div>
+                            <small class="card-text">Release Date: ${movie.date}</small>
                         </div>
                     </div>
                 `;
