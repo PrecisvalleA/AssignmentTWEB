@@ -21,15 +21,15 @@ document.addEventListener('DOMContentLoaded', () => {
                     .then(resp => resp.json())
                     .then(details => {
                         const col = document.createElement('div');
-                        col.className = 'col-md-4';
+                        col.className = 'col-12 col-sm-6 col-md-3 mt-3';
 
                         col.innerHTML = `
                           <div class="card mb-4 h-100">
-                            <img src="${details.posters}" class="card-img-top" alt="Poster di ${details.movie.name}">
+                            <img src="${details.posters}" class="card-img-top object-fit-contain" alt="Poster di ${details.movie.name}">
                             <div class="card-body">
-                              <h5 class="card-title">${details.movie.name}</h5>
-                              <p class="card-text">Rating: ${details.movie.rating ?? 'N/A'}</p>
-                              <p class="card-text">Anno: ${details.movie.date}</p>
+                              <h6 class="card-title text-center">${details.movie.name}</h6>
+                              <div class="card-text mt-3">Rating: ${details.movie.rating ?? 'N/A'}</div>
+                              <small class="card-text">Anno: ${details.movie.date}</small>
                             </div>
                           </div>
                         `;
