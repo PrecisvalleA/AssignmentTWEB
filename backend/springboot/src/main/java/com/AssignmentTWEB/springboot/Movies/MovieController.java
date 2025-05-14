@@ -26,37 +26,27 @@ import java.util.*;
 @RequestMapping("/movies") //endpoint
 public class MovieController {
 
-    @Autowired
-    private MovieService movieService;
+    @Autowired private MovieService movieService;
 
-    @Autowired
-    private ActorService actorService;
+    @Autowired private ActorService actorService;
 
-    @Autowired
-    private CrewService crewService;
+    @Autowired private CrewService crewService;
 
-    @Autowired
-    private CountryService countryService;
+    @Autowired private CountryService countryService;
 
-    @Autowired
-    private PostersRepository posterRepository;
+    @Autowired private PostersRepository posterRepository;
 
-    @Autowired
-    private OscarAwardRepository oscarAwardRepository;
+    @Autowired private OscarAwardRepository oscarAwardRepository;
 
-    @Autowired
-    private GenreService genreService;
+    @Autowired private GenreService genreService;
 
-    @Autowired
-    private ReleaseService releaseService;
+    @Autowired private ReleaseService releaseService;
 
-    @Autowired
-    private StudioService studioService;
+    @Autowired private StudioService studioService;
 
-    @Autowired
-    private ThemeService themeService;
-    @Autowired
-    private PostersService postersService;
+    @Autowired private ThemeService themeService;
+
+    @Autowired private PostersService postersService;
 
 
     //Endpoint: to get all film
@@ -171,28 +161,18 @@ public class MovieController {
         return result;
     }
 
-    @GetMapping("/details/paginated")
-    public List<Map<String, Object>> getPaginatedMovieDetails(
-            @RequestParam(defaultValue = "50") int limit,
-            @RequestParam(defaultValue = "0") int offset) {
-        Pageable pageable = PageRequest.of(offset / limit, limit, Sort.by("rating").descending());
-        Page<Movie> page = movieService.getPaginatedMoviesPage(limit, offset);
+    @GetMapping("/paginated")
+    public List<Map<String, Object>> getPaginatedMovies(
+            @RequestParam(defaultValue = "12") int limit,
+            @RequestParam(defaultValue = "0") int page) {
+        Page<Movie> pageResult = movieService.getPaginatedMoviesPage(limit, page);
 
         List<Map<String, Object>> result = new ArrayList<>();
-        for (Movie movie : page.getContent()) {
-            Map<String, Object> details = new HashMap<>();
-            details.put("movie", movie);
-            details.put("actors", actorService.getActorsByMovie(movie.getId_movie()));
-            details.put("crew", crewService.getCrewsByMovie(movie.getId_movie()));
-            details.put("countries", countryService.getCountriesByMovie(movie.getId_movie()));
-            details.put("genres", genreService.getGenreById(movie.getId_movie()));
-            details.put("releases", releaseService.getReleaseByMovie(movie.getId_movie()));
-            details.put("studios", studioService.getStudioByMovie(movie.getId_movie()));
-            details.put("themes", themeService.getThemeById(movie.getId_movie()));
-            details.put("posters", postersService.getPostersByMovie(movie.getId_movie()));
-            details.put("oscars", oscarAwardRepository.findByFilm(movie.getName()));
-
-            result.add(details);
+        for (Movie movie : pageResult.getContent()) {
+            Map<String, Object> data = new HashMap<>();
+            data.put("movie", movie);
+            data.put("posters", postersService.getPostersByMovie(movie.getId_movie()));
+            result.add(data);
         }
 
         return result;

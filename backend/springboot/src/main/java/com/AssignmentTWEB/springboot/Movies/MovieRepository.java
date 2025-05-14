@@ -24,7 +24,6 @@ public interface MovieRepository extends JpaRepository<Movie, Integer>{ //extend
 
     List<Movie> findAllByOrderByRatingDesc(); //return best movies by rating
 
-    @Query("SELECT m FROM Movie m WHERE m.date <= '2025' AND m.rating IS NOT NULL ORDER BY m.rating DESC")
-    Page<Movie> findMoviesReleasedBefore2026(Pageable pageable);
+    Page<Movie> findByRatingNotNull(Pageable pageable);
 
 }
