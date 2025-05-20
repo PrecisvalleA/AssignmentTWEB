@@ -10,14 +10,14 @@
   <body>
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container-fluid">
-      <a class="navbar-brand" href="#">MoviesHub 🎬</a>
+      <a class="navbar-brand" href="index.html">MoviesHub 🎬</a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse d-flex justify-content-between" id="navbarNav">
         <ul class="navbar-nav">
           <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="#">Home</a>
+            <a class="nav-link active" aria-current="page" href="index.html">Home</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="#">Movies</a>
@@ -30,8 +30,9 @@
           </li>
         </ul>
 
-        <form class="d-flex" role="search">
+          <form id="search-form" class="d-flex" role="search">
           <input id="search-bar" class="form-control me-2" type="search" placeholder="Cerca un film..." aria-label="Search">
+          <button class="btn btn-outline-light" type="submit">🔍</button>
         </form>
       </div>
     </div>
@@ -39,12 +40,13 @@
 
 
   <div class="container-fluid pt-2">
+      <h2 id="section-title" class="mb-4 text-center">Top Rated</h2>
       <div id="movies-list" class="row justify-content-center" style="color: darkgrey"></div>
   </div>
 
   <div class="d-flex justify-content-center my-4">
-    <button id="prev-btn" class="btn btn-secondary me-2">Indietro</button>
-    <button id="next-btn" class="btn btn-primary">Avanti</button>
+
+    <button id="load-more-btn" class="btn btn-primary">Avanti</button>
   </div>
 
 
