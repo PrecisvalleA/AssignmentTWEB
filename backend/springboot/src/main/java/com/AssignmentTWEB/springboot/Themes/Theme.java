@@ -1,31 +1,48 @@
 package com.AssignmentTWEB.springboot.Themes;
 
 import com.AssignmentTWEB.springboot.Movies.Movie;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 @Entity
 @Table(name = "themes")
 public class Theme {
 
-    @EmbeddedId
-    private ThemePrimaryKey id_theme; //primary key
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-    @ManyToOne //one film has more than 1 theme
-    @MapsId("id_movie") //use movie for primary key FK
-    @JoinColumn(name = "id_movie", nullable = false) //foreign key link movie
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "id_movie", nullable = false)
+    @JsonBackReference
     private Movie movie;
+
+    @Column(nullable = false)
+    private String theme;
+
 
     public Theme() {}
 
     public Theme(Movie movie, String theme) {
-        this.id_theme = new ThemePrimaryKey(movie.getId_movie(), theme);
+        this.movie = movie;
+        this.theme = theme;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public Movie getMovie() {
+        return movie;
+    }
+    public void setMovie(Movie movie) {
         this.movie = movie;
     }
 
-    public ThemePrimaryKey getId_Theme() {return id_theme;}
-    public void setId_theme(ThemePrimaryKey id_theme) {this.id_theme = id_theme;}
-
-    public Movie getMovie() {return movie;}
-    public void setMovie(Movie movie) {this.movie = movie;}
-
+    public String getTheme() {
+        return theme;
+    }
+    public void setTheme(String theme) {
+        this.theme = theme;
+    }
 }

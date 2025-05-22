@@ -1,31 +1,47 @@
 package com.AssignmentTWEB.springboot.Genres;
 
 import com.AssignmentTWEB.springboot.Movies.Movie;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 @Entity
 @Table(name = "genres")
 public class Genre {
 
-    @EmbeddedId
-    private GenrePrimaryKey id_genre; //primary key
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-    @ManyToOne //one film has more than 1 genre
-    @MapsId("id_movie") //use movie for primary key FK
-    @JoinColumn(name = "id_movie", nullable = false) //foreign key link movie
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "id_movie", nullable = false)
+    @JsonBackReference
     private Movie movie;
+
+    @Column(nullable = false)
+    private String genre;
 
     public Genre() {}
 
     public Genre(Movie movie, String genre) {
-        this.id_genre = new GenrePrimaryKey(movie.getId_movie(), genre);
+        this.movie = movie;
+        this.genre = genre;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public Movie getMovie() {
+        return movie;
+    }
+    public void setMovie(Movie movie) {
         this.movie = movie;
     }
 
-    public GenrePrimaryKey getId_genre() {return id_genre;}
-    public void setId_genre(GenrePrimaryKey id_genre) {this.id_genre = id_genre;}
-
-    public Movie getMovie() {return movie;}
-    public void setMovie(Movie movie) {this.movie = movie;}
-
+    public String getGenre() {
+        return genre;
+    }
+    public void setGenre(String genre) {
+        this.genre = genre;
+    }
 }

@@ -1,31 +1,57 @@
 package com.AssignmentTWEB.springboot.Crews;
 
 import com.AssignmentTWEB.springboot.Movies.Movie;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 @Entity
 @Table(name = "crew")
 public class Crew {
 
-    @EmbeddedId
-    private CrewPrimaryKey id_crew; //primary key
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-    @ManyToOne //one film has more than 1 actor
-    @MapsId("id_movie") //use movie for primary key FK
-    @JoinColumn(name = "id_movie", nullable = false) //foreign key link movie
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "id_movie", nullable = false)
+    @JsonBackReference
     private Movie movie;
+
+    @Column(nullable = false)
+    private String role;
+
+    @Column(nullable = false)
+    private String name;
 
     public Crew() {}
 
-    public Crew(Movie movie, String role, String name) {
-        this.id_crew = new CrewPrimaryKey(movie.getId_movie(), role, name);
+    public Crew(Movie movie, String name, String role) {
+        this.movie = movie;
+        this.role = role;
+        this.name = name;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public Movie getMovie() {
+        return movie;
+    }
+    public void setMovie(Movie movie) {
         this.movie = movie;
     }
 
-    public CrewPrimaryKey getId_crew() {return id_crew;}
-    public void setId_crew(CrewPrimaryKey id_crew) {this.id_crew = id_crew;}
-
-    public Movie getMovie() {return movie;}
-    public void setMovie(Movie movie) {this.movie = movie;}
-
+    public String getName() {
+        return name;
+    }
+    public void setName(String name) {
+        this.name = name;
+    }
+    public String getRole() {
+        return role;
+    }
+    public void setRole(String role) {
+        this.role = role;
+    }
 }

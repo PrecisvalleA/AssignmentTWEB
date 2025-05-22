@@ -25,7 +25,7 @@ public class ActorService {
         List<Actor> actors = actorRepository.findByMovie(movie);
 
         return actors.stream()
-                .map(actor -> actor.getId_actor().getName() + " - " + actor.getId_actor().getRole())
+                .map(actor -> actor.getName() + " - " + actor.getRole())
                 .collect(Collectors.toList());
     }
 }

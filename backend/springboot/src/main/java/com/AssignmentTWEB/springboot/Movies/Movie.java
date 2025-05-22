@@ -1,6 +1,19 @@
 package com.AssignmentTWEB.springboot.Movies; // package class
 
+import com.AssignmentTWEB.springboot.Actors.Actor;
+import com.AssignmentTWEB.springboot.Crews.Crew;
+import com.AssignmentTWEB.springboot.Countries.Country;
+import com.AssignmentTWEB.springboot.Genres.Genre;
+import com.AssignmentTWEB.springboot.Posters.Posters;
+import com.AssignmentTWEB.springboot.Releases.Release;
+import com.AssignmentTWEB.springboot.Studios.Studio;
+import com.AssignmentTWEB.springboot.Themes.Theme;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*; //JPA annotations
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 
 @Entity // this class is a JPA entity
 @Table(name = "movies") //table name in the database
@@ -38,6 +51,39 @@ public class Movie {
         this.rating = rating;
     }
 
+    //FetchType.LAZY doesn't load actors for every findbyId()
+    @OneToMany(mappedBy = "movie", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JsonManagedReference
+    private List<Actor> actors = new ArrayList<>();
+
+    @OneToMany(mappedBy = "movie", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JsonManagedReference
+    private List<Crew> crews = new ArrayList<>();
+
+    @OneToMany(mappedBy = "movie", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JsonManagedReference
+    private List<Country> countries = new ArrayList<>();
+
+    @OneToMany(mappedBy = "movie", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JsonManagedReference
+    private List<Genre> genres = new ArrayList<>();
+
+    @OneToMany(mappedBy = "movie", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JsonManagedReference
+    private List<Release> releases = new ArrayList<>();
+
+    @OneToMany(mappedBy = "movie", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JsonManagedReference
+    private List<Studio> studios = new ArrayList<>();
+
+    @OneToMany(mappedBy = "movie", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JsonManagedReference
+    private List<Theme> themes = new ArrayList<>();
+
+    @OneToMany(mappedBy = "movie", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JsonManagedReference
+    private List<Posters> posters = new ArrayList<>();
+
     public Integer getId_movie(){return id_movie;}
     public void setId_movie(Integer id_movie){this.id_movie = id_movie;}
 
@@ -58,4 +104,33 @@ public class Movie {
 
     public Double getRating(){return rating;}
     public void setRating(Double rating){this.rating = rating;}
+
+
+    //getter list for all tables
+    public List<Actor> getActors() {
+        return actors;
+    }
+    public List<Crew> getCrews() {
+        return crews;
+    }
+    public List<Country> getCountries() {
+        return countries;
+    }
+    public List<Genre> getGenres() {
+        return genres;
+    }
+    public List<Release> getReleases() {
+        return releases;
+    }
+    public List<Studio> getStudios() {
+        return studios;
+    }
+    public List<Theme> getThemes() {
+        return themes;
+    }
+    public List<Posters> getPosters() {
+        return posters;
+    }
+
+
 }

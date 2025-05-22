@@ -21,7 +21,7 @@ public class ThemeService {
         List<Theme> themes = themeRepository.findByMovie(movie);
 
         return themes.stream()
-                .map(theme -> theme.getId_Theme().getTheme())
+                .map(theme -> theme.getTheme())
                 .collect(Collectors.toList());
     }
 }

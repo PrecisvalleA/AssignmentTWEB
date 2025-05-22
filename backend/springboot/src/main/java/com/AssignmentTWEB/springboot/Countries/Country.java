@@ -1,31 +1,47 @@
 package com.AssignmentTWEB.springboot.Countries;
 
 import com.AssignmentTWEB.springboot.Movies.Movie;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 @Entity
 @Table(name = "countries")
 public class Country {
 
-    @EmbeddedId
-    private CountryPrimaryKey id_country;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-    @ManyToOne
-    @MapsId("id_movie")
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "id_movie", nullable = false)
+    @JsonBackReference
     private Movie movie;
+
+    @Column(nullable = false)
+    private String country;
 
     public Country() {}
 
     public Country(Movie movie, String country) {
-        this.id_country= new CountryPrimaryKey(movie.getId_movie(), country);
+        this.movie = movie;
+        this.country = country;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public Movie getMovie() {
+        return movie;
+    }
+    public void setMovie(Movie movie) {
         this.movie = movie;
     }
 
-    public CountryPrimaryKey getId_country() {return id_country;}
-    public void setId_country(CountryPrimaryKey id_country) {this.id_country = id_country;}
-
-    public Movie getMovie() {return movie;}
-    public void setMovie(Movie movie) {this.movie = movie;}
-
+    public String getCountry() {
+        return country;
+    }
+    public void setCountry(String country) {
+        this.country = country;
+    }
 }

@@ -17,8 +17,8 @@ public class PostersService {
 
         Posters posters = postersRepository.findByMovie(movie);
 
-        if (posters != null && posters.getId_posters() != null) {
-            return posters.getId_posters().getLink();
+        if (posters != null) {
+            return posters.getLink();
         } else {
             return null;
         }

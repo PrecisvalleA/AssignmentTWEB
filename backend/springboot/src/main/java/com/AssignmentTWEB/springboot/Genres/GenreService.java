@@ -21,7 +21,7 @@ public class GenreService {
         List<Genre> genres = genreRepository.findByMovie(movie);
 
         return genres.stream()
-                .map(genre -> genre.getId_genre().getGenre())
+                .map(genre -> genre.getGenre())
                 .collect(Collectors.toList());
     }
 }

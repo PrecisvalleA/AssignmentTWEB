@@ -20,7 +20,7 @@ public class StudioService {
         List<Studio> studios = studioRepository.findByMovie(movie);
 
         return studios.stream()
-                .map(studio -> studio.getId_studio().getStudio())
+                .map(studio -> studio.getStudio())
                 .collect(Collectors.toList());
     }
 }

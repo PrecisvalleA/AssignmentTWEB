@@ -6,7 +6,7 @@ import com.AssignmentTWEB.springboot.Crews.CrewService;
 import com.AssignmentTWEB.springboot.Genres.GenreService;
 import com.AssignmentTWEB.springboot.OscarAwards.OscarAward;
 import com.AssignmentTWEB.springboot.Posters.Posters;
-import com.AssignmentTWEB.springboot.OscarAwards.OscarAwardRepository;
+import com.AssignmentTWEB.springboot.OscarAwards.OscarAwardService;
 import com.AssignmentTWEB.springboot.Posters.PostersRepository;
 import com.AssignmentTWEB.springboot.Posters.PostersService;
 import com.AssignmentTWEB.springboot.Releases.ReleaseService;
@@ -14,9 +14,7 @@ import com.AssignmentTWEB.springboot.Studios.StudioService;
 import com.AssignmentTWEB.springboot.Themes.ThemeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
@@ -36,7 +34,7 @@ public class MovieController {
 
     @Autowired private PostersRepository posterRepository;
 
-    @Autowired private OscarAwardRepository oscarAwardRepository;
+    @Autowired private OscarAwardService oscarAwardService;
 
     @Autowired private GenreService genreService;
 
@@ -115,30 +113,23 @@ public class MovieController {
     }
 
     @GetMapping("/details/{id}")
-    public Map<String, Object> getMovieDetails(@PathVariable Integer id) {
-        Map<String, Object> response = new HashMap<>();
-
-        Optional<Movie> optionalMovie = movieService.getMovieById(id);
-        if (optionalMovie.isEmpty()) {
-            response.put("error", "Movie not found");
-            return response;
-        }
-
-        Movie movie = optionalMovie.get();
-        response.put("movie", movie);
-        response.put("actors", actorService.getActorsByMovie(id));
-        response.put("crew", crewService.getCrewsByMovie(id));
-        response.put("countries", countryService.getCountriesByMovie(id));
-        response.put("genres", genreService.getGenreById(id));
-        response.put("releases", releaseService.getReleaseByMovie(id));
-        response.put("studios", studioService.getStudioByMovie(id));
-        response.put("themes", themeService.getThemeById(id));
-        response.put("posters", postersService.getPostersByMovie(id));
-
-        List<OscarAward> oscars = oscarAwardRepository.findByFilm(movie.getName());
-        response.put("oscars", oscars);
-
-        return response;
+    public ResponseEntity<Map<String,Object>> getMovieDetails(@PathVariable Integer id) {
+        return movieService.getMovieById(id)
+                .map(movie -> {
+                    Map<String,Object> response = new HashMap<>();
+                    response.put("movie", movie);
+                    response.put("actors", actorService.getActorsByMovie(id));
+                    response.put("crew", crewService.getCrewsByMovie(id));
+                    response.put("countries", countryService.getCountriesByMovie(id));
+                    response.put("genres", genreService.getGenreById(id));
+                    response.put("releases", releaseService.getReleaseByMovie(id));
+                    response.put("studios", studioService.getStudioByMovie(id));
+                    response.put("themes", themeService.getThemeById(id));
+                    response.put("posters", postersService.getPostersByMovie(id));
+                    response.put("oscars", oscarAwardService.getByMovieName(movie.getName()));
+                    return ResponseEntity.ok(response);
+                })
+                .orElse(ResponseEntity.notFound().build());
     }
 
     @GetMapping("/details/top")
@@ -152,7 +143,7 @@ public class MovieController {
 
             Posters poster = posterRepository.findByMovie(movie);
             if (poster != null) {
-                details.put("poster", poster.getId_posters().getLink());
+                details.put("poster", poster.getLink());
             }
 
             result.add(details);

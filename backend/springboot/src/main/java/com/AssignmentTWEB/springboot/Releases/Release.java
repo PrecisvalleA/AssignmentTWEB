@@ -1,39 +1,67 @@
 package com.AssignmentTWEB.springboot.Releases;
 
 import com.AssignmentTWEB.springboot.Movies.Movie;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 
 @Entity
 @Table(name = "releases")
 public class Release {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-    @EmbeddedId
-    private ReleasePrimaryKey id_release; // primary key
-
-    @ManyToOne // one film has more than one release
-    @MapsId("id_movie") // use movie for primary key FK
-    @JoinColumn(name = "id_movie", nullable = false) // foreign key link movie
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "id_movie", nullable = false)
+    @JsonBackReference
     private Movie movie;
 
-    private String rating;
+    @Column(nullable = false)
+    private String date;
+
+    @Column(nullable = false)
+    private String country;
+
+    @Column(nullable = false)
+    private String type;
 
     public Release() {}
 
-    public Release(Movie movie, String country, String type, String date, String rating) {
-        this.id_release = new ReleasePrimaryKey(movie.getId_movie(), date, country, type);
+    public Release(Movie movie, String date, String country, String type) {
         this.movie = movie;
-        this.rating = rating;
+        this.date = date;
+        this.country = country;
+        this.type = type;
     }
 
+    public Long getId() {
+        return id;
+    }
 
+    public Movie getMovie() {
+        return movie;
+    }
+    public void setMovie(Movie movie) {
+        this.movie = movie;
+    }
 
-    public ReleasePrimaryKey getId_release() { return id_release; }
-    public void setId_release(ReleasePrimaryKey id_release) { this.id_release = id_release; }
-
-    public Movie getMovie() { return movie; }
-    public void setMovie(Movie movie) { this.movie = movie; }
-
-    public String getRating() { return rating; }
-    public void setRating(String rating) { this.rating = rating; }
+    public String getDate() {
+        return date;
+    }
+    public void setDate(String date) {
+        this.date = date;
+    }
+    public String getCountry() {
+        return country;
+    }
+    public void setCountry(String country) {
+        this.country = country;
+    }
+    public String getType() {
+        return type;
+    }
+    public void setType(String type) {
+        this.type = type;
+    }
 }

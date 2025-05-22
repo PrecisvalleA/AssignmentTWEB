@@ -20,7 +20,7 @@ public class LanguageService {
         List<Language> languages = languageRepository.findByMovie(movie);
 
         return languages.stream()
-                .map(language -> language.getId_language().getType() + " - " + language.getId_language().getLanguage())
+                .map(language -> language.getType() + " - " + language.getLanguage())
                 .collect(Collectors.toList());
     }
 }

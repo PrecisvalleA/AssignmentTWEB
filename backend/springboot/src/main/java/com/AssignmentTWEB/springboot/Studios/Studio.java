@@ -1,31 +1,48 @@
 package com.AssignmentTWEB.springboot.Studios;
 
 import com.AssignmentTWEB.springboot.Movies.Movie;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 @Entity
 @Table(name = "studios")
 public class Studio {
 
-    @EmbeddedId
-    private StudioPrimaryKey id_studio; //primary key
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-    @ManyToOne //one film has more than 1 actor
-    @MapsId("id_movie") //use movie for primary key FK
-    @JoinColumn(name = "id_movie", nullable = false) //foreign key link movie
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "id_movie", nullable = false)
+    @JsonBackReference
     private Movie movie;
+
+    @Column(nullable = false)
+    private String studio;
+
 
     public Studio() {}
 
     public Studio(Movie movie, String studio) {
-        this.id_studio = new StudioPrimaryKey(movie.getId_movie(), studio);
+        this.movie = movie;
+        this.studio = studio;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public Movie getMovie() {
+        return movie;
+    }
+    public void setMovie(Movie movie) {
         this.movie = movie;
     }
 
-    public StudioPrimaryKey getId_studio() {return id_studio;}
-    public void setId_studio(StudioPrimaryKey id_studio) {this.id_studio = id_studio;}
-
-    public Movie getMovie() {return movie;}
-    public void setMovie(Movie movie) {this.movie = movie;}
-
+    public String getStudio() {
+        return studio;
+    }
+    public void setStudio(String studio) {
+        this.studio = studio;
+    }
 }

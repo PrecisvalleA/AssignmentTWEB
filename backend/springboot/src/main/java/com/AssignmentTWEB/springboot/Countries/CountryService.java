@@ -20,7 +20,7 @@ public class CountryService {
         List<Country> countries = countryRepository.findByMovie(movie);
 
         return countries.stream()
-                .map(country -> country.getId_country().getCountry())
+                .map(country -> country.getCountry())
                 .collect(Collectors.toList());
     }
 }

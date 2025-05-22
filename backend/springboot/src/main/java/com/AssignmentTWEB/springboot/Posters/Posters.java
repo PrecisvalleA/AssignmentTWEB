@@ -1,31 +1,48 @@
 package com.AssignmentTWEB.springboot.Posters;
 
 import com.AssignmentTWEB.springboot.Movies.Movie;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 @Entity
 @Table(name = "posters")
 public class Posters {
 
-    @EmbeddedId
-    private PostersPrimaryKey id_posters;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-    @OneToOne
-    @MapsId("id_movie")
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "id_movie", nullable = false)
+    @JsonBackReference
     private Movie movie;
+
+    @Column(nullable = false)
+    private String link;
 
     public Posters() {}
 
     public Posters(Movie movie, String link) {
-        this.id_posters= new PostersPrimaryKey(movie.getId_movie(), link);
+        this.movie = movie;
+        this.link = link;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public Movie getMovie() {
+        return movie;
+    }
+    public void setMovie(Movie movie) {
         this.movie = movie;
     }
 
-    public PostersPrimaryKey getId_posters() {return id_posters;}
-    public void setId_posters(PostersPrimaryKey id_posters) {this.id_posters = id_posters;}
-
-    public Movie getMovie() {return movie;}
-    public void setMovie(Movie movie) {this.movie = movie;}
+    public String getLink() {
+        return link;
+    }
+    public void setLink(String link) {
+        this.link = link;
+    }
 
 }

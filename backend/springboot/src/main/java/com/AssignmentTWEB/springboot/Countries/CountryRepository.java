@@ -6,7 +6,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface CountryRepository extends JpaRepository <Country, CountryPrimaryKey>{
+public interface CountryRepository extends JpaRepository <Country, Integer>{
 
     //find all countries where a film has been produced
     List<Country> findByMovie(Movie movie);

@@ -22,8 +22,8 @@ public class ReleaseService {
         List<Release> releases = releaseRepository.findByMovie(movie);
 
         return releases.stream()
-                .map(release -> release.getId_release().getCountry() + " - " + release.getId_release().getDate()
-                + " - " + release.getId_release().getType() + " - " + release.getRating())
+                .map(release -> release.getCountry() + " - " + release.getDate()
+                + " - " + release.getType() + " - " + release)
                 .collect(Collectors.toList());
     }
 }

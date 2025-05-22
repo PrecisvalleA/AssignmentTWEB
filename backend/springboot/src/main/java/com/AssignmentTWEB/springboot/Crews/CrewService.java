@@ -21,7 +21,7 @@ public class CrewService {
         List<Crew> crews = crewRepository.findByMovie(movie);
 
         return crews.stream()
-                .map(crew -> crew.getId_crew().getRole() + " - " + crew.getId_crew().getName())
+                .map(crew -> crew.getRole() + " - " + crew.getName())
                 .collect(Collectors.toList());
     }
 }
