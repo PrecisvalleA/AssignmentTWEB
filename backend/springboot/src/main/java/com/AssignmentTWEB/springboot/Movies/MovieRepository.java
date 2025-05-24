@@ -10,7 +10,7 @@ import java.util.List; // list is necessary for function which return many resul
 
 @Repository
 
-public interface MovieRepository extends JpaRepository<Movie, Integer>{ //extends JpaRepository for Movie entity with Long ID
+public interface MovieRepository extends JpaRepository<Movie, Integer>{ //extends JpaRepository for Movie entity with Integer ID
 
     List<Movie> findByNameContainingIgnoreCase(String title); // return all film where name contains String name
 

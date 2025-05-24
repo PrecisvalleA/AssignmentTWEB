@@ -6,7 +6,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface LanguageRepository extends JpaRepository<Language, Integer>{
+public interface LanguageRepository extends JpaRepository<Language, Long>{
 
     List<Language> findByMovie(Movie movie);
 

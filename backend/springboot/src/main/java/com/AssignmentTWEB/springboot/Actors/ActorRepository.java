@@ -6,7 +6,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface ActorRepository extends JpaRepository<Actor, Integer> {
+public interface ActorRepository extends JpaRepository<Actor, Long> {
 
     List<Actor> findByMovie(Movie movie); //find all movie's actors
 }

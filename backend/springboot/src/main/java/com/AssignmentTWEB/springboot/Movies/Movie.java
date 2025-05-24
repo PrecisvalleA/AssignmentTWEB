@@ -8,6 +8,7 @@ import com.AssignmentTWEB.springboot.Posters.Posters;
 import com.AssignmentTWEB.springboot.Releases.Release;
 import com.AssignmentTWEB.springboot.Studios.Studio;
 import com.AssignmentTWEB.springboot.Themes.Theme;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*; //JPA annotations
 
@@ -17,6 +18,16 @@ import java.util.Set;
 
 @Entity // this class is a JPA entity
 @Table(name = "movies") //table name in the database
+@JsonIgnoreProperties({
+        "actors",
+        "crews",
+        "countries",
+        "genres",
+        "releases",
+        "studios",
+        "themes",
+        "posters"
+})
 public class Movie {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY) //auto-increment ID

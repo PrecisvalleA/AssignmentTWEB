@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface ThemeRepository extends JpaRepository<Theme, Integer> {
+public interface ThemeRepository extends JpaRepository<Theme, Long> {
 
     List<Theme> findByMovie(Movie movie); //find all movie's themes
 }

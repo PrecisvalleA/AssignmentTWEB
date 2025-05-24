@@ -6,7 +6,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface CrewRepository extends JpaRepository<Crew, Integer> {
+public interface CrewRepository extends JpaRepository<Crew, Long> {
 
     List<Crew> findByMovie(Movie movie); //find all movie's crew
 }

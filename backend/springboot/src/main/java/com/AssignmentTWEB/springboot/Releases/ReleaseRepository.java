@@ -6,6 +6,6 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface ReleaseRepository extends JpaRepository<Release, Integer> {
+public interface ReleaseRepository extends JpaRepository<Release, Long> {
     List<Release> findByMovie(Movie id_movie); // Find all releases by movie ID
 }

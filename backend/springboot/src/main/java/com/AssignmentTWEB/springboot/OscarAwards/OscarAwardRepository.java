@@ -6,6 +6,6 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface OscarAwardRepository extends JpaRepository<OscarAward, Integer>{
+public interface OscarAwardRepository extends JpaRepository<OscarAward, Long>{
     List<OscarAward> findByFilm(String film);
 }
