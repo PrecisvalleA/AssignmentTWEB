@@ -12,15 +12,11 @@ public class StudioService {
     private StudioRepository studioRepository;
 
     //get all studios
-    public List<String> getStudioByMovie(Integer id_movie) {
+    public List<Studio> getStudioByMovie(Integer id_movie) {
 
         Movie movie = new Movie();
         movie.setId_movie(id_movie);
 
-        List<Studio> studios = studioRepository.findByMovie(movie);
-
-        return studios.stream()
-                .map(studio -> studio.getStudio())
-                .collect(Collectors.toList());
+        return studioRepository.findByMovie(movie);
     }
 }

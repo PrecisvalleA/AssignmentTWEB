@@ -1,6 +1,8 @@
 package com.AssignmentTWEB.springboot.Actors;
 
 import com.AssignmentTWEB.springboot.Movies.Movie;
+import com.AssignmentTWEB.springboot.Movies.MovieRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
@@ -11,21 +13,20 @@ public class ActorService {
 
     @Autowired
     private ActorRepository actorRepository;
+    @Autowired
+    private MovieRepository movieRepository;
 
     public List<Actor> getAllActors() {
         return actorRepository.findAll();
     }
 
     //get all actors
-    public List<String> getActorsByMovie(Integer id_movie) {
+    public List<Actor> getActorsByMovie(Integer id_movie) {
 
-        Movie movie = new Movie();
+        Movie movie = movieRepository.findById(id_movie).orElseThrow(() -> new EntityNotFoundException("Movie not found"));
         movie.setId_movie(id_movie);
 
-        List<Actor> actors = actorRepository.findByMovie(movie);
+        return actorRepository.findByMovie(movie);
 
-        return actors.stream()
-                .map(actor -> actor.getName() + " - " + actor.getRole())
-                .collect(Collectors.toList());
     }
 }

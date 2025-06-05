@@ -13,15 +13,11 @@ public class GenreService {
     private GenreRepository genreRepository;
 
     //get all genres
-    public List<String> getGenreById(Integer id_movie) {
+    public List<Genre> getGenreById(Integer id_movie) {
 
         Movie movie = new Movie();
         movie.setId_movie(id_movie);
 
-        List<Genre> genres = genreRepository.findByMovie(movie);
-
-        return genres.stream()
-                .map(genre -> genre.getGenre())
-                .collect(Collectors.toList());
+        return genreRepository.findByMovie(movie);
     }
 }

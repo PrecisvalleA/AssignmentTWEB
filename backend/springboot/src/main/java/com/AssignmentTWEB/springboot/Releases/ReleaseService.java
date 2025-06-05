@@ -14,17 +14,12 @@ public class ReleaseService {
     private ReleaseRepository releaseRepository;
 
     //get all releases
-    public List<String> getReleaseByMovie(Integer id_movie) {
+    public List<Release> getReleaseByMovie(Integer id_movie) {
 
         Movie movie = new Movie();
         movie.setId_movie(id_movie);
 
-        List<Release> releases = releaseRepository.findByMovie(movie);
-
-        return releases.stream()
-                .map(release -> release.getCountry() + " - " + release.getDate()
-                + " - " + release.getType() + " - " + release)
-                .collect(Collectors.toList());
+        return releaseRepository.findByMovie(movie);
     }
 }
 

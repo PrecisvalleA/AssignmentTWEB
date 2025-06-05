@@ -13,14 +13,10 @@ public class CountryService {
     private CountryRepository countryRepository;
 
     //get all countries by an id_movie
-    public List<String> getCountriesByMovie(Integer id_movie) {
+    public List<Country> getCountriesByMovie(Integer id_movie) {
         Movie movie = new Movie();
         movie.setId_movie(id_movie);
 
-        List<Country> countries = countryRepository.findByMovie(movie);
-
-        return countries.stream()
-                .map(country -> country.getCountry())
-                .collect(Collectors.toList());
+        return countryRepository.findByMovie(movie);
     }
 }

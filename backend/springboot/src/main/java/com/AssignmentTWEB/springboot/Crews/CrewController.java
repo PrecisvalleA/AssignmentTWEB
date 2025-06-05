@@ -13,7 +13,7 @@ public class CrewController {
     private CrewService crewService;
 
     @GetMapping("/movies/{id_movie}")
-    public List<String> getAllCrews(@PathVariable Integer id_movie) {
+    public List<Crew> getAllCrews(@PathVariable Integer id_movie) {
         return crewService.getCrewsByMovie(id_movie);
     }
 }

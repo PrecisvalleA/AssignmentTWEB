@@ -4,6 +4,8 @@ import com.AssignmentTWEB.springboot.Movies.Movie;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class PostersService {
 
@@ -11,16 +13,11 @@ public class PostersService {
     private PostersRepository postersRepository;
 
     //get all posters by an id_movie
-    public String getPostersByMovie(Integer id_movie) {
+    public Posters getPostersByMovie(Integer id_movie) {
         Movie movie = new Movie();
         movie.setId_movie(id_movie);
 
-        Posters posters = postersRepository.findByMovie(movie);
+        return postersRepository.findByMovie(movie);
 
-        if (posters != null) {
-            return posters.getLink();
-        } else {
-            return null;
-        }
     }
 }

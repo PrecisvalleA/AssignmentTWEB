@@ -14,7 +14,7 @@ public class GenreController {
     private GenreService genreService;
 
     @GetMapping("/movies/{id_movie}")
-    public List<String> getAllGenres(@PathVariable Integer id_movie) {
+    public List<Genre> getAllGenres(@PathVariable Integer id_movie) {
         return genreService.getGenreById(id_movie);
     }
 }

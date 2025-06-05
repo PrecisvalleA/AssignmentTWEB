@@ -12,15 +12,11 @@ public class LanguageService {
     private LanguageRepository languageRepository;
 
     //get all languages
-    public List<String> getLanguageByMovie(Integer id_movie) {
+    public List<Language> getLanguageByMovie(Integer id_movie) {
 
         Movie movie = new Movie();
         movie.setId_movie(id_movie);
 
-        List<Language> languages = languageRepository.findByMovie(movie);
-
-        return languages.stream()
-                .map(language -> language.getType() + " - " + language.getLanguage())
-                .collect(Collectors.toList());
+        return languageRepository.findByMovie(movie);
     }
 }

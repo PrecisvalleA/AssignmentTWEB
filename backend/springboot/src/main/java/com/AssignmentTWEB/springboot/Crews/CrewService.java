@@ -13,15 +13,12 @@ public class CrewService {
     private CrewRepository crewRepository;
 
     //get all crews
-    public List<String> getCrewsByMovie(Integer id_movie) {
+    public List<Crew> getCrewsByMovie(Integer id_movie) {
 
         Movie movie = new Movie();
         movie.setId_movie(id_movie);
 
-        List<Crew> crews = crewRepository.findByMovie(movie);
 
-        return crews.stream()
-                .map(crew -> crew.getRole() + " - " + crew.getName())
-                .collect(Collectors.toList());
+        return crewRepository.findByMovie(movie);
     }
 }

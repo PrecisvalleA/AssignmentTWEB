@@ -13,7 +13,7 @@ public class ReleaseController {
     private ReleaseService releaseService;
 
     @GetMapping("/movies/{id_movie}")
-    public List<String> getReleasesByMovie(@PathVariable Integer id_movie) {
+    public List<Release> getReleasesByMovie(@PathVariable Integer id_movie) {
         return releaseService.getReleaseByMovie(id_movie);
     }
 }

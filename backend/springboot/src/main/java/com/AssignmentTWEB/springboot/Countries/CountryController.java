@@ -12,7 +12,7 @@ public class CountryController {
     private CountryService countryService;
 
     @GetMapping("/movies/{id_movie}")
-    public List<String> getAllCountries(@PathVariable Integer id_movie) {
+    public List<Country> getAllCountries(@PathVariable Integer id_movie) {
         return countryService.getCountriesByMovie(id_movie);
     }
 }

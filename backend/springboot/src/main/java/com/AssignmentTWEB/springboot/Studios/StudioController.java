@@ -12,7 +12,7 @@ public class StudioController {
     private StudioService studioService;
 
     @GetMapping("/movies/{id_movie}")
-    public List<String> getAllStudios(@PathVariable Integer id_movie) {
+    public List<Studio> getAllStudios(@PathVariable Integer id_movie) {
         return studioService.getStudioByMovie(id_movie);
     }
 }

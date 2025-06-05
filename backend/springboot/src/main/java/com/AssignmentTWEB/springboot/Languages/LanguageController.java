@@ -13,7 +13,7 @@ public class LanguageController {
     private LanguageService languageService;
 
     @GetMapping("movies/{id_movie}")
-    public List<String> getAllLanguages(@PathVariable Integer id_movie) {
+    public List<Language> getAllLanguages(@PathVariable Integer id_movie) {
         return languageService.getLanguageByMovie(id_movie);
     }
 }

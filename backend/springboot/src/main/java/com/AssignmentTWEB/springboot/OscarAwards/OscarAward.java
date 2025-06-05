@@ -8,7 +8,7 @@ public class OscarAward {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id_oscar_award;
+    private Long id;
 
     @Column(nullable = false)
     private Integer year_film;
@@ -31,10 +31,12 @@ public class OscarAward {
     @Column(nullable = false)
     private Boolean winner;
 
+
+
     public OscarAward() {}
 
-    public Integer getId_oscar_award() {return id_oscar_award;}
-    public void setId_oscar_award(Integer id_oscar_award) {this.id_oscar_award = id_oscar_award;}
+    public Long getId_oscar_award() {return id;}
+    public void setId_oscar_award(Long id) {this.id = id;}
 
     public Integer getYear_film() {return year_film;}
     public void setYear_film(Integer year_film) {this.year_film = year_film;}

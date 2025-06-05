@@ -12,12 +12,12 @@ public class Posters {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @OneToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "id_movie", nullable = false)
     @JsonBackReference
     private Movie movie;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 512)
     private String link;
 
     public Posters() {}

@@ -13,7 +13,7 @@ public class ThemeController {
     private ThemeService themeService;
 
     @GetMapping("/movies/{id_movie}")
-    public List<String> getAllThemes(@PathVariable Integer id_movie) {
+    public List<Theme> getAllThemes(@PathVariable Integer id_movie) {
         return themeService.getThemeById(id_movie);
     }
 }

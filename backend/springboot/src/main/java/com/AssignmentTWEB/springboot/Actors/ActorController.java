@@ -13,7 +13,7 @@ public class ActorController {
     private ActorService actorService;
 
     @GetMapping("/movies/{id_movie}")
-    public List<String> getAllActorsByMovie(@PathVariable Integer id_movie) {
+    public List<Actor> getAllActorsByMovie(@PathVariable Integer id_movie) {
         return actorService.getActorsByMovie(id_movie);
     }
 

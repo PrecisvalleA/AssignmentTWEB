@@ -1,5 +1,6 @@
 package com.AssignmentTWEB.springboot.Movies;
 
+import com.AssignmentTWEB.springboot.Movies.MovieDetailsDTO;
 import com.AssignmentTWEB.springboot.Actors.ActorService;
 import com.AssignmentTWEB.springboot.Countries.CountryService;
 import com.AssignmentTWEB.springboot.Crews.CrewService;
@@ -14,6 +15,9 @@ import com.AssignmentTWEB.springboot.Studios.StudioService;
 import com.AssignmentTWEB.springboot.Themes.ThemeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -55,10 +59,10 @@ public class MovieController {
 
     //Endpoint: to get a film by ID
     @GetMapping("/{id}")
-    public Optional<Movie> getMovieById(@PathVariable Integer id) {
-        return movieService.getMovieById(id);
+    public ResponseEntity<MovieDetailsDTO> getMovieDetailsById(@PathVariable Integer id) {
+        Optional<MovieDetailsDTO> details = movieService.getMovieDetailsById(id);
+        return details.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).body(null));
     }
-
     //Endpoint: add or update a film
     @PostMapping
     public Movie saveMovie(@RequestBody Movie movie) {
@@ -112,61 +116,10 @@ public class MovieController {
         return movieService.findTopMovies();
     }
 
-    @GetMapping("/details/{id}")
-    public ResponseEntity<Map<String,Object>> getMovieDetails(@PathVariable Integer id) {
-        return movieService.getMovieById(id)
-                .map(movie -> {
-                    Map<String,Object> response = new HashMap<>();
-                    response.put("movie", movie);
-                    response.put("actors", actorService.getActorsByMovie(id));
-                    response.put("crew", crewService.getCrewsByMovie(id));
-                    response.put("countries", countryService.getCountriesByMovie(id));
-                    response.put("genres", genreService.getGenreById(id));
-                    response.put("releases", releaseService.getReleaseByMovie(id));
-                    response.put("studios", studioService.getStudioByMovie(id));
-                    response.put("themes", themeService.getThemeById(id));
-                    response.put("posters", postersService.getPostersByMovie(id));
-                    response.put("oscars", oscarAwardService.getByMovieName(movie.getName()));
-                    return ResponseEntity.ok(response);
-                })
-                .orElse(ResponseEntity.notFound().build());
-    }
-
-    @GetMapping("/details/top")
-    public List<Map<String, Object>> getTopMovieDetails() {
-        List<Movie> topMovies = movieService.findTopMovies();
-        List<Map<String, Object>> result = new ArrayList<>();
-
-        for (Movie movie : topMovies) {
-            Map<String, Object> details = new HashMap<>();
-            details.put("movie", movie);
-
-            Posters poster = posterRepository.findByMovie(movie);
-            if (poster != null) {
-                details.put("poster", poster.getLink());
-            }
-
-            result.add(details);
-        }
-
-        return result;
-    }
-
     @GetMapping("/paginated")
-    public List<Map<String, Object>> getPaginatedMovies(
-            @RequestParam(defaultValue = "12") int limit,
-            @RequestParam(defaultValue = "0") int page) {
-        Page<Movie> pageResult = movieService.getPaginatedMoviesPage(limit, page);
-
-        List<Map<String, Object>> result = new ArrayList<>();
-        for (Movie movie : pageResult.getContent()) {
-            Map<String, Object> data = new HashMap<>();
-            data.put("movie", movie);
-            data.put("posters", postersService.getPostersByMovie(movie.getId_movie()));
-            result.add(data);
-        }
-
-        return result;
+    public Page<Movie> getPaginatedMovies(
+           @PageableDefault(size = 12, sort = "rating") Pageable pageable) {
+        return movieService.getPaginatedMoviesPage(pageable);
     }
 
 }
