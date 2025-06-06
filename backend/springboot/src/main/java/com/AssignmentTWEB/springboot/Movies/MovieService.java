@@ -82,42 +82,47 @@ public class MovieService{
         return movieRepository.findById(id);
     }
 
+
     //function to add a new film or update a film
     public Movie saveMovie(Movie movie){
         return movieRepository.save(movie);
     }
 
+
     //delete a movie by id
     public void deleteMovie(Integer id) {movieRepository.deleteById(id);}
 
+
     //search a movie by a keyword insert by user
-    public List<Movie> findMoviesByName(String keyword) {return movieRepository.findByNameContainingIgnoreCase(keyword);}
+    public Page<Movie> findMoviesByName(String keyword, Pageable pageable) {return movieRepository.findByNameContainingIgnoreCase(keyword, pageable);}
 
-    //search movies with date >= than a value insert by user
-    public List<Movie> findMoviesByDate(String date) {return movieRepository.findByDateContaining(date);}
-
-    // find movies with duration >= to a value insert by user
-    public List<Movie> getMoviesByDuration(Double minute) {
-        return movieRepository.findByMinuteGreaterThanEqual(minute);
-    }
-
-    //find movies with rating between two values insert by user
-    public List<Movie> getMovieByRatingRange(Double min, Double max) {
-        return movieRepository.findByRatingBetween(min, max);
-    }
-
-    //find movies with duration between two values insert by user
-    public List<Movie> getMoviesByDurationRange(Double min, Double max) {
-        return movieRepository.findByMinuteBetween(min, max);
-    }
-
-    //find best movies by rating
-    public List<Movie> findTopMovies() {
-        return movieRepository.findAllByOrderByRatingDesc();
-    }
 
     public Page<Movie> getPaginatedMoviesPage(Pageable pageable) {
         return movieRepository.findMoviesWithPosters(pageable);
+    }
+
+    public Page<Movie> filterMovies (Double minRating, Double maxRating, String minDate, String maxDate, Double minDuration, Double maxDuration, Pageable pageable) {
+        if(minRating != null && maxRating != null) {
+            return movieRepository.findByRatingBetween(minRating, maxRating, pageable);
+        }else if(minRating != null) {
+            return movieRepository.findByRatingGreaterThanEqual(minRating, pageable);
+        }else if(maxRating != null) {
+            return movieRepository.findByRatingLessThanEqual(maxRating, pageable);
+        }else if(minDate != null && maxDate != null) {
+            return movieRepository.findByDateBetween(minDate, maxDate, pageable);
+        }else if(minDate != null) {
+            return movieRepository.findByDateGreaterThanEqual(minDate, pageable);
+        }else if(maxDate != null) {
+            return movieRepository.findByDateLessThanEqual(maxDate, pageable);
+        }else if(minDuration != null && maxDuration != null) {
+            return movieRepository.findByDurationBetween(minDuration, maxDuration, pageable);
+        }else if(minDuration != null) {
+            return movieRepository.findByDurationGreaterThanEqual(minDuration, pageable);
+        }else if(maxDuration != null) {
+            return movieRepository.findByDurationLessThanEqual(maxDuration, pageable);
+        }else{
+            return movieRepository.findMoviesWithPosters(pageable);
+        }
     }
 
     public Optional<MovieDetailsDTO> getMovieDetailsById(Integer id_movie) {

@@ -23,31 +23,92 @@ import java.util.Set;
 
 @Repository
 
-public interface MovieRepository extends JpaRepository<Movie, Integer>{//extends JpaRepository for Movie entity with Integer ID
+public interface MovieRepository extends JpaRepository<Movie, Integer> {//extends JpaRepository for Movie entity with Integer ID
 
-    List<Movie> findByNameContainingIgnoreCase(String title); // return all film where name contains String name
-
-    List<Movie> findByDateContaining(String date); // return all films where date is >= than a value
-
-    List<Movie> findByMinuteGreaterThanEqual(Double minute); //return all film where minute is >= than a value
-
-    List<Movie> findByMinuteBetween(Double min, Double max); //return all film where minute is between 2 values
-
-    List<Movie> findByRatingBetween(Double min, Double max); //return all film where rating is between 2 values
-
-    List<Movie> findAllByOrderByRatingDesc(); //return best movies by rating
-
-    Page<Movie> findByRatingNotNull(Pageable pageable);
-
-    @Query("SELECT m FROM Movie m WHERE m.id_movie = :id_movie")
-    Movie findMovieById(@Param("id_movie") Integer id_movie);
+    @Query("SELECT m, p.link AS posterURL FROM Movie m LEFT JOIN Posters p ON m.id_movie = p.movie.id_movie")
+    Page<Movie> findByNameContainingIgnoreCase(String name, Pageable pageable);
 
     @Query("SELECT m, p.link AS posterUrl \n" +
             "FROM Movie m \n" +
             "LEFT JOIN Posters p \n" +
             "ON m.id_movie = p.movie.id_movie \n" +
-            "WHERE m.rating IS NOT NULL \n" +
-            "ORDER BY m.rating DESC")
+            "WHERE m.rating IS NOT NULL \n")
+    Page<Movie> findByRatingGreaterThanEqual(Double min, Pageable pageable);
+
+
+    @Query("SELECT m, p.link AS posterUrl \n" +
+            "FROM Movie m \n" +
+            "LEFT JOIN Posters p \n" +
+            "ON m.id_movie = p.movie.id_movie \n" +
+            "WHERE m.rating IS NOT NULL \n")
+    Page<Movie> findByRatingLessThanEqual(Double max, Pageable pageable);
+
+
+    @Query("SELECT m, p.link AS posterUrl \n" +
+            "FROM Movie m \n" +
+            "LEFT JOIN Posters p \n" +
+            "ON m.id_movie = p.movie.id_movie \n" +
+            "WHERE m.rating IS NOT NULL \n")
+    Page<Movie> findByRatingBetween(Double min, Double max, Pageable pageable); //return all film where rating is between 2 values
+
+
+    @Query("SELECT m, p.link AS posterUrl \n" +
+            "FROM Movie m \n" +
+            "LEFT JOIN Posters p \n" +
+            "ON m.id_movie = p.movie.id_movie \n" +
+            "WHERE m.date IS NOT NULL \n")
+    Page<Movie> findByDateBetween(String minDate, String maxDate, Pageable pageable);
+
+
+    @Query("SELECT m, p.link AS posterUrl \n" +
+            "FROM Movie m \n" +
+            "LEFT JOIN Posters p \n" +
+            "ON m.id_movie = p.movie.id_movie \n" +
+            "WHERE m.date IS NOT NULL \n")
+    Page<Movie> findByDateGreaterThanEqual(String minDate, Pageable pageable);
+
+
+    @Query("SELECT m, p.link AS posterUrl \n" +
+            "FROM Movie m \n" +
+            "LEFT JOIN Posters p \n" +
+            "ON m.id_movie = p.movie.id_movie \n" +
+            "WHERE m.date IS NOT NULL \n")
+    Page<Movie> findByDateLessThanEqual(String maxDate, Pageable pageable);
+
+
+    @Query("SELECT m, p.link AS posterUrl \n" +
+            "FROM Movie m \n" +
+            "LEFT JOIN Posters p \n" +
+            "ON m.id_movie = p.movie.id_movie \n" +
+            "WHERE m.minute IS NOT NULL \n")
+    Page<Movie> findByDurationBetween(Double minDuration, Double maxDuration, Pageable pageable); //return all film where minute is between 2 values
+
+
+    @Query("SELECT m, p.link AS posterUrl \n" +
+            "FROM Movie m \n" +
+            "LEFT JOIN Posters p \n" +
+            "ON m.id_movie = p.movie.id_movie \n" +
+            "WHERE m.minute IS NOT NULL \n")
+    Page<Movie> findByDurationGreaterThanEqual(Double minDuration, Pageable pageable); //return all film where minute is >= than a value
+
+
+    @Query("SELECT m, p.link AS posterUrl \n" +
+            "FROM Movie m \n" +
+            "LEFT JOIN Posters p \n" +
+            "ON m.id_movie = p.movie.id_movie \n" +
+            "WHERE m.minute IS NOT NULL \n")
+    Page<Movie> findByDurationLessThanEqual(Double maxDuration, Pageable pageable);
+
+
+    @Query("SELECT m FROM Movie m WHERE m.id_movie = :id_movie")
+    Movie findMovieById(@Param("id_movie") Integer id_movie);
+
+
+    @Query("SELECT m, p.link AS posterUrl \n" +
+            "FROM Movie m \n" +
+            "LEFT JOIN Posters p \n" +
+            "ON m.id_movie = p.movie.id_movie \n" +
+            "WHERE m.rating IS NOT NULL \n")
     Page<Movie> findMoviesWithPosters(Pageable pageable);
 
     @Query("SELECT a FROM Actor a WHERE a.movie.id_movie = :id_movie ")
@@ -76,17 +137,4 @@ public interface MovieRepository extends JpaRepository<Movie, Integer>{//extends
 
     @Query("SELECT t FROM Theme t WHERE t.movie.id_movie = :id_movie")
     Set<Theme> findThemeByMovieId(@Param("id_movie") Integer id_movie);
-
-//    @Query("SELECT m " +
-//            "FROM Movie m " +
-//            "LEFT JOIN FETCH m.actors " +
-//            "LEFT JOIN FETCH m.crews " +
-//            "LEFT JOIN FETCH m.countries " +
-//            "LEFT JOIN FETCH m.genres " +
-//            "LEFT JOIN FETCH m.releases " +
-//            "LEFT JOIN FETCH m.studios " +
-//            "LEFT JOIN FETCH m.themes " +
-//            "LEFT JOIN FETCH m.posters " +
-//            "WHERE m.id_movie = :id_movie")
-//    Optional<Movie> findMovieDetailsById(@Param("id_movie") Integer id_movie);
 }

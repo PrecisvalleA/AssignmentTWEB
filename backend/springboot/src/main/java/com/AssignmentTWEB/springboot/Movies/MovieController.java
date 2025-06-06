@@ -16,6 +16,7 @@ import com.AssignmentTWEB.springboot.Themes.ThemeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -77,49 +78,22 @@ public class MovieController {
 
     //Endpoint: search a film by name
     @GetMapping("/search/{keyword}")
-    public List<Movie> findByName(@PathVariable String keyword) {
-        return movieService.findMoviesByName(keyword);
+    public Page<Movie> findByName(@PathVariable String keyword
+    , @PageableDefault(size = 12) Pageable pageable) {
+        return movieService.findMoviesByName(keyword, pageable);
     }
 
-    @GetMapping("/date")
-    public List<Movie> findByDate(@RequestParam String date) {
-        return movieService.findMoviesByDate(date);
-    }
-
-    //Endpoint: search film with rating >= value
-    @GetMapping("/rating/{value}")
-    public List<Movie> findByRating(@PathVariable Double value) {
-        return movieService.getMovieByRatingRange(value, 5.0);
-    }
-
-    //Endpoint: search film with duration >= value
-    @GetMapping("/minute/{value}")
-    public List<Movie> findByMinute(@PathVariable Double value) {
-        return movieService.getMoviesByDuration(value);
-    }
-
-    //Endpoint: search film with rating between 2 values
-    @GetMapping("/ratingRange")
-    public List<Movie> findByRatingRange(@RequestParam Double min, @RequestParam Double max) {
-        return movieService.getMovieByRatingRange(min, max);
-    }
-
-    //Endpoint: search film with duration between 2 values
-    @GetMapping("/durationRange")
-    public List<Movie> findByDurationRange(@RequestParam Double min, @RequestParam Double max) {
-        return movieService.getMoviesByDurationRange(min, max);
-    }
-
-    //Endpoint: search top films by rating
-    @GetMapping("/top")
-    public List<Movie> findTopMovies() {
-        return movieService.findTopMovies();
-    }
 
     @GetMapping("/paginated")
     public Page<Movie> getPaginatedMovies(
-           @PageableDefault(size = 12, sort = "rating") Pageable pageable) {
-        return movieService.getPaginatedMoviesPage(pageable);
+           @RequestParam(required = false) Double minRating,
+           @RequestParam(required = false) Double maxRating,
+           @RequestParam(required = false) Double minDuration,
+           @RequestParam(required = false) Double maxDuration,
+           @RequestParam(required = false) String minDate,
+           @RequestParam(required = false) String maxDate,
+           @PageableDefault(size = 12, sort = "rating", direction = Sort.Direction.DESC) Pageable pageable) {
+        return movieService.filterMovies(minRating, maxRating, minDate,maxDate, minDuration, maxDuration,  pageable);
     }
 
 }
