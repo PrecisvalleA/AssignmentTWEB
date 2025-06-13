@@ -15,7 +15,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
-import org.springframework.data.jpa.repository.EntityGraph;
 
 import java.util.List; // list is necessary for function which return many results
 import java.util.Optional;
@@ -29,16 +28,20 @@ public interface MovieRepository extends JpaRepository<Movie, Integer> {//extend
     Page<MoviePoster> findByNameContainingIgnoreCase(String name, Pageable pageable);
 
     @Query("""
-        SELECT m AS movie, p.link  AS posterUrl
+        SELECT m AS movie, p.link AS posterUrl, STRING_AGG(g.genre, ', ') AS genres
         FROM Movie m
         LEFT JOIN Posters p ON p.movie.id = m.id
+        LEFT JOIN Genre g ON g.movie.id = m.id
         WHERE m.rating IS NOT NULL
-           AND (:minRating IS NULL   OR m.rating   >= :minRating)
-           AND (:maxRating IS NULL   OR m.rating   <= :maxRating)
-           AND (:minDate   IS NULL   OR m.date     >= :minDate)
-           AND (:maxDate   IS NULL   OR m.date     <= :maxDate)
-           AND (:minDur    IS NULL   OR m.minute   >= :minDur)
-           AND (:maxDur    IS NULL   OR m.minute   <= :maxDur)""")
+           AND (:minRating IS NULL OR m.rating >= :minRating)
+           AND (:maxRating IS NULL OR m.rating <= :maxRating)
+           AND (:minDate IS NULL OR m.date >= :minDate)
+           AND (:maxDate IS NULL OR m.date <= :maxDate)
+           AND (:minDur IS NULL OR m.minute >= :minDur)
+           AND (:maxDur IS NULL OR m.minute <= :maxDur)
+           AND (:genre IS NULL OR g.genre ILIKE :genre)
+           GROUP BY m.id, p.link
+           """)
         Page<MoviePoster> findWithAllFilters(
                 @Param("minRating") Double minRating,
                 @Param("maxRating") Double maxRating,
@@ -46,6 +49,7 @@ public interface MovieRepository extends JpaRepository<Movie, Integer> {//extend
                 @Param("maxDate")   String maxDate,
                 @Param("minDur")    Double minDur,
                 @Param("maxDur")    Double maxDur,
+                @Param("genre")     String genre,
                 Pageable pageable
         );
 
@@ -53,7 +57,7 @@ public interface MovieRepository extends JpaRepository<Movie, Integer> {//extend
     Movie findMovieById(@Param("id") Integer id);
 
 
-    @Query("SELECT m, p.link AS posterUrl \n" +
+    @Query("SELECT DISTINCT m, p.link AS posterUrl \n" +
             "FROM Movie m \n" +
             "LEFT JOIN Posters p \n" +
             "ON m.id = p.movie.id \n" +

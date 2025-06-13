@@ -91,8 +91,9 @@ public class MovieController {
            @RequestParam(required = false) Double maxDuration,
            @RequestParam(required = false) String minDate,
            @RequestParam(required = false) String maxDate,
+           @RequestParam(required = false) String genre,
            @PageableDefault(size = 12, sort = "rating", direction = Sort.Direction.DESC) Pageable pageable){
-        return movieService.filterMovies(minRating, maxRating, minDate,maxDate, minDuration, maxDuration,  pageable);
+        return movieService.filterMovies(minRating, maxRating, minDate,maxDate, minDuration, maxDuration,  genre, pageable);
     }
 
 }
