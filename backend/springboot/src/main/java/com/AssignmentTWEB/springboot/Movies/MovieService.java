@@ -94,35 +94,48 @@ public class MovieService{
 
 
     //search a movie by a keyword insert by user
-    public Page<Movie> findMoviesByName(String keyword, Pageable pageable) {return movieRepository.findByNameContainingIgnoreCase(keyword, pageable);}
+    public Page<MoviePoster> findMoviesByName(String keyword, Pageable pageable) {return movieRepository.findByNameContainingIgnoreCase(keyword, pageable);}
 
 
     public Page<Movie> getPaginatedMoviesPage(Pageable pageable) {
         return movieRepository.findMoviesWithPosters(pageable);
     }
 
-    public Page<Movie> filterMovies (Double minRating, Double maxRating, String minDate, String maxDate, Double minDuration, Double maxDuration, Pageable pageable) {
-        if(minRating != null && maxRating != null) {
-            return movieRepository.findByRatingBetween(minRating, maxRating, pageable);
-        }else if(minRating != null) {
-            return movieRepository.findByRatingGreaterThanEqual(minRating, pageable);
-        }else if(maxRating != null) {
-            return movieRepository.findByRatingLessThanEqual(maxRating, pageable);
-        }else if(minDate != null && maxDate != null) {
-            return movieRepository.findByDateBetween(minDate, maxDate, pageable);
-        }else if(minDate != null) {
-            return movieRepository.findByDateGreaterThanEqual(minDate, pageable);
-        }else if(maxDate != null) {
-            return movieRepository.findByDateLessThanEqual(maxDate, pageable);
-        }else if(minDuration != null && maxDuration != null) {
-            return movieRepository.findByDurationBetween(minDuration, maxDuration, pageable);
-        }else if(minDuration != null) {
-            return movieRepository.findByDurationGreaterThanEqual(minDuration, pageable);
-        }else if(maxDuration != null) {
-            return movieRepository.findByDurationLessThanEqual(maxDuration, pageable);
-        }else{
-            return movieRepository.findMoviesWithPosters(pageable);
-        }
+//    public Page<Movie> filterMovies (Double minRating, Double maxRating, String minDate, String maxDate, Double minDuration, Double maxDuration, Pageable pageable) {
+//        if(minRating != null && maxRating != null) {
+//            return movieRepository.findByRatingBetween(minRating, maxRating, pageable);
+//        }else if(minRating != null) {
+//            return movieRepository.findByRatingGreaterThanEqual(minRating, pageable);
+//        }else if(maxRating != null) {
+//            return movieRepository.findByRatingLessThanEqual(maxRating, pageable);
+//        }else if(minDate != null && maxDate != null) {
+//            return movieRepository.findByDateBetween(minDate, maxDate, pageable);
+//        }else if(minDate != null) {
+//            return movieRepository.findByDateGreaterThanEqual(minDate, pageable);
+//        }else if(maxDate != null) {
+//            return movieRepository.findByDateLessThanEqual(maxDate, pageable);
+//        }else if(minDuration != null && maxDuration != null) {
+//            return movieRepository.findByDurationBetween(minDuration, maxDuration, pageable);
+//        }else if(minDuration != null) {
+//            return movieRepository.findByDurationGreaterThanEqual(minDuration, pageable);
+//        }else if(maxDuration != null) {
+//            return movieRepository.findByDurationLessThanEqual(maxDuration, pageable);
+//        }else{
+//            return movieRepository.findMoviesWithPosters(pageable);
+//        }
+//    }
+
+    public Page<MoviePoster> filterMovies(
+            Double minRating, Double maxRating,
+            String minDate,   String maxDate,
+            Double minDuration, Double maxDuration,
+            Pageable pageable) {
+        return movieRepository.findWithAllFilters(
+                minRating, maxRating,
+                minDate,   maxDate,
+                minDuration, maxDuration,
+                pageable
+        );
     }
 
     public Optional<MovieDetailsDTO> getMovieDetailsById(Integer id_movie) {

@@ -78,21 +78,20 @@ public class MovieController {
 
     //Endpoint: search a film by name
     @GetMapping("/search/{keyword}")
-    public Page<Movie> findByName(@PathVariable String keyword
+    public Page<MoviePoster> findByName(@PathVariable String keyword
     , @PageableDefault(size = 12) Pageable pageable) {
         return movieService.findMoviesByName(keyword, pageable);
     }
 
-
     @GetMapping("/paginated")
-    public Page<Movie> getPaginatedMovies(
+    public Page<MoviePoster> getPaginatedMovies(
            @RequestParam(required = false) Double minRating,
            @RequestParam(required = false) Double maxRating,
            @RequestParam(required = false) Double minDuration,
            @RequestParam(required = false) Double maxDuration,
            @RequestParam(required = false) String minDate,
            @RequestParam(required = false) String maxDate,
-           @PageableDefault(size = 12, sort = "rating", direction = Sort.Direction.DESC) Pageable pageable) {
+           @PageableDefault(size = 12, sort = "rating", direction = Sort.Direction.DESC) Pageable pageable){
         return movieService.filterMovies(minRating, maxRating, minDate,maxDate, minDuration, maxDuration,  pageable);
     }
 

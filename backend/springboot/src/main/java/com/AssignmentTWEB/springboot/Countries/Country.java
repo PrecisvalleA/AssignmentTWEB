@@ -13,7 +13,7 @@ public class Country {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "id_movie", nullable = false)
+    @JoinColumn(name = "id_movie", referencedColumnName = "id", nullable = false)
     @JsonBackReference
     private Movie movie;
 

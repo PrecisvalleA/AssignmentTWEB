@@ -25,116 +25,65 @@ import java.util.Set;
 
 public interface MovieRepository extends JpaRepository<Movie, Integer> {//extends JpaRepository for Movie entity with Integer ID
 
-    @Query("SELECT m, p.link AS posterURL FROM Movie m LEFT JOIN Posters p ON m.id_movie = p.movie.id_movie")
-    Page<Movie> findByNameContainingIgnoreCase(String name, Pageable pageable);
+    @Query("SELECT m, p.link AS posterURL FROM Movie m LEFT JOIN Posters p ON m.id = p.movie.id")
+    Page<MoviePoster> findByNameContainingIgnoreCase(String name, Pageable pageable);
 
-    @Query("SELECT m, p.link AS posterUrl \n" +
-            "FROM Movie m \n" +
-            "LEFT JOIN Posters p \n" +
-            "ON m.id_movie = p.movie.id_movie \n" +
-            "WHERE m.rating IS NOT NULL \n")
-    Page<Movie> findByRatingGreaterThanEqual(Double min, Pageable pageable);
+    @Query("""
+        SELECT m AS movie, p.link  AS posterUrl
+        FROM Movie m
+        LEFT JOIN Posters p ON p.movie.id = m.id
+        WHERE m.rating IS NOT NULL
+           AND (:minRating IS NULL   OR m.rating   >= :minRating)
+           AND (:maxRating IS NULL   OR m.rating   <= :maxRating)
+           AND (:minDate   IS NULL   OR m.date     >= :minDate)
+           AND (:maxDate   IS NULL   OR m.date     <= :maxDate)
+           AND (:minDur    IS NULL   OR m.minute   >= :minDur)
+           AND (:maxDur    IS NULL   OR m.minute   <= :maxDur)""")
+        Page<MoviePoster> findWithAllFilters(
+                @Param("minRating") Double minRating,
+                @Param("maxRating") Double maxRating,
+                @Param("minDate")   String minDate,
+                @Param("maxDate")   String maxDate,
+                @Param("minDur")    Double minDur,
+                @Param("maxDur")    Double maxDur,
+                Pageable pageable
+        );
 
-
-    @Query("SELECT m, p.link AS posterUrl \n" +
-            "FROM Movie m \n" +
-            "LEFT JOIN Posters p \n" +
-            "ON m.id_movie = p.movie.id_movie \n" +
-            "WHERE m.rating IS NOT NULL \n")
-    Page<Movie> findByRatingLessThanEqual(Double max, Pageable pageable);
-
-
-    @Query("SELECT m, p.link AS posterUrl \n" +
-            "FROM Movie m \n" +
-            "LEFT JOIN Posters p \n" +
-            "ON m.id_movie = p.movie.id_movie \n" +
-            "WHERE m.rating IS NOT NULL \n")
-    Page<Movie> findByRatingBetween(Double min, Double max, Pageable pageable); //return all film where rating is between 2 values
-
-
-    @Query("SELECT m, p.link AS posterUrl \n" +
-            "FROM Movie m \n" +
-            "LEFT JOIN Posters p \n" +
-            "ON m.id_movie = p.movie.id_movie \n" +
-            "WHERE m.date IS NOT NULL \n")
-    Page<Movie> findByDateBetween(String minDate, String maxDate, Pageable pageable);
+    @Query("SELECT m FROM Movie m WHERE m.id = :id")
+    Movie findMovieById(@Param("id") Integer id);
 
 
     @Query("SELECT m, p.link AS posterUrl \n" +
             "FROM Movie m \n" +
             "LEFT JOIN Posters p \n" +
-            "ON m.id_movie = p.movie.id_movie \n" +
-            "WHERE m.date IS NOT NULL \n")
-    Page<Movie> findByDateGreaterThanEqual(String minDate, Pageable pageable);
-
-
-    @Query("SELECT m, p.link AS posterUrl \n" +
-            "FROM Movie m \n" +
-            "LEFT JOIN Posters p \n" +
-            "ON m.id_movie = p.movie.id_movie \n" +
-            "WHERE m.date IS NOT NULL \n")
-    Page<Movie> findByDateLessThanEqual(String maxDate, Pageable pageable);
-
-
-    @Query("SELECT m, p.link AS posterUrl \n" +
-            "FROM Movie m \n" +
-            "LEFT JOIN Posters p \n" +
-            "ON m.id_movie = p.movie.id_movie \n" +
-            "WHERE m.minute IS NOT NULL \n")
-    Page<Movie> findByDurationBetween(Double minDuration, Double maxDuration, Pageable pageable); //return all film where minute is between 2 values
-
-
-    @Query("SELECT m, p.link AS posterUrl \n" +
-            "FROM Movie m \n" +
-            "LEFT JOIN Posters p \n" +
-            "ON m.id_movie = p.movie.id_movie \n" +
-            "WHERE m.minute IS NOT NULL \n")
-    Page<Movie> findByDurationGreaterThanEqual(Double minDuration, Pageable pageable); //return all film where minute is >= than a value
-
-
-    @Query("SELECT m, p.link AS posterUrl \n" +
-            "FROM Movie m \n" +
-            "LEFT JOIN Posters p \n" +
-            "ON m.id_movie = p.movie.id_movie \n" +
-            "WHERE m.minute IS NOT NULL \n")
-    Page<Movie> findByDurationLessThanEqual(Double maxDuration, Pageable pageable);
-
-
-    @Query("SELECT m FROM Movie m WHERE m.id_movie = :id_movie")
-    Movie findMovieById(@Param("id_movie") Integer id_movie);
-
-
-    @Query("SELECT m, p.link AS posterUrl \n" +
-            "FROM Movie m \n" +
-            "LEFT JOIN Posters p \n" +
-            "ON m.id_movie = p.movie.id_movie \n" +
+            "ON m.id = p.movie.id \n" +
             "WHERE m.rating IS NOT NULL \n")
     Page<Movie> findMoviesWithPosters(Pageable pageable);
 
-    @Query("SELECT a FROM Actor a WHERE a.movie.id_movie = :id_movie ")
-    Set<Actor> findActorsByMovieId(@Param("id_movie") Integer id_movie);
+    @Query("SELECT a FROM Actor a WHERE a.movie.id = :id ")
+    Set<Actor> findActorsByMovieId(@Param("id") Integer id);
 
-    @Query("SELECT c FROM Crew c WHERE c.movie.id_movie = :id_movie")
-    Set<Crew> findCrewsByMovieId(@Param("id_movie") Integer id_movie);
+    @Query("SELECT c FROM Crew c WHERE c.movie.id = :id")
+    Set<Crew> findCrewsByMovieId(@Param("id") Integer id);
 
-    @Query("SELECT co FROM Country co WHERE co.movie.id_movie = :id_movie")
-    Set<Country> findCountriesByMovieId(@Param("id_movie") Integer id_movie);
+    @Query("SELECT co FROM Country co WHERE co.movie.id = :id")
+    Set<Country> findCountriesByMovieId(@Param("id") Integer id);
 
-    @Query("SELECT g FROM Genre g WHERE g.movie.id_movie = :id_movie")
-    Set<Genre> findGenresByMovieId(@Param("id_movie") Integer id_movie);
+    @Query("SELECT g FROM Genre g WHERE g.movie.id = :id")
+    Set<Genre> findGenresByMovieId(@Param("id") Integer id);
 
-    @Query("SELECT l FROM Language l WHERE l.movie.id_movie = :id_movie")
-    Set<Language> findLanguageByMovieId(@Param("id_movie") Integer id_movie);
+    @Query("SELECT l FROM Language l WHERE l.movie.id = :id")
+    Set<Language> findLanguageByMovieId(@Param("id") Integer id);
 
-    @Query("SELECT p FROM Posters p WHERE p.movie.id_movie = :id_movie")
-    Posters findPostersByMovieId(@Param("id_movie") Integer id_movie);
+    @Query("SELECT p FROM Posters p WHERE p.movie.id = :id")
+    Posters findPostersByMovieId(@Param("id") Integer id);
 
-    @Query("SELECT r FROM Release r WHERE r.movie.id_movie = :id_movie")
-    Set<Release> findReleaseByMovieId(@Param("id_movie") Integer id_movie);
+    @Query("SELECT r FROM Release r WHERE r.movie.id = :id")
+    Set<Release> findReleaseByMovieId(@Param("id") Integer id);
 
-    @Query("SELECT s FROM Studio s WHERE s.movie.id_movie = :id_movie")
-    Set<Studio> findStudioByMovieId(@Param("id_movie") Integer id_movie);
+    @Query("SELECT s FROM Studio s WHERE s.movie.id = :id")
+    Set<Studio> findStudioByMovieId(@Param("id") Integer id);
 
-    @Query("SELECT t FROM Theme t WHERE t.movie.id_movie = :id_movie")
-    Set<Theme> findThemeByMovieId(@Param("id_movie") Integer id_movie);
+    @Query("SELECT t FROM Theme t WHERE t.movie.id = :id")
+    Set<Theme> findThemeByMovieId(@Param("id") Integer id);
 }
