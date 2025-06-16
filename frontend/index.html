@@ -30,7 +30,7 @@
             <a class="nav-link" href="#">Movies</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#">Recensioni</a>
+            <a class="nav-link" href="#">Reviews</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="#">Top Rated</a>
@@ -38,7 +38,7 @@
         </ul>
 
           <form id="search-form" class="d-flex" role="search">
-          <input id="search-bar" class="form-control me-2" type="search" placeholder="Cerca un film..." aria-label="Search">
+          <input id="search-bar" class="form-control me-2" type="search" placeholder="Search movies..." aria-label="Search">
           <button class="btn btn-outline-light" type="submit">🔍</button>
         </form>
       </div>
@@ -46,70 +46,81 @@
   </nav>
 
   <div class="container-fluid pt-4">
-  <div class="filters mb-4">
-    <div class="row">
-      <div class="col">
-        <label class="form-label">Filtra per Rating:</label>
-        <div id="rating-stars">
-          <span class="fa fa-star" style="font-size: 25px" data-value="0"></span>
-          <span class="fa fa-star" style="font-size: 25px" data-value="1"></span>
-          <span class="fa fa-star" style="font-size: 25px" data-value="2"></span>
-          <span class="fa fa-star" style="font-size: 25px" data-value="3"></span>
-          <span class="fa fa-star" style="font-size: 25px" data-value="4"></span>
+    <div class="filters mb-4">
+      <div class="row align-items-center">
+        <div class="col d-flex align-items-center">
+          <label class="form-label" style="margin-bottom: 0px">Rating:</label>
+        </div>
+        <div class="col">
+          <label for="min-date-filter">Release year from:</label>
+        </div>
+        <div class="col">
+          <label for="max-date-filter">to</label>
+        </div>
+        <div class="col">
+          <label for="genre-filter">Genre:</label>
+        </div>
+        <div class="col">
+          <label for="sort-filter">Order by:</label>
         </div>
       </div>
-      <div class="col">
-        <label for="min-date-filter">Data di Uscita da:</label>
+      <div class = "row">
+        <div class="col" style="flex: 1">
+          <div id="rating-stars">
+          <span class="fa fa-star" style="font-size: 20px" data-value="0"></span>
+          <span class="fa fa-star" style="font-size: 20px" data-value="1"></span>
+          <span class="fa fa-star" style="font-size: 20px" data-value="2"></span>
+          <span class="fa fa-star" style="font-size: 20px" data-value="3"></span>
+          <span class="fa fa-star" style="font-size: 20px" data-value="4"></span>
+          </div>
+        </div>
+          <div class="col">
           <input type="number" id="min-date-filter" class="form-control" min="1850" max="2100" placeholder="Es. 1930">
-      </div>
-      <div class="col">
-        <label for="max-date-filter">a</label>
-        <input type="number" id="max-date-filter" class="form-control" min="1850" max="2100" placeholder="Es. 2025">
-      </div>
+          </div>
+          <div class="col">
+          <input type="number" id="max-date-filter" class="form-control" min="1850" max="2100" placeholder="Es. 2025">
+          </div>
 
-      <div class="col">
-        <label for="genre-filter">Genere:</label>
-        <select id="genre-filter" class="form-select">
-          <option value="">Tutti</option>
-          <option value="Action">Action</option>
-          <option value="Adventure">Adventure</option>
-          <option value="Animation">Animation</option>
-          <option value="Comedy">Comedy</option>
-          <option value="Crime">Crime</option>
-          <option value="Documentary">Documentary</option>
-          <option value="Drama">Drama</option>
-          <option value="Family">Family</option>
-          <option value="Fantasy">Fantasy</option>
-          <option value="History">History</option>
-          <option value="Horror">Horror</option>
-          <option value="Mystery">Mystery</option>
-          <option value="Romance">Romance</option>
-          <option value="Thriller">Thriller</option>
-          <option value="War">War</option>
-          <option value="Western">Western</option>
-        </select>
+          <div class="col">
+          <select id="genre-filter" class="form-select">
+            <option value="">Tutti</option>
+            <option value="Action">Action</option>
+            <option value="Adventure">Adventure</option>
+            <option value="Animation">Animation</option>
+            <option value="Comedy">Comedy</option>
+            <option value="Crime">Crime</option>
+            <option value="Documentary">Documentary</option>
+            <option value="Drama">Drama</option>
+            <option value="Family">Family</option>
+            <option value="Fantasy">Fantasy</option>
+            <option value="History">History</option>
+            <option value="Horror">Horror</option>
+            <option value="Mystery">Mystery</option>
+            <option value="Romance">Romance</option>
+            <option value="Thriller">Thriller</option>
+            <option value="War">War</option>
+            <option value="Western">Western</option>
+          </select>
+        </div>
+          <div class = "col">
+            <select id="sort-filter" class="form-select">
+              <option value="rating,desc">Rating Desc</option>
+              <option value="rating,asc">Rating Asc</option>
+              <option value="name,asc">Name A-Z</option>
+              <option value="name,desc">Name Z-A</option>
+            </select>
+          </div>
       </div>
-
-      <div class="col">
-        <label for="sort-filter">Ordinamento:</label>
-        <select id="sort-filter" class="form-select">
-          <option value="rating,desc">Rating Decrescente</option>
-          <option value="rating,asc">Rating Crescente </option>
-          <option value="name,asc">Nome A-Z</option>
-          <option value="name,desc">Nome Z-A</option>
-        </select>
-      </div>
-    </div>
   </div>
   </div>
   <div class="container-fluid pt-2">
-      <h2 id="section-title" class="mb-4 text-center" style="font-style: italic">Top Rated</h2>
+      <h2 id="section-title" class="mb-4 text-center" style="font-style: italic">Top Rated Movies</h2>
       <div id="movies-list" class="row justify-content-center" style="color: darkgrey"></div>
   </div>
 
   <div class="d-flex justify-content-center my-4">
 
-    <button id="load-more-btn" class="btn btn-primary">Avanti</button>
+    <button id="load-more-btn" class="btn btn-primary">Next >></button>
   </div>
 
   <footer class="bg-dark text-white text-center p-3 mt-5">
@@ -117,7 +128,7 @@
     </footer>
 
     <script>
-      window.API_URL = "https://api.frameverse.unito.it";
+      window.API_URL = "http://localhost:8080";
     </script>
     <script src="js/script.js"></script>
   </body>

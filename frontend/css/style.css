@@ -29,10 +29,29 @@ nav{
     color: white;
     font-size: 25px;
 }
+#min-date-filter:hover{
+    cursor: pointer;
+    transition: color 0.3s;
+}
+#max-date-filter:hover{
+    cursor: pointer;
+    transition: color 0.3s;
+}
+
+#genre-filter:hover{
+    cursor: pointer;
+    transition: color 0.3s;
+}
+
+#sort-filter:hover{
+    cursor: pointer;
+    transition: color 0.3s;
+}
 
 .fa-star {
     color: #ccc;
     cursor: pointer;
+    transition: color 0.3s;
 }
 
 .fa-star.checked {
@@ -70,6 +89,14 @@ nav{
 #movies-list{
     color: darkgrey;
     margin-bottom: 200px;
+}
+
+#movie-details{
+    color: white;
+}
+
+.text-muted{
+    color: gold;
 }
 
 .loader {
