@@ -12,9 +12,9 @@ public class ActorController {
     @Autowired
     private ActorService actorService;
 
-    @GetMapping("/movies/{id_movie}")
-    public List<Actor> getAllActorsByMovie(@PathVariable Integer id_movie) {
-        return actorService.getActorsByMovie(id_movie);
+    @GetMapping("/movies/{id}")
+    public List<Actor> getAllActorsByMovie(@PathVariable Integer id) {
+        return actorService.getActorsByMovie(id);
     }
 
     @GetMapping("/all")

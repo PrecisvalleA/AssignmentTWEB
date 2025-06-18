@@ -14,10 +14,10 @@ public class ReleaseService {
     private ReleaseRepository releaseRepository;
 
     //get all releases
-    public List<Release> getReleaseByMovie(Integer id_movie) {
+    public List<Release> getReleaseByMovie(Integer id) {
 
         Movie movie = new Movie();
-        movie.setId_movie(id_movie);
+        movie.setId(id);
 
         return releaseRepository.findByMovie(movie);
     }

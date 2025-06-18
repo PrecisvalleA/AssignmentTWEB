@@ -11,8 +11,8 @@ public class CountryController {
     @Autowired
     private CountryService countryService;
 
-    @GetMapping("/movies/{id_movie}")
-    public List<Country> getAllCountries(@PathVariable Integer id_movie) {
-        return countryService.getCountriesByMovie(id_movie);
+    @GetMapping("/movies/{id}")
+    public List<Country> getAllCountries(@PathVariable Integer id) {
+        return countryService.getCountriesByMovie(id);
     }
 }

@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const API_URL = window.API_BASE_URL || "http://localhost:8080";
+    const API_URL = window.API_BASE_URL || "http://localhost:3000";
     const container = document.getElementById('movies-list');
     const loadMoreBtn = document.getElementById('load-more-btn');
     const searchInput = document.getElementById('search-bar');
@@ -72,15 +72,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 console.log(`Navigating to movie details page with ID: ${movieId}`);
                 window.location.href = `details.html?id=${movieId}`;
             } else {
-                console.error('ID del film non trovato!');
-                alert('Errore: ID del film non disponibile.');
+                console.error('Movie ID not found!');
+                alert('Error: Movie ID not found!.');
             }
         });
 
 
         col.innerHTML = `
         <div class="card mb-4 h-100">
-          <img src="${posterUrl}" class="card-img-top object-fit-contain" style="height: 300px" alt="Poster di ${movie.name}">
+          <img src="${posterUrl}" class="card-img-top object-fit-contain" style="height: 300px" alt="Poster of ${movie.name}">
             <div class="card-body">
              <h6 class="card-title text-center">${movie.name}</h6>
               <div class="card-text mt-3">Rating: ${movie.rating ?? 'N/A'}</div>
@@ -117,13 +117,13 @@ document.addEventListener('DOMContentLoaded', () => {
         loadMoreBtn.style.display = '';
         if (currentPage === 0) container.innerHTML = '';
 
-        const url = `${API_URL}/movies/paginated?` + params.toString();
+        const url = `${API_URL}/spring/movies/paginated?` + params.toString();
 
 
         fetch(url)
             .then(response => response.json())
             .then(data => {
-                console.log('Risposta API:', data);
+                console.log('Response API:', data);
                 data.content.forEach(({ movie, posterUrl, genres }) => {
                     console.log('Film received:', movie);
                     renderCard(movie, posterUrl, genres);
@@ -132,7 +132,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 loadMoreBtn.disabled = data.content.length < limit;
             })
             .catch(error => {
-                console.error('Errore nel recupero dei film:', error);
+                console.error('Error: movies not found', error);
             })
             .finally(() => hideLoader());
     }
@@ -140,7 +140,7 @@ document.addEventListener('DOMContentLoaded', () => {
     //Search function
     function loadSearchPage(query) {
         showLoader();
-        sectionTitle.textContent = `Risultati per “${query}”`;
+        sectionTitle.textContent = `Response for “${query}”`;
 
         const params = new URLSearchParams();
         params.append('page', searchPage);
@@ -148,17 +148,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (searchPage === 0) container.innerHTML = '';
 
-        fetch(`${API_URL}/movies/search/${encodeURIComponent(query)}?` + params.toString())
+        fetch(`${API_URL}/spring/movies/search/${encodeURIComponent(query)}?` + params.toString())
             .then(response => response.json())
             .then(data=> {
                 const items = data.content || [];
                 if (items.length === 0) {
-                    container.innerHTML = '<p class="text-center text-danger">Nessun film trovato.</p>';
+                    container.innerHTML = '<p class="text-center text-danger">Movies not found.</p>';
                     loadMoreBtn.style.display = 'none';
                     return;
                 }
                 items.forEach(({ movie }) => {
-                    fetch(`${API_URL}/movies/${movie.id}`)
+                    fetch(`${API_URL}/spring/movies/${movie.id}`)
                         .then(response => response.json())
                         .then(details => {
                             const posterUrl = details.posters?.link ?? 'default.jpg';
@@ -166,7 +166,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             renderCard(details.movie, posterUrl, genres);
                         })
                         .catch(error => {
-                            console.error('Errore nei dettagli del film:', error);
+                            console.error('Movie details error:', error);
                             renderCard(movie, 'default.jpg', 'N/A');
                         });
                     loadMoreBtn.style.display = '';
@@ -174,8 +174,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 })
             })
             .catch(error => {
-                console.error('Errore nel recupero dei film:', error);
-                container.innerHTML = '<p class="text-center text-danger">Errore nella ricerca.</p>';
+                console.error('Error: movies not found', error);
+                container.innerHTML = '<p class="text-center text-danger">Search error!.</p>';
             })
             .finally(() => hideLoader());
     }

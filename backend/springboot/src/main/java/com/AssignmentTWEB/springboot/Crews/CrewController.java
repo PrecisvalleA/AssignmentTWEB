@@ -12,8 +12,8 @@ public class CrewController {
     @Autowired
     private CrewService crewService;
 
-    @GetMapping("/movies/{id_movie}")
-    public List<Crew> getAllCrews(@PathVariable Integer id_movie) {
-        return crewService.getCrewsByMovie(id_movie);
+    @GetMapping("/movies/{id}")
+    public List<Crew> getAllCrews(@PathVariable Integer id) {
+        return crewService.getCrewsByMovie(id);
     }
 }

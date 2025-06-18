@@ -78,8 +78,7 @@ public class MovieController {
 
     //Endpoint: search a film by name
     @GetMapping("/search/{keyword}")
-    public Page<MoviePoster> findByName(@PathVariable String keyword
-    , @PageableDefault(size = 12) Pageable pageable) {
+    public Page<MoviePoster> findByName(@PathVariable String keyword, @PageableDefault(size = 12) Pageable pageable) {
         return movieService.findMoviesByName(keyword, pageable);
     }
 

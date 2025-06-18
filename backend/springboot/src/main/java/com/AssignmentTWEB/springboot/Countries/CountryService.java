@@ -15,7 +15,7 @@ public class CountryService {
     //get all countries by an id_movie
     public List<Country> getCountriesByMovie(Integer id_movie) {
         Movie movie = new Movie();
-        movie.setId_movie(id_movie);
+        movie.setId(id_movie);
 
         return countryRepository.findByMovie(movie);
     }

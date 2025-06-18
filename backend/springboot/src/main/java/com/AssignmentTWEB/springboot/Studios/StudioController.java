@@ -11,8 +11,8 @@ public class StudioController {
     @Autowired
     private StudioService studioService;
 
-    @GetMapping("/movies/{id_movie}")
-    public List<Studio> getAllStudios(@PathVariable Integer id_movie) {
-        return studioService.getStudioByMovie(id_movie);
+    @GetMapping("/movies/{id}")
+    public List<Studio> getAllStudios(@PathVariable Integer id) {
+        return studioService.getStudioByMovie(id);
     }
 }

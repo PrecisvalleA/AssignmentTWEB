@@ -13,8 +13,8 @@ public class PostersController {
     @Autowired
     private PostersService postersService;
 
-    @GetMapping("/movies/{id_movie}")
-    public Posters getAllposters(@PathVariable Integer id_movie) {
-        return postersService.getPostersByMovie(id_movie);
+    @GetMapping("/movies/{id}")
+    public Posters getAllposters(@PathVariable Integer id) {
+        return postersService.getPostersByMovie(id);
     }
 }

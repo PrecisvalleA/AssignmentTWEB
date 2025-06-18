@@ -11,4 +11,7 @@ app.use(express.json());
 app.use('/spring', springRoutes);
 app.use('/mongo', mongoRoutes);
 
-module.exports = app;
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+    console.log(`Main server listening on port ${PORT}`);
+});

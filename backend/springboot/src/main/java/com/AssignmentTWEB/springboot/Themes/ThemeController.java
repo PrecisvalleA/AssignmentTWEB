@@ -12,8 +12,8 @@ public class ThemeController {
     @Autowired
     private ThemeService themeService;
 
-    @GetMapping("/movies/{id_movie}")
-    public List<Theme> getAllThemes(@PathVariable Integer id_movie) {
-        return themeService.getThemeById(id_movie);
+    @GetMapping("/movies/{id}")
+    public List<Theme> getAllThemes(@PathVariable Integer id) {
+        return themeService.getThemeById(id);
     }
 }

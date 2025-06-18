@@ -13,10 +13,10 @@ public class ThemeService {
     private ThemeRepository themeRepository;
 
     //get all themes
-    public List<Theme> getThemeById(Integer id_movie) {
+    public List<Theme> getThemeById(Integer id) {
 
         Movie movie = new Movie();
-        movie.setId_movie(id_movie);
+        movie.setId(id);
 
         return themeRepository.findByMovie(movie);
     }

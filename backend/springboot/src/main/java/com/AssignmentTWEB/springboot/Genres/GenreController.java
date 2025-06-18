@@ -13,8 +13,8 @@ public class GenreController {
     @Autowired
     private GenreService genreService;
 
-    @GetMapping("/movies/{id_movie}")
-    public List<Genre> getAllGenres(@PathVariable Integer id_movie) {
-        return genreService.getGenreById(id_movie);
+    @GetMapping("/movies/{id}")
+    public List<Genre> getAllGenres(@PathVariable Integer id) {
+        return genreService.getGenreById(id);
     }
 }

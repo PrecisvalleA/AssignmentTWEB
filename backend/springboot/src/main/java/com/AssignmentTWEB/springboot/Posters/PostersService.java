@@ -13,9 +13,9 @@ public class PostersService {
     private PostersRepository postersRepository;
 
     //get all posters by an id_movie
-    public Posters getPostersByMovie(Integer id_movie) {
+    public Posters getPostersByMovie(Integer id) {
         Movie movie = new Movie();
-        movie.setId_movie(id_movie);
+        movie.setId(id);
 
         return postersRepository.findByMovie(movie);
 

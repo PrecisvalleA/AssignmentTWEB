@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
 
-    const API_URL = window.API_URL || "http://localhost:8080";
+    const API_URL = window.API_URL || "http://localhost:3000";
 
     const movieDetailsContainer = document.getElementById('movie-details');
     const loader = document.getElementById('loader');
@@ -118,24 +118,54 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function loadMovieDetails(movieId) {
         showLoader();
-        const url = `${API_URL}/movies/${movieId}`;
+        const url = `${API_URL}/spring/movies/${movieId}`;
 
         fetch(url)
             .then(response => {
-                if (!response.ok) throw new Error('Film non trovato');
+                if (!response.ok) throw new Error('Movie not found');
                 return response.json();
             })
             .then(data => {
-                console.log('Dati del film ricevuti:', data);
+                console.log('Movie details received:', data);
                 renderMovieDetails(data);
+                loadReviews(data.movie.name);
             })
             .catch(error => {
-                console.error('Errore:', error);
-                movieDetailsContainer.innerHTML = `<p class="text-danger">Errore: ${error.message}</p>`;
+                console.error('Error:', error);
+                movieDetailsContainer.innerHTML = `<p class="text-danger">Error: ${error.message}</p>`;
             })
             .finally(() => hideLoader());
     }
     loadMovieDetails(movieId);
+
+    function loadReviews(movieTitle){
+        const reviewsContainer = document.getElementById('movie-reviews');
+        if(!reviewsContainer) return;
+
+        const encodedTitle = encodeURIComponent(movieTitle);
+        fetch(`${API_URL}/mongo/reviews/movie/${encodedTitle}`)
+            .then(response => response.json())
+            .then(reviews => {
+                if(!reviews.length){
+                    reviewsContainer.innerHTML = '<p>No reviews available for this movie.</p>';
+                    return;
+                }
+                reviewsContainer.innerHTML = reviews.map(review => `
+                    <div class="card mb-3">
+                        <div class="card-body">
+                            <h6 class="card-title">${review.critic_name} ${review.top_critic ? '<span class="badge bg-warning text-dark">Top Critic</span>' : ''}</h6>
+                        <h6 class="card-subtitle mb-2 text-muted">${review.publisher_name}</h6>
+                        <p class="card-text">${review.review_content}</p>
+                        <small class="text-muted">${review.review_date?.split('T')[0]} – ${review.review_type} – Score: ${review.review_score}</small>
+                        </div>
+                    </div>
+                `).join('');
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                reviewsContainer.innerHTML = `<p class="text-danger">Error loading reviews: ${error.message}</p>`;
+            })
+    }
 
     const searchForm = document.getElementById('search-form');
     const searchInput = document.getElementById('search-bar');

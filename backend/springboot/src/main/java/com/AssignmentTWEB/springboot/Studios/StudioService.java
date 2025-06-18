@@ -12,10 +12,10 @@ public class StudioService {
     private StudioRepository studioRepository;
 
     //get all studios
-    public List<Studio> getStudioByMovie(Integer id_movie) {
+    public List<Studio> getStudioByMovie(Integer id) {
 
         Movie movie = new Movie();
-        movie.setId_movie(id_movie);
+        movie.setId(id);
 
         return studioRepository.findByMovie(movie);
     }

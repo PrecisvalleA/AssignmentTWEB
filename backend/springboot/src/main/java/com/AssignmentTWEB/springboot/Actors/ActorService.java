@@ -21,10 +21,10 @@ public class ActorService {
     }
 
     //get all actors
-    public List<Actor> getActorsByMovie(Integer id_movie) {
+    public List<Actor> getActorsByMovie(Integer id) {
 
-        Movie movie = movieRepository.findById(id_movie).orElseThrow(() -> new EntityNotFoundException("Movie not found"));
-        movie.setId_movie(id_movie);
+        Movie movie = movieRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Movie not found"));
+        movie.setId(id);
 
         return actorRepository.findByMovie(movie);
 

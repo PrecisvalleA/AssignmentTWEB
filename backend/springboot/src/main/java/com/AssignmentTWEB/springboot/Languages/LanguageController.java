@@ -12,8 +12,8 @@ public class LanguageController {
     @Autowired
     private LanguageService languageService;
 
-    @GetMapping("movies/{id_movie}")
-    public List<Language> getAllLanguages(@PathVariable Integer id_movie) {
-        return languageService.getLanguageByMovie(id_movie);
+    @GetMapping("movies/{id}")
+    public List<Language> getAllLanguages(@PathVariable Integer id) {
+        return languageService.getLanguageByMovie(id);
     }
 }

@@ -24,8 +24,13 @@ import java.util.Set;
 
 public interface MovieRepository extends JpaRepository<Movie, Integer> {//extends JpaRepository for Movie entity with Integer ID
 
-    @Query("SELECT m, p.link AS posterURL FROM Movie m LEFT JOIN Posters p ON m.id = p.movie.id")
-    Page<MoviePoster> findByNameContainingIgnoreCase(String name, Pageable pageable);
+    @Query("SELECT m AS movie, COALESCE(p.link, '') AS posterURL, STRING_AGG(g.genre, ', ') AS genres " +
+            "FROM Movie m " +
+            "LEFT JOIN Posters p ON p.movie.id = m.id " +
+            "LEFT JOIN Genre g ON g.movie.id = m.id " +
+            "WHERE LOWER(m.name) LIKE LOWER(CONCAT('%', :name, '%')) " +
+            "GROUP BY m.id, p.link")
+    Page<MoviePoster> findByNameContainingIgnoreCase(@Param("name") String name, Pageable pageable);
 
     @Query("""
         SELECT m AS movie, p.link AS posterUrl, STRING_AGG(g.genre, ', ') AS genres

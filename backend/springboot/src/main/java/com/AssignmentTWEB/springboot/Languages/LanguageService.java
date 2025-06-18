@@ -15,7 +15,7 @@ public class LanguageService {
     public List<Language> getLanguageByMovie(Integer id_movie) {
 
         Movie movie = new Movie();
-        movie.setId_movie(id_movie);
+        movie.setId(id_movie);
 
         return languageRepository.findByMovie(movie);
     }

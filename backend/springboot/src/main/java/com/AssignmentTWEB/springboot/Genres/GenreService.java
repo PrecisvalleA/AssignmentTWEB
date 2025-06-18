@@ -13,10 +13,10 @@ public class GenreService {
     private GenreRepository genreRepository;
 
     //get all genres
-    public List<Genre> getGenreById(Integer id_movie) {
+    public List<Genre> getGenreById(Integer id) {
 
         Movie movie = new Movie();
-        movie.setId_movie(id_movie);
+        movie.setId(id);
 
         return genreRepository.findByMovie(movie);
     }
