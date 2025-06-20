@@ -2,38 +2,51 @@ package com.AssignmentTWEB.springboot.OscarAwards;
 
 import jakarta.persistence.*;
 
+/**
+ * Entity class representing an Oscar Award entry.
+ * Maps to the "the_oscar_awards" table in the database.
+ */
 @Entity
 @Table(name = "the_oscar_awards")
 public class OscarAward {
 
+    /** Unique identifier for the Oscar Award entry (Primary Key, auto-generated). */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    /** The year of the film's release. */
     @Column(nullable = false)
     private Integer year_film;
 
+    /** The year in which the Oscar ceremony took place. */
     @Column(nullable = false)
     private Integer year_ceremony;
 
+    /** The number (edition) of the Oscar ceremony. */
     @Column(nullable = false)
     private Integer ceremony;
 
+    /** The award category */
     @Column(nullable = false)
     private String category;
 
+    /** The name of the nominee. */
     @Column(nullable = false)
     private String name;
 
+    /** The film associated with the nomination. */
     @Column(nullable = false)
     private String film;
 
+    /** Boolean flag indicating if the nominee won the award. */
     @Column(nullable = false)
     private Boolean winner;
 
-
-
+    /** Default constructor required by JPA. */
     public OscarAward() {}
+
+    /** Getters and setters for the OscarAwards parameters */
 
     public Long getId_oscar_award() {return id;}
     public void setId_oscar_award(Long id) {this.id = id;}

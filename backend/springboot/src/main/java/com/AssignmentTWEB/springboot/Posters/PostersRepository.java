@@ -5,9 +5,18 @@ import jakarta.persistence.criteria.CriteriaBuilder;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+/**
+ * Repository interface for Posters entity.
+ * Provides CRUD operations and custom queries for Posters.
+ */
 @Repository
 public interface PostersRepository extends JpaRepository <Posters, Long>{
 
-    //find all countries where a film has been produced
+    /**
+     * Retrieve the poster associated with a specific movie.
+     *
+     * @param movie the movie entity
+     * @return the poster entity associated with the movie
+     */
     Posters findByMovie(Movie movie);
 }

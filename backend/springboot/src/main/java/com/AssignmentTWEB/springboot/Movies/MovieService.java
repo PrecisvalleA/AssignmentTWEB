@@ -72,38 +72,38 @@ public class MovieService{
     }
 
 
-    //find all films from the database
+    /** find all movies from the database */
     public List<Movie> getAllMovies(){
         return movieRepository.findAll();
     }
 
-    //find movie by ID
+    /** find movie by ID */
     public Optional<Movie> getMovieById(Integer id) {
         return movieRepository.findById(id);
     }
 
 
-    //function to add a new film or update a film
+    /** function to add a new movie or update a movie */
     public Movie saveMovie(Movie movie){
         return movieRepository.save(movie);
     }
 
 
-    //delete a movie by id
+    /**delete a movie by id */
     public void deleteMovie(Integer id) {movieRepository.deleteById(id);}
 
 
-    //search a movie by a keyword insert by user
+    /**search a movie by a keyword insert by user*/
     public Page<MoviePoster> findMoviesByName(String keyword, Pageable pageable) {
         return movieRepository.findByNameContainingIgnoreCase(keyword, pageable);
     }
 
-
+    /** Find a paginated list of movie with posters*/
     public Page<Movie> getPaginatedMoviesPage(Pageable pageable) {
         return movieRepository.findMoviesWithPosters(pageable);
     }
 
-
+    /** Filter movies by parameters. */
     public Page<MoviePoster> filterMovies(
             Double minRating, Double maxRating,
             String minDate,   String maxDate,
@@ -117,6 +117,7 @@ public class MovieService{
         );
     }
 
+    /** Find detailed movie by ID using DTO, including all the other entities */
     public Optional<MovieDetailsDTO> getMovieDetailsById(Integer id_movie) {
         Movie movieById = movieRepository.findMovieById(id_movie);
 

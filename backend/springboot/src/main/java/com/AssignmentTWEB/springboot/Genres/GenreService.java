@@ -4,7 +4,10 @@ import com.AssignmentTWEB.springboot.Movies.Movie;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
-import java.util.stream.Collectors;
+
+/**
+ * Service class responsible for business logic related to Genres.
+ */
 
 @Service
 public class GenreService {
@@ -12,7 +15,12 @@ public class GenreService {
     @Autowired
     private GenreRepository genreRepository;
 
-    //get all genres
+    /**
+     * Retrieve all genres associated with a specific movie.
+     *
+     * @param id the ID of the movie
+     * @return list of genres for the specified movie
+     */
     public List<Genre> getGenreById(Integer id) {
 
         Movie movie = new Movie();

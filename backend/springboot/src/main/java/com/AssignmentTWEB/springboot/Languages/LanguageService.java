@@ -6,12 +6,20 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Service class responsible for business logic related to Languages.
+ */
 @Service
 public class LanguageService {
     @Autowired
     private LanguageRepository languageRepository;
 
-    //get all languages
+    /**
+     * Retrieve all languages associated with a specific movie.
+     *
+     * @param id_movie the ID of the movie
+     * @return list of languages for the specified movie
+     */
     public List<Language> getLanguageByMovie(Integer id_movie) {
 
         Movie movie = new Movie();

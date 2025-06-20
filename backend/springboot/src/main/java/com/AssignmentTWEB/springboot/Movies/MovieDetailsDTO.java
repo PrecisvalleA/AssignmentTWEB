@@ -15,6 +15,10 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
+/** Data Transfer Object, that includes all the information about a movie
+ * Includes related entities such as actors, crew, countries, genres, languages, releases,
+ * studios, themes, posters, and Oscars.
+ */
 public class MovieDetailsDTO {
 
     private Movie movie;
@@ -29,7 +33,21 @@ public class MovieDetailsDTO {
     private Posters posters;
     private List<OscarAward> oscars;
 
-    // Costruttore con tutti i campi
+    /**
+     * Constructor that initializes all fields of MovieDetailsDTO
+     *
+     * @param movie the main Movie entity
+     * @param actors associated cast
+     * @param crew associated crew members
+     * @param countries production countries
+     * @param genres associated genres
+     * @param posters associated posters
+     * @param languages spoken languages
+     * @param releases release information
+     * @param studios associated studios
+     * @param themes associated themes
+     * @param oscars Oscars won
+     */
     public MovieDetailsDTO(Movie movie,
                            Set<Actor> actors,
                            Set<Crew> crew,

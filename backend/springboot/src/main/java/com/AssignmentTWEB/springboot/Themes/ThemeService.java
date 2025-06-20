@@ -6,13 +6,21 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Service class responsible for business logic related to Themes.
+ */
 @Service
 public class ThemeService {
 
     @Autowired
     private ThemeRepository themeRepository;
 
-    //get all themes
+    /**
+     * Retrieve all themes associated with a specific movie.
+     *
+     * @param id the ID of the movie
+     * @return list of themes for the specified movie
+     */
     public List<Theme> getThemeById(Integer id) {
 
         Movie movie = new Movie();

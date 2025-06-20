@@ -15,15 +15,23 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
-
-import java.util.List; // list is necessary for function which return many results
-import java.util.Optional;
 import java.util.Set;
 
-@Repository
 
+/**
+ * Repository interface for Movie entity.
+ * Extends JpaRepository to provide CRUD operations and custom queries.
+ */
+@Repository
 public interface MovieRepository extends JpaRepository<Movie, Integer> {//extends JpaRepository for Movie entity with Integer ID
 
+
+    /**
+     * Search movies by name with associated posters and genres.
+     * @param name partial or full movie name
+     * @param pageable pagination information
+     * @return paginated result of MoviePoster projection
+     */
     @Query("SELECT m AS movie, COALESCE(p.link, '') AS posterURL, STRING_AGG(g.genre, ', ') AS genres " +
             "FROM Movie m " +
             "LEFT JOIN Posters p ON p.movie.id = m.id " +
@@ -32,6 +40,18 @@ public interface MovieRepository extends JpaRepository<Movie, Integer> {//extend
             "GROUP BY m.id, p.link")
     Page<MoviePoster> findByNameContainingIgnoreCase(@Param("name") String name, Pageable pageable);
 
+    /**
+     * Search movies with multiple filters: rating, date, duration, and genre.
+     * @param minRating minimum rating
+     * @param maxRating maximum rating
+     * @param minDate minimum release date
+     * @param maxDate maximum release date
+     * @param minDur minimum duration
+     * @param maxDur maximum duration
+     * @param genre genre filter
+     * @param pageable pagination information
+     * @return paginated result of MoviePoster
+     */
     @Query("""
         SELECT m AS movie, p.link AS posterUrl, STRING_AGG(g.genre, ', ') AS genres
         FROM Movie m
@@ -58,6 +78,12 @@ public interface MovieRepository extends JpaRepository<Movie, Integer> {//extend
                 Pageable pageable
         );
 
+    /**
+     * Find a movie by ID.
+     *
+     * @param id movie ID
+     * @return Movie entity
+     */
     @Query("SELECT m FROM Movie m WHERE m.id = :id")
     Movie findMovieById(@Param("id") Integer id);
 
@@ -68,6 +94,8 @@ public interface MovieRepository extends JpaRepository<Movie, Integer> {//extend
             "ON m.id = p.movie.id \n" +
             "WHERE m.rating IS NOT NULL \n")
     Page<Movie> findMoviesWithPosters(Pageable pageable);
+
+    //Queries for related entities by movie.id
 
     @Query("SELECT a FROM Actor a WHERE a.movie.id = :id ")
     Set<Actor> findActorsByMovieId(@Param("id") Integer id);
