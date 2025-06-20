@@ -5,6 +5,19 @@ document.addEventListener('DOMContentLoaded', () => {
     const movieDetailsContainer = document.getElementById('movie-details');
     const loader = document.getElementById('loader');
     const movieId = new URLSearchParams(window.location.search).get('id');
+    let currentMovieTitle = '';
+
+    ['filter-top-critic', 'filter-review-type', 'filter-sort-date'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) {
+            el.addEventListener('change', () => {
+                currentPageReviews = 0;
+                loadReviews(currentMovieTitle, false);
+            });
+        }
+    });
+
+
 
     function showLoader() {
         if (loader) loader.style.display = 'block';
@@ -72,10 +85,17 @@ document.addEventListener('DOMContentLoaded', () => {
                     <li class="list-group-item"><strong>Languages:</strong> ${languages?.map(l => l.language).join(', ') || '-'}</li>
                     <li class="list-group-item"><strong>Studios:</strong> ${studios?.map(s => s.studio).join(', ') || '-'}</li>
                 </ul>
+                <div class="btn-group my-4" role="group">
+                <button type="button" class="btn btn-outline-primary" data-scroll="#cast-section" style="color: white">Cast</button>
+                <button type="button" class="btn btn-outline-primary" data-scroll="#crew-section" style="color: white">Crew</button>
+                <button type="button" class="btn btn-outline-primary" data-scroll="#releases-section" style="color: white">Releases</button>
+                <button type="button" class="btn btn-outline-primary" data-scroll="#reviews-section" style="color: white">Reviews</button>
+            </div>
             </div>
         </div>
+        
 
-        <h3 class="mt-5">🎭 Cast</h3>
+        <h3 id="cast-section" class="mt-5">🎭 Cast</h3>
         <div class="row">
             ${actors?.length > 0 ? actors.map(actor => `
                 <div class="col-6 col-sm-4 col-md-3 col-lg-2 mb-4">
@@ -89,7 +109,7 @@ document.addEventListener('DOMContentLoaded', () => {
             `).join('') : '<p class="text-muted">No cast available.</p>'}
         </div>
 
-        <h3 class="mt-5">🎬 Crew</h3>
+        <h3 id="crew-section" class="mt-5">🎬 Crew</h3>
         <div class="row">
             ${crew?.length > 0 ? crew.map(member => `
                 <div class="col-6 col-sm-4 col-md-3 col-lg-2 mb-4">
@@ -103,7 +123,7 @@ document.addEventListener('DOMContentLoaded', () => {
             `).join('') : '<p class="text-muted">No crew available.</p>'}
         </div>
 
-        <h3 class="mt-5">🌍 International Releases</h3>
+        <h3 id="releases-section" class="mt-5">🌍 International Releases</h3>
         <ul class="list-group">
             ${releases?.length > 0 ? releases.map(r => `
                 <li class="list-group-item">
@@ -113,7 +133,6 @@ document.addEventListener('DOMContentLoaded', () => {
         </ul>
     `;
     }
-
 
 
     function loadMovieDetails(movieId) {
@@ -128,7 +147,18 @@ document.addEventListener('DOMContentLoaded', () => {
             .then(data => {
                 console.log('Movie details received:', data);
                 renderMovieDetails(data);
-                loadReviews(data.movie.name);
+                currentMovieTitle = data.movie.name;
+                currentPageReviews = 0;
+                loadReviews(currentMovieTitle, false);
+
+
+                //scrolling section buttons
+                document.querySelectorAll('[data-scroll]').forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        const target = document.querySelector(btn.getAttribute('data-scroll'));
+                        if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    });
+                });
             })
             .catch(error => {
                 console.error('Error:', error);
@@ -138,28 +168,60 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     loadMovieDetails(movieId);
 
-    function loadReviews(movieTitle){
+
+    let currentPageReviews = 0;
+    const limitReviews = 5;
+
+    document.getElementById('load-more-reviews').addEventListener('click', () => {
+        currentPageReviews++;
+        loadReviews(currentMovieTitle, true);
+    });
+
+    function loadReviews(movieTitle, append = false){
         const reviewsContainer = document.getElementById('movie-reviews');
         if(!reviewsContainer) return;
 
         const encodedTitle = encodeURIComponent(movieTitle);
-        fetch(`${API_URL}/mongo/reviews/movie/${encodedTitle}`)
+        const params = new URLSearchParams();
+        params.append('page', currentPageReviews);
+        params.append('limit', limitReviews);
+
+        const topCritic = document.getElementById('filter-top-critic')?.value;
+        const reviewType = document.getElementById('filter-review-type')?.value;
+        const sortDate = document.getElementById('filter-sort-date')?.value;
+
+        if (topCritic) params.append('top_critic', topCritic);
+        if (reviewType) params.append('review_type', reviewType);
+        if (sortDate) params.append('sort_date', sortDate);
+
+        fetch(`${API_URL}/mongo/reviews/movie/${encodedTitle}?${params.toString()}`)
             .then(response => response.json())
             .then(reviews => {
-                if(!reviews.length){
+                if(!append) reviewsContainer.innerHTML = '';
+
+                if(!reviews.length && currentPageReviews === 0){
                     reviewsContainer.innerHTML = '<p>No reviews available for this movie.</p>';
+                    document.getElementById('load-more-reviews').style.display = 'none';
                     return;
                 }
-                reviewsContainer.innerHTML = reviews.map(review => `
-                    <div class="card mb-3">
-                        <div class="card-body">
-                            <h6 class="card-title">${review.critic_name} ${review.top_critic ? '<span class="badge bg-warning text-dark">Top Critic</span>' : ''}</h6>
-                        <h6 class="card-subtitle mb-2 text-muted">${review.publisher_name}</h6>
+                reviews.forEach(review => {
+                    const reviewCard = document.createElement('div');
+                    reviewCard.className = 'card mb-3 shadow-sm text-white';
+                    reviewCard.innerHTML = `
+                    <div class="card-body">
+                        <h6 class="card-title">${review.critic_name} ${review.top_critic ? '<span class="badge bg-warning text-dark">Top Critic</span>' : ''}</h6>
+                        <h6 class="card-subtitle">${review.publisher_name}</h6>
                         <p class="card-text">${review.review_content}</p>
-                        <small class="text-muted">${review.review_date?.split('T')[0]} – ${review.review_type} – Score: ${review.review_score}</small>
-                        </div>
+                        <small>${review.review_date?.split('T')[0]} – ${review.review_type} – Score: ${review.review_score}</small>
                     </div>
-                `).join('');
+                `;
+                    reviewsContainer.appendChild(reviewCard);
+                });
+                if (reviews.length < limitReviews) {
+                    document.getElementById('load-more-reviews').style.display = 'none';
+                } else {
+                    document.getElementById('load-more-reviews').style.display = 'block';
+                }
             })
             .catch(error => {
                 console.error('Error:', error);
@@ -177,5 +239,6 @@ document.addEventListener('DOMContentLoaded', () => {
             window.location.href = `index.html?q=${encodeURIComponent(query)}`;
         }
     });
+
 
 });

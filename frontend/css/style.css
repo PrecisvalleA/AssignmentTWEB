@@ -95,9 +95,15 @@ nav{
     color: white;
 }
 
+#movie-review{
+    color: white;
+}
+
 .text-muted{
     color: gold;
 }
+
+
 
 .loader {
     border: 8px solid black;
