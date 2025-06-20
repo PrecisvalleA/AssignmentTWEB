@@ -1,5 +1,15 @@
+/**
+ * FrameVerse Frontend Client Logic
+ *
+ * This script handles:
+ * - Fetching movie data via API Gateway
+ * - Applying filters and sorting
+ * - Handling search queries
+ * - Rendering movies as Bootstrap cards
+ */
 document.addEventListener('DOMContentLoaded', () => {
     const API_URL = window.API_BASE_URL || "http://localhost:3000";
+    // DOM Elements
     const container = document.getElementById('movies-list');
     const loadMoreBtn = document.getElementById('load-more-btn');
     const searchInput = document.getElementById('search-bar');
@@ -9,8 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const maxDateFilter   = document.getElementById('max-date-filter');
     const sortFilter   = document.getElementById('sort-filter');
     const genreFilter = document.getElementById('genre-filter');
-    const urlParams = new URLSearchParams(window.location.search);
-    const searchQuery = urlParams.get('q');
+
     let selectedRating = null;
     const ratingStars = document.querySelectorAll('#rating-stars .fa-star');
 
@@ -20,6 +29,9 @@ document.addEventListener('DOMContentLoaded', () => {
     let currentSearchQuery = '';
     const limit = 12;
 
+    // Handle search query from URL params
+    const urlParams = new URLSearchParams(window.location.search);
+    const searchQuery = urlParams.get('q');
     if (searchQuery) {
         searchInput.value = searchQuery;
         loadSearchPage(searchQuery);
@@ -28,7 +40,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
 
-
+    // Rating stars filtering logic
     ratingStars.forEach(star => {
         star.addEventListener('click', () => {
             const clickedValue = parseInt(star.getAttribute('data-value'));
@@ -52,6 +64,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
 
+    // Filters (year range, genre, sort) event listeners
     [minDateFilter, maxDateFilter, sortFilter, genreFilter].forEach(filterEl => {
         filterEl.addEventListener('change', () => {
             currentPage = 0;
@@ -60,7 +73,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
 
-    //creating card function
+    // Render single movie card
     function renderCard(movie, posterUrl, genre) {
         const col = document.createElement('div');
         col.setAttribute('data-id', movie.id);
@@ -92,7 +105,7 @@ document.addEventListener('DOMContentLoaded', () => {
         container.appendChild(col);
     }
 
-
+    // Show and hide loader functions
     function showLoader() {
         document.getElementById('loader').style.display = 'block';
     }
@@ -100,7 +113,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('loader').style.display = 'none';
     }
 
-    //HomePage function
+    // Load movies for homepage (with filters)
     function loadHomePage() {
         showLoader();
         const params = new URLSearchParams();
@@ -137,7 +150,7 @@ document.addEventListener('DOMContentLoaded', () => {
             .finally(() => hideLoader());
     }
 
-    //Search function
+    // Load search results page
     function loadSearchPage(query) {
         showLoader();
         sectionTitle.textContent = `Response for “${query}”`;
@@ -180,7 +193,7 @@ document.addEventListener('DOMContentLoaded', () => {
             .finally(() => hideLoader());
     }
 
-
+    // Load more button handler
     loadMoreBtn.addEventListener('click', () => {
         if (currentSearchQuery) {
             searchPage++;
@@ -191,6 +204,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    // Handle search form submit
     searchForm.addEventListener('submit', (e) => {
         e.preventDefault();
         const q = searchInput.value.trim();

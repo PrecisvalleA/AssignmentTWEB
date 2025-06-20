@@ -1,10 +1,17 @@
+/**
+ * Mongo Routes Proxy
+ *
+ * Forwards requests from /mongo/* to the MongoDB Reviews microservice.
+ */
+
 const express = require('express');
 const axios = require('axios');
 const router = express.Router();
 
-// Inoltra tutte le richieste a /mongo/* al server MongoDB
+// Proxy all requests under /mongo to the actual MongoDB microservice
 router.use('/', async (req, res) => {
   try {
+    // Rebuild the full target URL dynamically
     const mongoURL = `http://localhost:3001${req.originalUrl.replace('/mongo', '')}`;
 
     const response = await axios({

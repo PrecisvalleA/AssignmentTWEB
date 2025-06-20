@@ -1,3 +1,8 @@
+<!--
+  FrameVerse - Movie Details Page
+  Displays full movie details and associated reviews.
+  Fetches data from the central Express API Gateway (Spring Boot + MongoDB integration).
+-->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,12 +10,16 @@
     <title>Details</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>FrameVerse - Details</title>
+    <!-- Bootstrap 5 for layout and responsive design -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Custom styles -->
     <link rel="stylesheet" href="css/style.css">
+    <!-- Font Awesome for star ratings -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
 </head>
 <body>
+<!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-dark">
         <div class="container-fluid">
             <header>
@@ -44,11 +53,14 @@
             </div>
         </div>
     </nav>
+<!-- Loader -->
     <div id="loader" class="loader" style="display: none;"></div>
+<!-- Main Movie Details -->
     <div id="movie-details" class="container py-4"></div>
-
+<!-- Reviews Section with Filters -->
     <div  id="reviews-section" class="container mt-5">
         <h2 style="color: white">Reviews</h2>
+        <!-- Filters: Top Critic, Review Type, Sort -->
         <div class="row mb-3">
             <div class="d-flex justify-content-end mb-3 flex-wrap gap-2">
                 <div class="col-md-3">
@@ -76,19 +88,22 @@
                 </div>
             </div>
         </div>
+        <!-- Reviews List -->
         <div id="movie-reviews" class="mt-3"></div>
+        <!-- Load more reviews -->
         <div class="d-flex justify-content-center mt-3">
             <button id="load-more-reviews" class="btn btn-primary">Load More</button>
         </div>
     </div>
-
+<!-- Footer -->
     <footer class="bg-dark text-white text-center p-3 mt-5">
         <p class="mb-0">© 2025 FrameVerse. UniTo informatica</p>
     </footer>
+<!-- API Gateway URL -->
     <script>
         window.API_URL = "http://localhost:3000";
     </script>
-
+<!-- JS Logic -->
     <script src="js/details.js"></script>
 </body>
 </html>

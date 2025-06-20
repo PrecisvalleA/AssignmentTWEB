@@ -1,3 +1,8 @@
+/**
+ * Spring Routes Proxy
+ *
+ * Forwards specific requests under /spring/* to the Spring Boot backend server.
+ */
 const express = require('express');
 const axios = require('axios');
 const console = require("node:console");
@@ -6,7 +11,7 @@ const router = express.Router();
 const SPRING_SERVER_URL = 'http://localhost:8080'; // SpringBoot port
 
 
-
+// Get movie details by ID
 router.get('/movies/:id', async (req, res) => {
   const { id } = req.params;
   try {
@@ -18,7 +23,7 @@ router.get('/movies/:id', async (req, res) => {
   }
 });
 
-
+// Search movies by keyword
 router.get('/movies/search/:keyword', async (req, res) => {
   const {keyword} = req.params;
   const {page = 0, size = 12} = req.query;
@@ -33,6 +38,7 @@ router.get('/movies/search/:keyword', async (req, res) => {
   }
 })
 
+// Paginated movie filtering with multiple query parameters
 router.get('/movies/paginated', async (req, res) => {
   try {
     const response = await axios.get(`${SPRING_SERVER_URL}/movies/paginated`, {
