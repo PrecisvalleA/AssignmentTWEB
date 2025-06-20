@@ -1,12 +1,24 @@
+/**
+ * FrameVerse - Movie Details Page Logic
+ *
+ * Fetches and renders:
+ * - Movie Details (from Spring Boot API via API Gateway)
+ * - Reviews (from MongoDB Microservice via API Gateway)
+ * - Supports filtering reviews by Top Critic, Type, Sort by Date
+ * - Supports paginated reviews ("Load More")
+ * - Smooth scrolling for internal sections
+ */
 document.addEventListener('DOMContentLoaded', () => {
 
     const API_URL = window.API_URL || "http://localhost:3000";
 
     const movieDetailsContainer = document.getElementById('movie-details');
     const loader = document.getElementById('loader');
+    // Get movie ID from URL params
     const movieId = new URLSearchParams(window.location.search).get('id');
     let currentMovieTitle = '';
 
+    // Event listeners for review filters (dropdowns)
     ['filter-top-critic', 'filter-review-type', 'filter-sort-date'].forEach(id => {
         const el = document.getElementById(id);
         if (el) {
@@ -18,7 +30,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
 
-
+    // Loader utilities
     function showLoader() {
         if (loader) loader.style.display = 'block';
     }
@@ -38,7 +50,8 @@ document.addEventListener('DOMContentLoaded', () => {
         return `<div class="text-warning fs-5">${starsHtml}</div>`;
     }
 
-
+// Render full movie details including:
+    // - Poster, Rating, Oscars, Description, Genres, Countries, Languages, Themes, Studios, Cast, Crew, Releases
     function renderMovieDetails(movieDetails) {
         const {
             movie, genres, themes, countries, languages,
@@ -134,7 +147,7 @@ document.addEventListener('DOMContentLoaded', () => {
     `;
     }
 
-
+// Fetch full movie details from Spring Boot API
     function loadMovieDetails(movieId) {
         showLoader();
         const url = `${API_URL}/spring/movies/${movieId}`;
@@ -166,9 +179,10 @@ document.addEventListener('DOMContentLoaded', () => {
             })
             .finally(() => hideLoader());
     }
+    // Load details immediately
     loadMovieDetails(movieId);
 
-
+//Reviews pagination
     let currentPageReviews = 0;
     const limitReviews = 5;
 
@@ -177,6 +191,7 @@ document.addEventListener('DOMContentLoaded', () => {
         loadReviews(currentMovieTitle, true);
     });
 
+    // Fetch reviews for current movie title from MongoDB API
     function loadReviews(movieTitle, append = false){
         const reviewsContainer = document.getElementById('movie-reviews');
         if(!reviewsContainer) return;
@@ -186,6 +201,7 @@ document.addEventListener('DOMContentLoaded', () => {
         params.append('page', currentPageReviews);
         params.append('limit', limitReviews);
 
+        // Apply filters
         const topCritic = document.getElementById('filter-top-critic')?.value;
         const reviewType = document.getElementById('filter-review-type')?.value;
         const sortDate = document.getElementById('filter-sort-date')?.value;
