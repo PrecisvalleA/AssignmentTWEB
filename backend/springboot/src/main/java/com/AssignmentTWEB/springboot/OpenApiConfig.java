@@ -18,20 +18,18 @@ public class OpenApiConfig {
     public OpenAPI apiInfo() {
         return new OpenAPI()
                 .info(new Info()
-                        .title("Movie Full Stack Project")
+                        .title("IUM-TWEB UNITO PROJECT")
                         .description("""
-                            Project for Web Technologies assignment.
+                            Project for IUM-TWEB assignment.
 
                             Modules documented here:
-                            - Movies API (Spring Boot)
-                            - Actors, Crews, Countries, Genres, Languages, Posters, Releases, Studios, Themes
-                            - Oscar Awards integration
+                            - Movies API (Spring Boot): Actors, Crews, Countries, Genres, Languages, Posters, Releases, Studios, Themes, Oscar Awards
 
-                            Full stack project includes also:
-                            - Data Cleaning (Python + Jupiter Notebook)
-                            - Main REST API Server (Axios + Express)
-                            - Reviews Microservice (Node.js + Express)
-                            - Frontend Client (React or Angular or Vue depending on your stack)
+                            Project includes also:
+                            - Data Cleaning and Analysis(Python + Jupiter Notebook)
+                            - Main Server (Axios + Express)
+                            - Reviews Server (Node.js + Express)
+                            - Frontend Client (HTML + Javascript + Css + Bootstrap)
                         """)
                         .version("1.0.0")
                         .license(new License().name("MIT License")));
