@@ -35,15 +35,6 @@
                     <li class="nav-item">
                         <a class="nav-link active" aria-current="page" href="index.html">Home</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Movies</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Recensioni</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Top Rated</a>
-                    </li>
                 </ul>
 
                 <form id="search-form" class="d-flex" role="search">
@@ -55,6 +46,24 @@
     </nav>
 <!-- Loader -->
     <div id="loader" class="loader" style="display: none;"></div>
+
+<!-- Breadcrumb -->
+<div class="container-fluid px-3 py-2">
+    <div style="width: 15%">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb" style="background-color: transparent; margin-bottom: 0;">
+            <li class="breadcrumb-item">
+                <a href="index.html" style="color: white; font-size: 0.9rem;">Home</a>
+            </li>
+            <li class="breadcrumb-item active" aria-current="page" style="color: white; font-size: 0.9rem;">
+                Movie Details
+            </li>
+        </ol>
+    </nav>
+    </div>
+</div>
+
+
 <!-- Main Movie Details -->
     <div id="movie-details" class="container py-4"></div>
 <!-- Reviews Section with Filters -->
