@@ -28,6 +28,7 @@ The data preparation involved:
 - Language: Java (version 19)
 - Framework: SpringBoot
 - DataBase: PostgreSQL
+- Build Tool: Gradle
 Handled entities: Movies, Actors, Crews, Countries, Languages, Genres, Themes, Posters, Releases, Studios, The_Oscar_Awards.
 #RESTful API Endpoints:
   1) Retrieve movies and detailed information.
@@ -49,6 +50,7 @@ Handled entities: Movies, Actors, Crews, Countries, Languages, Genres, Themes, P
  2) Rich querying on reviews per movie or critic.
  3) Filters include Top Critic status, review type (Fresh/Rotten), sort by date.
  4) Pagination support for scalable review browsing.
+
 #Endpoints:
  1) Retrieve reviews by movie or critic.
  2) Submit new reviews.
@@ -61,11 +63,13 @@ A Node.js Express main server is designed to rapidly and efficiently process req
  2) Forwards /spring requests to the springboot server
  3) Forwards /mongo requests to the Express server
  4) Simplifies frontend/backend integration
+ 5) Uses Axios library for HTTP forwarding between internal services
 
 ## Frontend Web Application
 The client-side application was developed using standard web technologies, without any advanced frontend framework.
 - Technologies: HTML5, CSS3 (Bootstrap 5), Vanilla Javascript.
 - Fully responsive design.
+- No frameworks used.
 
 #Main functionalities:
 Homepage (index.html):
