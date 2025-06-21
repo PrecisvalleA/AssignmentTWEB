@@ -85,6 +85,38 @@ Movie Details Page (details.html):
 - Reviews (live querying to MongoDB microservice): filters by Top Critic, review type (fresh or rotten, date sorting).
 - Design notes: Smooth section navigation with in-page scrolling.
 
+## Project Setup and Launch Instructions (backend and frontend, NO data cleaning)
+Once you have the databases populated, then you need to install:
+- Java 19+
+- Gradle
+- Node.js 18+
+- npm 9+
+- MongoDB (running locally on port mongodb://localhost:27017/)
+- PostgreSQL (running locally on port 5432)
+
+To start Spring Boot server:
+- Navigate to the backend Spring Boot folder (cd backend/springboot)
+- Build and run the spring boot server using gradle (using IDE shortcuts or "./gradlew bootRun")
+- The server will run on "http://localhost:8080" (swagger documentation available on "http://localhost:8080/swagger-ui/index.html")
+To start Express MongoDB server:
+- Navigate to express folder (cd backend/express)
+- Install dependencies: npm install
+- Start the server: npm start
+- The server will run on "http://localhost:3001"
+To start Main Server:
+- Navigate to main_server folder (cd backend/main_server)
+- Install dependencies: npm install
+- Start the server: npm start
+- The server will run on "http://localhost:3000"
+Frontend FrameVerse Web App:
+- Open index.html file in a browser ("frontend/index.html). No build is required.
+
+Ports recap:
+- SpringBoot (java): 8080
+- Express Mongo Reviews (node.js): 3001
+- Express Main server: 3000
+- Frontend: Html on browser
+
 ## Technologies Summary:
 - Backend (static): Java Spring Boot with MySQL
 - Microservice (dynamic): Node.js Express with MongoDB
