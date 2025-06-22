@@ -22,7 +22,4 @@ app.use('/spring', springRoutes);
 app.use('/mongo', mongoRoutes);
 
 // Start server
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-    console.log(`Main server listening on port ${PORT}`);
-});
+module.exports = app;
