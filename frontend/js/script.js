@@ -123,7 +123,12 @@ document.addEventListener('DOMContentLoaded', () => {
         if (selectedRating) params.append('minRating', selectedRating);
         if (minDateFilter.value) params.append('minDate', minDateFilter.value);
         if (maxDateFilter.value) params.append('maxDate', maxDateFilter.value);
-        if (sortFilter.value) params.append('sort', sortFilter.value);
+        if (sortFilter.value) {
+            params.append('sort', sortFilter.value);
+        } else {
+            params.append('sort', 'rating,desc');
+        }
+
         if (genreFilter.value) params.append('genre', genreFilter.value);
 
         sectionTitle.textContent = 'Top Rated';
