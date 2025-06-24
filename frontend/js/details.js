@@ -255,6 +255,34 @@ document.addEventListener('DOMContentLoaded', () => {
             window.location.href = `index.html?q=${encodeURIComponent(query)}`;
         }
     });
+    // === Socket.IO Chat Integration ===
+    const socket = io(API_URL, { transports: ['websocket'] });
+
+    // Join a room named after the movie ID (isolated chat per film)
+    socket.emit('joinRoom', movieId);
+
+    const chatForm = document.getElementById('chat-form');
+    const chatInput = document.getElementById('chat-input');
+    const chatMessages = document.getElementById('chat-messages');
+
+    chatForm?.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const message = chatInput.value.trim();
+        if (message) {
+            socket.emit('chatMessage', { movieId, message });
+            chatInput.value = '';
+        }
+    });
+
+    socket.on('chatMessage', ({ message, timestamp }) => {
+        const time = new Date(timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        const div = document.createElement('div');
+        div.classList.add('mb-2');
+        div.innerHTML = `<strong>[${time}]</strong> ${message}`;
+        chatMessages.appendChild(div);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+    });
+
 
 
 });

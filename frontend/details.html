@@ -66,6 +66,24 @@
 
 <!-- Main Movie Details -->
 <div id="movie-details" class="container py-4"></div>
+<!-- Chat Section -->
+<div id="chat-section" class="container mt-4 mb-5">
+    <h2 style="color: white;">Live Chat</h2>
+    <div id="chat-messages" class="border rounded p-3 mb-3" style="height: 250px; overflow-y: auto; background-color: #222; color: white;">
+        <!-- Where the messages appear -->
+    </div>
+    <form id="chat-form" class="d-flex gap-2">
+        <input
+                id="chat-input"
+                type="text"
+                class="form-control"
+                placeholder="Scrivi un messaggio..."
+                autocomplete="off"
+                required
+        />
+        <button type="submit" class="btn btn-primary">Invia</button>
+    </form>
+</div>
 <!-- Reviews Section with Filters -->
 <div  id="reviews-section" class="container mt-5">
     <h2 style="color: white">Reviews</h2>
@@ -112,6 +130,8 @@
 <script>
     window.API_URL = "http://localhost:3000";
 </script>
+<!-- Socket.io Logic -->
+<script src="https://cdn.socket.io/4.7.2/socket.io.min.js" integrity="sha384-A0QZdkT6tT8jA6UMX35VpTysdJ+K/4MyEzImtNmXxR05pqkNw/SlPjJ0UuMK9KN1" crossorigin="anonymous"></script>
 <!-- JS Logic -->
 <script src="js/details.js"></script>
 </body>
