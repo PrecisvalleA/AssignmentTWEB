@@ -6,6 +6,7 @@ import com.AssignmentTWEB.springboot.Countries.CountryService;
 import com.AssignmentTWEB.springboot.Crews.Crew;
 import com.AssignmentTWEB.springboot.Crews.CrewService;
 import com.AssignmentTWEB.springboot.Genres.Genre;
+import com.AssignmentTWEB.springboot.Genres.GenreRepository;
 import com.AssignmentTWEB.springboot.Genres.GenreService;
 import com.AssignmentTWEB.springboot.Languages.Language;
 import com.AssignmentTWEB.springboot.OscarAwards.OscarAward;
@@ -25,10 +26,8 @@ import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Set;
+
+import java.util.*;
 
 import com.AssignmentTWEB.springboot.Movies.MovieDetailsDTO;
 
@@ -48,6 +47,9 @@ public class MovieService{
     private final CountryService countryService;
 
     private final GenreService genreService;
+
+    @Autowired
+    private GenreRepository genreRepository;
 
     private final ReleaseService releaseService;
 
@@ -109,12 +111,30 @@ public class MovieService{
             String minDate,   String maxDate,
             Double minDuration, Double maxDuration,
             String genre, Pageable pageable) {
-        return movieRepository.findWithAllFilters(
-                minRating, maxRating,
-                minDate,   maxDate,
-                minDuration, maxDuration,
-                genre, pageable
+        Page<Movie> moviePage = movieRepository.findBasicFilteredMovies(minRating, maxRating,
+                minDate, maxDate, minDuration, maxDuration, pageable);
+        List<Integer> movieIds = moviePage.getContent().stream()
+                .map(Movie::getId)
+                .toList();
+
+        List<Genre> genres = genreRepository.findGenresByMovieIds(movieIds);
+
+        Map<Integer, List<String>> genresMap = genres.stream().collect(
+                java.util.stream.Collectors.groupingBy(
+                        g -> g.getMovie().getId(),
+                        java.util.stream.Collectors.mapping(Genre::getGenre, java.util.stream.Collectors.toList())
+                )
         );
+
+        List<MoviePoster> posters = moviePage.getContent().stream().map(m -> {
+            String posterUrl = postersService.getPostersByMovie(m.getId()) != null ?
+                    postersService.getPostersByMovie(m.getId()).getLink() : "default.jpg";
+
+            String genresString = String.join(", ", genresMap.getOrDefault(m.getId(), List.of()));
+
+            return new MoviePoster(m, posterUrl, genresString);
+        }).toList();
+        return new org.springframework.data.domain.PageImpl<>(posters, pageable, moviePage.getTotalElements());
     }
 
     /** Find detailed movie by ID using DTO, including all the other entities */

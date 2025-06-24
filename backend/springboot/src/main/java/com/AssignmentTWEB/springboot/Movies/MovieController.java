@@ -15,6 +15,7 @@ import com.AssignmentTWEB.springboot.Studios.StudioService;
 import com.AssignmentTWEB.springboot.Themes.ThemeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -145,6 +146,12 @@ public class MovieController {
            @RequestParam(required = false) String maxDate,
            @RequestParam(required = false) String genre,
            @PageableDefault(size = 12, sort = "rating", direction = Sort.Direction.DESC) Pageable pageable){
+        if (!pageable.getSort().isSorted()) {
+            pageable = PageRequest.of(
+                    pageable.getPageNumber(),
+                    pageable.getPageSize()
+            );
+        }
         return movieService.filterMovies(minRating, maxRating, minDate,maxDate, minDuration, maxDuration,  genre, pageable);
     }
 

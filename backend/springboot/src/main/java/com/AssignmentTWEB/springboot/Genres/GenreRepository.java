@@ -2,6 +2,8 @@ package com.AssignmentTWEB.springboot.Genres;
 
 import com.AssignmentTWEB.springboot.Movies.Movie;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import java.util.List;
 
@@ -12,11 +14,6 @@ import java.util.List;
 @Repository
 public interface GenreRepository extends JpaRepository<Genre, Long> {
 
-    /**
-     * Retrieve all genres associated with a specific movie.
-     *
-     * @param movie the movie entity
-     * @return list of genres related to the given movie
-     */
-    List<Genre> findByMovie(Movie movie); //find all movie's genres
+    @Query("SELECT g FROM Genre g WHERE g.movie.id IN :ids")
+    List<Genre> findGenresByMovieIds(@Param("ids") List<Integer> ids);
 }

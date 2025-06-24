@@ -26,6 +26,6 @@ public class GenreService {
         Movie movie = new Movie();
         movie.setId(id);
 
-        return genreRepository.findByMovie(movie);
+        return genreRepository.findGenresByMovieIds((List<Integer>) movie);
     }
 }

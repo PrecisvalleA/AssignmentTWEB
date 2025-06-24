@@ -15,6 +15,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 import java.util.Set;
 
 
@@ -67,7 +69,7 @@ public interface MovieRepository extends JpaRepository<Movie, Integer> {//extend
            AND (:genre IS NULL OR g.genre ILIKE :genre)
            GROUP BY m.id, p.link
            """)
-        Page<MoviePoster> findWithAllFilters(
+    Page<MoviePoster> findWithAllFilters(
                 @Param("minRating") Double minRating,
                 @Param("maxRating") Double maxRating,
                 @Param("minDate")   String minDate,
@@ -77,6 +79,28 @@ public interface MovieRepository extends JpaRepository<Movie, Integer> {//extend
                 @Param("genre")     String genre,
                 Pageable pageable
         );
+
+
+    @Query("""
+        SELECT m FROM Movie m
+        WHERE m.rating IS NOT NULL
+          AND (:minRating IS NULL OR m.rating >= :minRating)
+          AND (:maxRating IS NULL OR m.rating <= :maxRating)
+          AND (:minDate IS NULL OR m.date >= :minDate)
+          AND (:maxDate IS NULL OR m.date <= :maxDate)
+          AND (:minDur IS NULL OR m.minute >= :minDur)
+          AND (:maxDur IS NULL OR m.minute <= :maxDur)
+          ORDER BY m.rating DESC, m.id DESC
+    """)
+    Page<Movie> findBasicFilteredMovies(
+            @Param("minRating") Double minRating,
+            @Param("maxRating") Double maxRating,
+            @Param("minDate") String minDate,
+            @Param("maxDate") String maxDate,
+            @Param("minDur") Double minDur,
+            @Param("maxDur") Double maxDur,
+            Pageable pageable
+    );
 
     /**
      * Find a movie by ID.

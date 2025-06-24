@@ -10,18 +10,19 @@ const router = express.Router();
 
 const SPRING_SERVER_URL = 'http://localhost:8080'; // SpringBoot port
 
-
-// Get movie details by ID
-router.get('/movies/:id', async (req, res) => {
-  const { id } = req.params;
+// Paginated movie filtering with multiple query parameters
+router.get('/movies/paginated', async (req, res) => {
   try {
-    const response = await axios.get(`${SPRING_SERVER_URL}/movies/${id}`);
+    const response = await axios.get(`${SPRING_SERVER_URL}/movies/paginated`, {
+      params: req.query
+    });
     res.json(response.data);
   } catch (error) {
-    console.error('Error movie details:', error.message);
-    res.status(500).json({ error: 'Error movie details:' });
+    console.error('Error fetching paginated movies:', error.message);
+    res.status(500).json({ error: 'Error fetching paginated movies' });
   }
-});
+})
+
 
 // Search movies by keyword
 router.get('/movies/search/:keyword', async (req, res) => {
@@ -38,17 +39,16 @@ router.get('/movies/search/:keyword', async (req, res) => {
   }
 })
 
-// Paginated movie filtering with multiple query parameters
-router.get('/movies/paginated', async (req, res) => {
+// Get movie details by ID
+router.get('/movies/:id', async (req, res) => {
+  const { id } = req.params;
   try {
-    const response = await axios.get(`${SPRING_SERVER_URL}/movies/paginated`, {
-      params: req.query
-    });
+    const response = await axios.get(`${SPRING_SERVER_URL}/movies/${id}`);
     res.json(response.data);
   } catch (error) {
-    console.error('Error fetching paginated movies:', error.message);
-    res.status(500).json({ error: 'Error fetching paginated movies' });
+    console.error('Error movie details:', error.message);
+    res.status(500).json({ error: 'Error movie details:' });
   }
-})
+});
 
 module.exports = router;
