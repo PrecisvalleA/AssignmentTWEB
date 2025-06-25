@@ -256,33 +256,36 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
     // === Socket.IO Chat Integration ===
-    const socket = io(API_URL, { transports: ['websocket'] });
+    const chatForm     = document.getElementById('chat-form');
+    const chatInput    = document.getElementById('chat-input');
+    const chatMessages = document.getElementById('chat-messages');
+
+    const socket = io(`${API_URL}/chat`, { transports: ['websocket'] });
 
     // Join a room named after the movie ID (isolated chat per film)
     socket.emit('joinRoom', movieId);
 
-    const chatForm = document.getElementById('chat-form');
-    const chatInput = document.getElementById('chat-input');
-    const chatMessages = document.getElementById('chat-messages');
-
-    chatForm?.addEventListener('submit', (e) => {
+    chatForm.addEventListener('submit', (e) => {
         e.preventDefault();
-        const message = chatInput.value.trim();
-        if (message) {
-            socket.emit('chatMessage', { movieId, message });
-            chatInput.value = '';
-        }
+        const text = chatInput.value.trim();
+        if (!text) return;
+
+        socket.emit('chatMessage', { movieId, message: text });   // username opz.
+        chatInput.value = '';
     });
 
-    socket.on('chatMessage', ({ message, timestamp }) => {
-        const time = new Date(timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    socket.on('chatMessage', ({ username = 'User', message, timestamp }) => {
+        const time = new Date(timestamp)
+            .toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
         const div = document.createElement('div');
-        div.classList.add('mb-2');
-        div.innerHTML = `<strong>[${time}]</strong> ${message}`;
+        div.className = 'mb-2';
+        div.innerHTML = `<strong>[${time}] ${username}:</strong> ${message}`;
         chatMessages.appendChild(div);
         chatMessages.scrollTop = chatMessages.scrollHeight;
     });
 
+    socket.io.on('error',   err => console.error('Socket.IO error', err));
+    socket.io.on('reconnect', () => console.log('Reconnected!'));
 
 
 });

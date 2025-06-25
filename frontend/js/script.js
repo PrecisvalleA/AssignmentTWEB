@@ -175,21 +175,13 @@ document.addEventListener('DOMContentLoaded', () => {
                     loadMoreBtn.style.display = 'none';
                     return;
                 }
-                items.forEach(({ movie }) => {
-                    fetch(`${API_URL}/spring/movies/${movie.id}`)
-                        .then(response => response.json())
-                        .then(details => {
-                            const posterUrl = details.posters?.link ?? 'default.jpg';
-                            const genres = details.genres?.map(g => g.genre).join(', ') ?? 'N/A';
-                            renderCard(details.movie, posterUrl, genres);
-                        })
-                        .catch(error => {
-                            console.error('Movie details error:', error);
-                            renderCard(movie, 'default.jpg', 'N/A');
-                        });
-                    loadMoreBtn.style.display = '';
-                    loadMoreBtn.disabled = items.length < limit;
-                })
+                items.forEach(items => {
+                    const [movie, posterUrl] = items;
+                    const genres = 'N/A';
+                    renderCard(movie, posterUrl ?? 'default.jpg', genres);
+                });
+                loadMoreBtn.style.display = '';
+                loadMoreBtn.disabled = items.length < limit;
             })
             .catch(error => {
                 console.error('Error: movies not found', error);
