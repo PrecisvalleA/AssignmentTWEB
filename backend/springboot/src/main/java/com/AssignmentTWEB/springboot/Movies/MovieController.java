@@ -124,7 +124,7 @@ public class MovieController {
             @ApiResponse(responseCode = "500", description = "Internal server error")
     })
     @GetMapping("/search/{keyword}")
-    public Page<MoviePoster> findByName(@PathVariable String keyword, @PageableDefault(size = 12) Pageable pageable) {
+    public Page<Object[]> findByName(@PathVariable String keyword, @PageableDefault(size = 12) Pageable pageable) {
         return movieService.findMoviesByName(keyword, pageable);
     }
 

@@ -38,9 +38,9 @@ public interface MovieRepository extends JpaRepository<Movie, Integer> {//extend
             "FROM Movie m " +
             "LEFT JOIN Posters p ON p.movie.id = m.id " +
             "LEFT JOIN Genre g ON g.movie.id = m.id " +
-            "WHERE LOWER(m.name) LIKE LOWER(CONCAT('%', :name, '%')) " +
+            "WHERE LOWER(m.name) LIKE LOWER(CONCAT('%', :keyword, '%')) " +
             "GROUP BY m.id, p.link")
-    Page<MoviePoster> findByNameContainingIgnoreCase(@Param("name") String name, Pageable pageable);
+    Page<Object[]> findByNameContainingIgnoreCase(@Param("keyword") String keyword, Pageable pageable);
 
     /**
      * Search movies with multiple filters: rating, date, duration, and genre.

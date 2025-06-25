@@ -96,7 +96,7 @@ public class MovieService{
 
 
     /**search a movie by a keyword insert by user*/
-    public Page<MoviePoster> findMoviesByName(String keyword, Pageable pageable) {
+    public Page<Object[]> findMoviesByName(String keyword, Pageable pageable) {
         return movieRepository.findByNameContainingIgnoreCase(keyword, pageable);
     }
 
