@@ -26,21 +26,23 @@ router.get('/movies/paginated', async (req, res) => {
 
 // Search movies by keyword
 router.get('/movies/search/:keyword', async (req, res) => {
-  const {keyword} = req.params;
-  const {page = 0, size = 12} = req.query;
+
   try {
+    const {keyword} = req.params;
+    const {page = 0, size = 12} = req.query;
     const response = await axios.get(`${SPRING_SERVER_URL}/movies/search/${encodeURIComponent(keyword)}`, {
       params: {page, size}
     });
-    res.json(response.data);
+    res.status(response.status).json(response.data);
   } catch (error) {
-    console.error('Error searching movie:', error.message);
-    res.status(500).json({error: 'Movie search failed'});
+    console.error('Error search → status:', error.response?.status);
+    console.error('Error search → body  :', error.response?.data);
+    res.status(status).json(body);
   }
 })
 
 // Get movie details by ID
-router.get('/movies/:id', async (req, res) => {
+router.get('/movies/:id(\\d+)', async (req, res) => {
   const { id } = req.params;
   try {
     const response = await axios.get(`${SPRING_SERVER_URL}/movies/${id}`);
