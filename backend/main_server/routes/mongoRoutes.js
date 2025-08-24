@@ -9,6 +9,49 @@ const axios = require('axios');
 const router = express.Router();
 
 // Proxy all requests under /mongo to the actual MongoDB microservice
+/**
+ * @swagger
+ * /mongo/{proxyPath}:
+ *   get:
+ *     summary: Proxy GET request to the MongoDB Reviews microservice
+ *     parameters:
+ *       - in: path
+ *         name: proxyPath
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Remaining path forwarded to MongoDB microservice
+ *       - in: header
+ *         name: Authorization
+ *         schema:
+ *           type: string
+ *         description: Optional authorization header
+ *     responses:
+ *       200:
+ *         description: Successful response from MongoDB microservice
+ *       500:
+ *         description: Server error MongoDB
+ *
+ *   post:
+ *     summary: Proxy POST request to the MongoDB Reviews microservice
+ *     parameters:
+ *       - in: path
+ *         name: proxyPath
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Remaining path forwarded to MongoDB microservice
+ *       - in: header
+ *         name: Authorization
+ *         schema:
+ *           type: string
+ *         description: Optional authorization header
+ *     responses:
+ *       200:
+ *         description: Successful response from MongoDB microservice
+ *       500:
+ *         description: Server error MongoDB
+ */
 router.use('/', async (req, res) => {
   try {
     // Rebuild the full target URL dynamically

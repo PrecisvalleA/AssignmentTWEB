@@ -11,6 +11,33 @@ const router = express.Router();
 const SPRING_SERVER_URL = 'http://localhost:8080'; // SpringBoot port
 
 // Paginated movie filtering with multiple query parameters
+/**
+ * @swagger
+ * /movies/paginated:
+ *   get:
+ *     summary: Paginated movie filtering with multiple query parameters
+ *     parameters:
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: integer
+ *         description: Page number
+ *       - in: query
+ *         name: size
+ *         schema:
+ *           type: integer
+ *         description: Page size
+ *       - in: query
+ *         name: [other possible filters]
+ *         schema:
+ *           type: string
+ *         description: Other possible filtering parameters
+ *     responses:
+ *       200:
+ *         description: Paginated list of movies
+ *       500:
+ *         description: Error fetching paginated movies
+ */
 router.get('/movies/paginated', async (req, res) => {
   try {
     const response = await axios.get(`${SPRING_SERVER_URL}/movies/paginated`, {
@@ -25,6 +52,36 @@ router.get('/movies/paginated', async (req, res) => {
 
 
 // Search movies by keyword
+/**
+ * @swagger
+ * /movies/search/{keyword}:
+ *   get:
+ *     summary: Search movies by keyword
+ *     parameters:
+ *       - in: path
+ *         name: keyword
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Keyword to search movies
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: integer
+ *           default: 0
+ *         description: Page number
+ *       - in: query
+ *         name: size
+ *         schema:
+ *           type: integer
+ *           default: 12
+ *         description: Page size
+ *     responses:
+ *       200:
+ *         description: Search results
+ *       500:
+ *         description: Error searching movies
+ */
 router.get('/movies/search/:keyword', async (req, res) => {
 
   try {
@@ -42,6 +99,24 @@ router.get('/movies/search/:keyword', async (req, res) => {
 })
 
 // Get movie details by ID
+/**
+ * @swagger
+ * /movies/{id}:
+ *   get:
+ *     summary: Get movie details by ID
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: Movie ID
+ *     responses:
+ *       200:
+ *         description: Movie details
+ *       500:
+ *         description: Error fetching movie details
+ */
 router.get('/movies/:id(\\d+)', async (req, res) => {
   const { id } = req.params;
   try {
