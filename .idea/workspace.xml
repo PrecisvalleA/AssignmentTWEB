@@ -5,27 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="ca81a239-9cf9-485f-b70b-7dc7baea030e" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/AssignmentTWEB.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/AssignmentTWEB.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/ad599eff-1743-4a1a-bb50-b9ec7f06d3f5.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/ad599eff-1743-4a1a-bb50-b9ec7f06d3f5.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/ad599eff-1743-4a1a-bb50-b9ec7f06d3f5/storage_v2/_src_/database/Progetto_TWEB.28_qGg/schema/information_schema.FNRwLQ.meta" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/ad599eff-1743-4a1a-bb50-b9ec7f06d3f5/storage_v2/_src_/database/Progetto_TWEB.28_qGg/schema/information_schema.FNRwLQ.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/ad599eff-1743-4a1a-bb50-b9ec7f06d3f5/storage_v2/_src_/database/Progetto_TWEB.28_qGg/schema/pg_catalog.0S1ZNQ.meta" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/ad599eff-1743-4a1a-bb50-b9ec7f06d3f5/storage_v2/_src_/database/Progetto_TWEB.28_qGg/schema/pg_catalog.0S1ZNQ.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/ad599eff-1743-4a1a-bb50-b9ec7f06d3f5/storage_v2/_src_/database/Progetto_TWEB.28_qGg/schema/pg_catalog.0S1ZNQ.zip" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/ad599eff-1743-4a1a-bb50-b9ec7f06d3f5/storage_v2/_src_/database/Progetto_TWEB.28_qGg/schema/pg_catalog.0S1ZNQ.zip" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/notebooks/.env" beforeDir="false" afterPath="$PROJECT_DIR$/notebooks/.env" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/notebooks/data_cleaning/actors.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/notebooks/data_cleaning/actors.ipynb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/notebooks/data_cleaning/countries.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/notebooks/data_cleaning/countries.ipynb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/notebooks/data_cleaning/crews.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/notebooks/data_cleaning/crews.ipynb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/notebooks/data_cleaning/genres.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/notebooks/data_cleaning/genres.ipynb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/notebooks/data_cleaning/languages.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/notebooks/data_cleaning/languages.ipynb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/notebooks/data_cleaning/movies.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/notebooks/data_cleaning/movies.ipynb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/notebooks/data_cleaning/posters.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/notebooks/data_cleaning/posters.ipynb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/notebooks/data_cleaning/releases.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/notebooks/data_cleaning/releases.ipynb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/notebooks/data_cleaning/reviews.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/notebooks/data_cleaning/reviews.ipynb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/notebooks/data_cleaning/studios.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/notebooks/data_cleaning/studios.ipynb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/notebooks/data_cleaning/the_oscar_awards.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/notebooks/data_cleaning/the_oscar_awards.ipynb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/notebooks/data_cleaning/themes.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/notebooks/data_cleaning/themes.ipynb" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/notebooks/data_exploration/genre_analysis.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/notebooks/data_exploration/genre_analysis.ipynb" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -100,7 +80,7 @@
       <workItem from="1755961663013" duration="4509000" />
       <workItem from="1756028107493" duration="816000" />
       <workItem from="1756117094442" duration="6112000" />
-      <workItem from="1756145866465" duration="7201000" />
+      <workItem from="1756145866465" duration="14198000" />
     </task>
     <servers />
   </component>
