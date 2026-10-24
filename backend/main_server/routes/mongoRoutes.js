@@ -1,75 +1,93 @@
 /**
  * Mongo Routes Proxy
  *
- * Forwards requests from /mongo/* to the MongoDB Reviews microservice.
+ * Forwards the requests under /mongo/* to the Express/MongoDB reviews server.
+ * Example: GET /mongo/reviews/movie/Barbie -> GET http://localhost:3001/reviews/movie/Barbie
  */
-
 const express = require('express');
 const axios = require('axios');
 const router = express.Router();
 
-// Proxy all requests under /mongo to the actual MongoDB microservice
+const MONGO_SERVER_URL = process.env.MONGO_SERVER_URL || 'http://localhost:3001';
+const REQUEST_TIMEOUT_MS = 10000;
+
 /**
  * @swagger
- * /mongo/{proxyPath}:
+ * /mongo/reviews/movie/{title}:
  *   get:
- *     summary: Proxy GET request to the MongoDB Reviews microservice
+ *     summary: Reviews of a movie (filters and pagination)
  *     parameters:
  *       - in: path
- *         name: proxyPath
+ *         name: title
  *         required: true
- *         schema:
- *           type: string
- *         description: Remaining path forwarded to MongoDB microservice
- *       - in: header
- *         name: Authorization
- *         schema:
- *           type: string
- *         description: Optional authorization header
+ *         schema: { type: string }
+ *       - in: query
+ *         name: page
+ *         schema: { type: integer, default: 0 }
+ *       - in: query
+ *         name: limit
+ *         schema: { type: integer, default: 5 }
+ *       - in: query
+ *         name: top_critic
+ *         schema: { type: boolean }
+ *       - in: query
+ *         name: review_type
+ *         schema: { type: string, enum: [Fresh, Rotten] }
+ *       - in: query
+ *         name: sort_date
+ *         schema: { type: string, enum: [asc, desc] }
  *     responses:
  *       200:
- *         description: Successful response from MongoDB microservice
- *       500:
- *         description: Server error MongoDB
+ *         description: List of reviews
+ *       502:
+ *         description: Reviews server unreachable
  *
- *   post:
- *     summary: Proxy POST request to the MongoDB Reviews microservice
+ * /mongo/reviews/critic/{name}:
+ *   get:
+ *     summary: Reviews written by a critic
  *     parameters:
  *       - in: path
- *         name: proxyPath
+ *         name: name
  *         required: true
- *         schema:
- *           type: string
- *         description: Remaining path forwarded to MongoDB microservice
- *       - in: header
- *         name: Authorization
- *         schema:
- *           type: string
- *         description: Optional authorization header
+ *         schema: { type: string }
  *     responses:
  *       200:
- *         description: Successful response from MongoDB microservice
- *       500:
- *         description: Server error MongoDB
+ *         description: List of reviews
+ *
+ * /mongo/reviews:
+ *   post:
+ *     summary: Submit a new review
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *     responses:
+ *       201:
+ *         description: Review created
+ *       400:
+ *         description: Invalid review data
  */
 router.use('/', async (req, res) => {
   try {
-    // Rebuild the full target URL dynamically
-    const mongoURL = `http://localhost:3001${req.originalUrl.replace('/mongo', '')}`;
-
+    const hasBody = ['POST', 'PUT', 'PATCH'].includes(req.method);
     const response = await axios({
       method: req.method,
-      url: mongoURL,
-      headers: req.headers,
-      data: req.body
+      // req.url is the part after "/mongo", query string included
+      url: `${MONGO_SERVER_URL}${req.url}`,
+      data: hasBody ? req.body : undefined,
+      timeout: REQUEST_TIMEOUT_MS
     });
-
     res.status(response.status).json(response.data);
   } catch (error) {
-    res.status(error.response?.status || 500).json({
-      message: 'Server error MongoDB',
-      error: error.message
-    });
+    if (error.response) {
+      // The reviews server answered with an error: pass it through
+      return res.status(error.response.status).json(error.response.data);
+    }
+    console.error('Error contacting the reviews server:', error.message);
+    const status = error.code === 'ECONNABORTED' ? 504 : 502;
+    res.status(status).json({ error: 'Reviews server unavailable', detail: error.message });
   }
 });
 
