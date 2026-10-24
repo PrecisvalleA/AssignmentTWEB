@@ -19,10 +19,7 @@ var app = express();
 const mongoose = require('mongoose');
 
 // MongoDB Connection Setup
-mongoose.connect('mongodb://localhost:27017/reviews', {
-  useNewUrlParser: true,
-  useUnifiedTopology: true
-})
+mongoose.connect(process.env.MONGO_URL || 'mongodb://localhost:27017/reviews')
     .then(() => console.log('Connected to MongoDB'))
     .catch(err => console.error('MongoDB connection error:', err));
 // view engine setup
@@ -61,15 +58,9 @@ app.use(function(req, res, next) {
   next(createError(404));
 });
 
-//Global error handler
+// Global error handler: this is a JSON API, so errors are returned as JSON (not HTML pages)
 app.use(function(err, req, res, next) {
-  // set locals, only providing error in development
-  res.locals.message = err.message;
-  res.locals.error = req.app.get('env') === 'development' ? err : {};
-
-  // render the error page
-  res.status(err.status || 500);
-  res.render('error');
+  res.status(err.status || 500).json({ message: err.message });
 });
 
 
