@@ -1,125 +1,149 @@
+/* FrameVerse – dark cinema theme, on top of Bootstrap 5.3 (dark mode) */
+:root {
+    --ink: #070c24;
+    --panel: #0f1736;
+    --panel-2: #16204a;
+    --line: rgba(255, 255, 255, .10);
+    --marquee: #ffb62e;
+    --marquee-hover: #ffc95c;
+    --text: #eef1fb;
+    --muted: #9ba6c9;
 
-body{
-    background-color: darkblue;
-}
-
-nav{
-    background-color: blue;
-}
-
-.logo {
-    display: flex;
-    align-items: center;
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 2.5rem;
-    color: #333;
-}
-.logo .icon {
-    font-size: 2.8rem;
-    margin-right: 0.5rem;
-}
-.logo .highlight {
-    color: #e50914;
+    --bs-primary: #ffb62e;
+    --bs-primary-rgb: 255, 182, 46;
+    --bs-body-bg: var(--ink);
+    --bs-body-color: var(--text);
+    --bs-body-font-family: 'DM Sans', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
 }
 
-.nav-link{
-    font-size: 20px;
-}
-.col{
-    color: white;
-    font-size: 25px;
-}
-#min-date-filter:hover{
-    cursor: pointer;
-    transition: color 0.3s;
-}
-#max-date-filter:hover{
-    cursor: pointer;
-    transition: color 0.3s;
+body {
+    background:
+            radial-gradient(900px 420px at 50% -120px, rgba(255, 182, 46, .16), transparent 70%),
+            var(--ink);
+    background-attachment: fixed;
+    min-height: 100vh;
+    overflow-x: hidden;
 }
 
-#genre-filter:hover{
-    cursor: pointer;
-    transition: color 0.3s;
+/* ---------- Titles ---------- */
+h1, h2, h3, #section-title {
+    font-family: 'Bebas Neue', Impact, 'Arial Narrow', sans-serif;
+    font-weight: 400;
+    letter-spacing: .04em;
+    font-style: normal !important;
+    color: var(--text);
+}
+#section-title { font-size: 2.8rem; margin: 1.5rem 0 2rem !important; }
+#section-title::after {
+    content: ''; display: block; width: 64px; height: 4px; margin: .5rem auto 0;
+    border-radius: 2px; background: var(--marquee);
+}
+#movie-details h1 { font-size: 3.4rem; line-height: 1; }
+#movie-details h3, #chat-section h2, #reviews-section h2 {
+    font-size: 2rem; padding-left: .75rem; border-left: 4px solid var(--marquee);
 }
 
-#sort-filter:hover{
-    cursor: pointer;
-    transition: color 0.3s;
+/* ---------- Navbar ---------- */
+nav.navbar {
+    position: sticky; top: 0; z-index: 1030;
+    background: rgba(7, 12, 36, .88) !important;
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--line);
 }
+.nav-link { font-size: 1rem; font-weight: 500; }
+.nav-link.active { color: var(--marquee) !important; }
+#search-bar { min-width: 260px; border-radius: 999px; background: var(--panel); border-color: var(--line); }
+#search-form .btn { border-radius: 999px; border-color: var(--line); }
 
-.fa-star {
-    color: #ccc;
-    cursor: pointer;
-    transition: color 0.3s;
+/* ---------- Filters ---------- */
+.filters {
+    background: var(--panel); border: 1px solid var(--line);
+    border-radius: 14px; padding: 1rem 1.25rem;
 }
-
-.fa-star.checked {
-    color: gold;
+.filters .col, .filters label { font-size: .9rem; color: var(--muted); font-weight: 500; }
+.filters .form-control, .filters .form-select {
+    background-color: var(--panel-2); border-color: var(--line); border-radius: 10px;
 }
-
-.text{
-    font-family: "Audiowide", sans-serif;
+.form-control:focus, .form-select:focus {
+    border-color: var(--marquee); box-shadow: 0 0 0 .2rem rgba(255, 182, 46, .2);
 }
-.card{
-    background-color: blue;
-    box-shadow: 0 2px 6px 0 rgba(0,0,0,0.2);
-    transition: 0.3s;
-    color: white;
-    border-radius: 15px;
-    border-color: white;
+#rating-stars .fa-star { font-size: 24px !important; margin-right: 2px; transition: transform .15s; }
+#rating-stars .fa-star:hover { transform: scale(1.2); }
+.fa-star { color: #3b4770; cursor: pointer; }
+.fa-star.checked { color: var(--marquee); }
+
+/* ---------- Buttons ---------- */
+.btn-primary {
+    --bs-btn-color: #14120a; --bs-btn-bg: var(--marquee); --bs-btn-border-color: var(--marquee);
+    --bs-btn-hover-color: #14120a; --bs-btn-hover-bg: var(--marquee-hover); --bs-btn-hover-border-color: var(--marquee-hover);
+    --bs-btn-active-color: #14120a; --bs-btn-active-bg: var(--marquee-hover); --bs-btn-active-border-color: var(--marquee-hover);
+    --bs-btn-disabled-color: #7c86a8; --bs-btn-disabled-bg: #232d57; --bs-btn-disabled-border-color: #232d57;
+    border-radius: 999px; padding: .5rem 1.8rem; font-weight: 700;
 }
-
-#section-title{
-    color: white;
+.btn-outline-primary {
+    --bs-btn-border-color: var(--line); --bs-btn-hover-bg: var(--marquee);
+    --bs-btn-hover-border-color: var(--marquee); --bs-btn-active-bg: var(--marquee);
 }
+.btn-outline-primary:hover, .btn-outline-primary:active { color: #14120a !important; }
+.badge.bg-primary { color: #14120a !important; }
 
-.card:hover{
-    transform: scale(1.1);
-    z-index: 2;
-    cursor: pointer;
+/* ---------- Panels (cast, crew, reviews, oscars...) ---------- */
+.card { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; color: var(--text); }
+.list-group-item { background: var(--panel); color: var(--text); border-color: var(--line); }
+.text-muted { color: var(--muted) !important; }
+.alert-warning {
+    background: rgba(255, 182, 46, .10); color: #ffe3a3;
+    border: 1px solid rgba(255, 182, 46, .35); border-radius: 10px;
 }
+#movie-details { color: var(--text); }
+#movie-details h5 { color: var(--muted); font-weight: 500; }
+#movie-details img.img-fluid { border-radius: 8px; box-shadow: 0 16px 40px rgba(0, 0, 0, .55); }
+#movie-reviews .card-subtitle { color: var(--muted); font-size: .85rem; margin-bottom: .6rem; }
 
-.card-img-top {
-        width: auto;
-        height: 100%;
-        object-fit: contain;
+/* ---------- Movie grid: poster first, no frame ---------- */
+#movies-list { color: var(--text) !important; margin-bottom: 4rem; }
+#movies-list .card { background: transparent; border: 0; box-shadow: none; cursor: pointer; }
+#movies-list .card-img-top {
+    height: auto !important; aspect-ratio: 2 / 3; object-fit: cover;
+    border-radius: 8px; background: var(--panel);
+    box-shadow: 0 10px 24px rgba(0, 0, 0, .5);
+    outline: 2px solid transparent; outline-offset: 3px;
+    transition: outline-color .2s, transform .2s;
 }
+#movies-list .card:hover .card-img-top { outline-color: var(--marquee); transform: translateY(-4px); }
+#movies-list .card-body { padding: .8rem .25rem 0; font-size: .85rem; color: var(--muted); }
+#movies-list .card-title { text-align: left !important; font-size: 1rem; font-weight: 700; color: var(--text); min-height: 2.6em; }
+#movies-list div.card-text:first-of-type { margin-top: .2rem !important; color: var(--marquee); font-weight: 700; }
+#movies-list div.card-text + small, #movies-list small.card-text { display: block; }
 
-#movies-list{
-    color: darkgrey;
-    margin-bottom: 200px;
+/* ---------- Chat ---------- */
+#chat-messages {
+    background: var(--panel) !important; border-color: var(--line) !important;
+    border-radius: 12px !important; color: var(--text) !important;
 }
+#chat-section .form-control, #chat-section .btn { border-radius: 999px; }
 
-#movie-details{
-    color: white;
+/* ---------- Footer & loader ---------- */
+footer.bg-dark {
+    background: transparent !important; color: var(--muted);
+    border-top: 1px solid var(--line);
 }
-
-#movie-review{
-    color: white;
-}
-
-.text-muted{
-    color: gold;
-}
-
-
-
 .loader {
-    border: 8px solid black;
-    border-top: 8px solid #3498db;
-    width: 60px;
-    height: 60px;
+    border: 6px solid rgba(255, 255, 255, .15); border-top-color: var(--marquee);
+    border-radius: 50%; width: 56px; height: 56px;
     animation: spin 1s linear infinite;
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    margin-top: -30px;
-    margin-left: -30px;
-    z-index: 1000;
+    position: fixed; top: 50%; left: 50%; margin: -28px 0 0 -28px; z-index: 2000;
 }
+@keyframes spin { to { transform: rotate(360deg); } }
 
-@keyframes spin {
-    0%   { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+/* ---------- Accessibility & responsive ---------- */
+a:focus-visible, button:focus-visible, .card:focus-visible { outline: 3px solid var(--marquee); outline-offset: 2px; }
+@media (max-width: 768px) {
+    .filters .row { row-gap: .5rem; }
+    .filters .col { flex: 0 0 50%; }
+    #section-title { font-size: 2.2rem; }
+    #movie-details h1 { font-size: 2.4rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+    * { transition: none !important; animation-duration: 0s !important; }
 }
