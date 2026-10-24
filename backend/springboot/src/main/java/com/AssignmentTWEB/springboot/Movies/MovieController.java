@@ -22,7 +22,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
+import org.springframework.web.server.ResponseStatusException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -63,14 +63,14 @@ public class MovieController {
     /**
      * Retrieve all movies in the database.
      */
-    @Operation(summary = "Retrieve all movies", description = "Returns a complete list of all movies stored in the database.")
+    @Operation(summary = "Retrieve movies (paginated)", description = "Returns a page of movies. Use the page, size and sort query parameters.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Movies retrieved successfully"),
             @ApiResponse(responseCode = "500", description = "Internal server error")
     })
     @GetMapping
-    public List<Movie> getAllMovies() {
-        return movieService.getAllMovies();
+    public Page<Movie> getAllMovies(@PageableDefault(size = 12, sort = "id") Pageable pageable) {
+        return movieService.getAllMovies(pageable);
     }
 
     /**
@@ -90,29 +90,36 @@ public class MovieController {
     /**
      * Add a new movie or update an existing one.
      */
-    @Operation(summary = "Create or update a movie", description = "Adds a new movie or updates an existing one based on the provided data.")
+    @Operation(summary = "Create or update a movie", description = "Adds a new movie or updates an existing one. The movie name is required.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Movie saved successfully"),
-            @ApiResponse(responseCode = "400", description = "Invalid movie data"),
+            @ApiResponse(responseCode = "201", description = "Movie saved successfully"),
+            @ApiResponse(responseCode = "400", description = "Invalid movie data (name is required)"),
             @ApiResponse(responseCode = "500", description = "Internal server error")
     })
     @PostMapping
-    public Movie saveMovie(@RequestBody Movie movie) {
-        return movieService.saveMovie(movie);
+    public ResponseEntity<Movie> saveMovie(@RequestBody Movie movie) {
+        if (movie.getName() == null || movie.getName().isBlank()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Movie name is required");
+        }
+        return ResponseEntity.status(HttpStatus.CREATED).body(movieService.saveMovie(movie));
     }
 
     /**
      * Delete a movie by ID.
      */
-    @Operation(summary = "Delete a movie by ID", description = "Deletes the movie corresponding to the provided ID.")
+    @Operation(summary = "Delete a movie by ID", description = "Deletes the movie and all its related rows (actors, crew, genres, ...).")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "204", description = "Movie deleted successfully"),
             @ApiResponse(responseCode = "404", description = "Movie not found"),
             @ApiResponse(responseCode = "500", description = "Internal server error")
     })
     @DeleteMapping("/{id}")
-    public void deleteById(@PathVariable Integer id) {
+    public ResponseEntity<Void> deleteById(@PathVariable Integer id) {
+        if (!movieService.existsById(id)) {
+            return ResponseEntity.notFound().build();
+        }
         movieService.deleteMovie(id);
+        return ResponseEntity.noContent().build();
     }
 
     /**
@@ -138,21 +145,31 @@ public class MovieController {
     })
     @GetMapping("/paginated")
     public Page<MoviePoster> getPaginatedMovies(
-           @RequestParam(required = false) Double minRating,
-           @RequestParam(required = false) Double maxRating,
-           @RequestParam(required = false) Double minDuration,
-           @RequestParam(required = false) Double maxDuration,
-           @RequestParam(required = false) String minDate,
-           @RequestParam(required = false) String maxDate,
-           @RequestParam(required = false) String genre,
-           @PageableDefault(size = 12, sort = "rating", direction = Sort.Direction.DESC) Pageable pageable){
-        if (!pageable.getSort().isSorted()) {
-            pageable = PageRequest.of(
-                    pageable.getPageNumber(),
-                    pageable.getPageSize()
-            );
+            @RequestParam(required = false) Double minRating,
+            @RequestParam(required = false) Double maxRating,
+            @RequestParam(required = false) Double minDuration,
+            @RequestParam(required = false) Double maxDuration,
+            @RequestParam(required = false) String minDate,
+            @RequestParam(required = false) String maxDate,
+            @RequestParam(required = false) String genre,
+            @PageableDefault(size = 12, sort = "rating", direction = Sort.Direction.DESC) Pageable pageable){
+
+        if (genre != null) {
+            genre = genre.trim();
+            if (genre.isEmpty() || genre.equalsIgnoreCase("all") || genre.equalsIgnoreCase("tutti")) {
+                genre = null;
+            } else {
+                genre = genre.toLowerCase();
+            }
         }
-        return movieService.filterMovies(minRating, maxRating, minDate,maxDate, minDuration, maxDuration,  genre, pageable);
+        Sort sort = pageable.getSort().isSorted()
+                ? pageable.getSort()
+                : Sort.by(Sort.Direction.DESC, "rating");
+        sort = sort.and(Sort.by(Sort.Direction.DESC, "id"));
+        pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sort);
+
+        return movieService.filterMovies(minRating, maxRating, minDate, maxDate,
+                minDuration, maxDuration, genre, pageable);
     }
 
 }

@@ -26,6 +26,7 @@ import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
@@ -74,9 +75,9 @@ public class MovieService{
     }
 
 
-    /** find all movies from the database */
-    public List<Movie> getAllMovies(){
-        return movieRepository.findAll();
+    /** find a page of movies from the database */
+    public Page<Movie> getAllMovies(Pageable pageable){
+        return movieRepository.findAll(pageable);
     }
 
     /** find movie by ID */
@@ -91,8 +92,25 @@ public class MovieService{
     }
 
 
-    /**delete a movie by id */
-    public void deleteMovie(Integer id) {movieRepository.deleteById(id);}
+    /** delete a movie by id, together with all its related rows */
+    @Transactional
+    public void deleteMovie(Integer id) {
+        movieRepository.deleteActorsByMovieId(id);
+        movieRepository.deleteCrewsByMovieId(id);
+        movieRepository.deleteCountriesByMovieId(id);
+        movieRepository.deleteGenresByMovieId(id);
+        movieRepository.deleteLanguagesByMovieId(id);
+        movieRepository.deletePostersByMovieId(id);
+        movieRepository.deleteReleasesByMovieId(id);
+        movieRepository.deleteStudiosByMovieId(id);
+        movieRepository.deleteThemesByMovieId(id);
+        movieRepository.deleteById(id);
+    }
+
+    /** check whether a movie exists */
+    public boolean existsById(Integer id) {
+        return movieRepository.existsById(id);
+    }
 
 
     /**search a movie by a keyword insert by user*/
@@ -111,8 +129,14 @@ public class MovieService{
             String minDate,   String maxDate,
             Double minDuration, Double maxDuration,
             String genre, Pageable pageable) {
+
         Page<Movie> moviePage = movieRepository.findBasicFilteredMovies(minRating, maxRating,
-                minDate, maxDate, minDuration, maxDuration, pageable);
+                minDate, maxDate, minDuration, maxDuration, genre, pageable);
+
+        if (moviePage.isEmpty()) {
+            return new PageImpl<>(List.of(), pageable, moviePage.getTotalElements());
+        }
+
         List<Integer> movieIds = moviePage.getContent().stream()
                 .map(Movie::getId)
                 .toList();
@@ -127,14 +151,13 @@ public class MovieService{
         );
 
         List<MoviePoster> posters = moviePage.getContent().stream().map(m -> {
-            String posterUrl = postersService.getPostersByMovie(m.getId()) != null ?
-                    postersService.getPostersByMovie(m.getId()).getLink() : "default.jpg";
-
+            Posters poster = postersService.getPostersByMovie(m.getId());
+            String posterUrl = (poster != null) ? poster.getLink() : "default.jpg";
             String genresString = String.join(", ", genresMap.getOrDefault(m.getId(), List.of()));
-
             return new MoviePoster(m, posterUrl, genresString);
         }).toList();
-        return new org.springframework.data.domain.PageImpl<>(posters, pageable, moviePage.getTotalElements());
+
+        return new PageImpl<>(posters, pageable, moviePage.getTotalElements());
     }
 
     /** Find detailed movie by ID using DTO, including all the other entities */
@@ -142,7 +165,7 @@ public class MovieService{
         Movie movieById = movieRepository.findMovieById(id_movie);
 
         if (movieById != null) {
-            Movie movie = movieRepository.findMovieById(id_movie);
+            Movie movie = movieById;
             Set<Actor> actors = movieRepository.findActorsByMovieId(id_movie);
             Set<Crew> crews = movieRepository.findCrewsByMovieId(id_movie);
             Set<Country> countries = movieRepository.findCountriesByMovieId(id_movie);

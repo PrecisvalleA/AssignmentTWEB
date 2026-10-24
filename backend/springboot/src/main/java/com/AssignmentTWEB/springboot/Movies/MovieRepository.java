@@ -15,6 +15,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import org.springframework.data.jpa.repository.Modifying;
 
 import java.util.List;
 import java.util.Set;
@@ -39,7 +40,8 @@ public interface MovieRepository extends JpaRepository<Movie, Integer> {//extend
             "LEFT JOIN Posters p ON p.movie.id = m.id " +
             "LEFT JOIN Genre g ON g.movie.id = m.id " +
             "WHERE LOWER(m.name) LIKE LOWER(CONCAT('%', :keyword, '%')) " +
-            "GROUP BY m.id, p.link")
+            "GROUP BY m.id, p.link " +
+            "ORDER BY m.rating DESC NULLS LAST, m.id DESC")
     Page<Object[]> findByNameContainingIgnoreCase(@Param("keyword") String keyword, Pageable pageable);
 
     /**
@@ -81,7 +83,7 @@ public interface MovieRepository extends JpaRepository<Movie, Integer> {//extend
         );
 
 
-    @Query("""
+    @Query(value = """
         SELECT m FROM Movie m
         WHERE m.rating IS NOT NULL
           AND (:minRating IS NULL OR m.rating >= :minRating)
@@ -90,8 +92,23 @@ public interface MovieRepository extends JpaRepository<Movie, Integer> {//extend
           AND (:maxDate IS NULL OR m.date <= :maxDate)
           AND (:minDur IS NULL OR m.minute >= :minDur)
           AND (:maxDur IS NULL OR m.minute <= :maxDur)
-          ORDER BY m.rating DESC, m.id DESC
-    """)
+          AND (CAST(:genre AS string) IS NULL OR EXISTS (
+                SELECT g.id FROM Genre g
+                WHERE g.movie.id = m.id AND LOWER(g.genre) = CAST(:genre AS string)))
+        """,
+            countQuery = """
+        SELECT COUNT(m) FROM Movie m
+        WHERE m.rating IS NOT NULL
+          AND (:minRating IS NULL OR m.rating >= :minRating)
+          AND (:maxRating IS NULL OR m.rating <= :maxRating)
+          AND (:minDate IS NULL OR m.date >= :minDate)
+          AND (:maxDate IS NULL OR m.date <= :maxDate)
+          AND (:minDur IS NULL OR m.minute >= :minDur)
+          AND (:maxDur IS NULL OR m.minute <= :maxDur)
+          AND (CAST(:genre AS string) IS NULL OR EXISTS (
+                SELECT g.id FROM Genre g
+                WHERE g.movie.id = m.id AND LOWER(g.genre) = CAST(:genre AS string)))
+        """)
     Page<Movie> findBasicFilteredMovies(
             @Param("minRating") Double minRating,
             @Param("maxRating") Double maxRating,
@@ -99,6 +116,7 @@ public interface MovieRepository extends JpaRepository<Movie, Integer> {//extend
             @Param("maxDate") String maxDate,
             @Param("minDur") Double minDur,
             @Param("maxDur") Double maxDur,
+            @Param("genre") String genre,
             Pageable pageable
     );
 
@@ -147,4 +165,32 @@ public interface MovieRepository extends JpaRepository<Movie, Integer> {//extend
 
     @Query("SELECT t FROM Theme t WHERE t.movie.id = :id")
     Set<Theme> findThemeByMovieId(@Param("id") Integer id);
+
+    // Bulk deletes of the related rows (used when a movie is deleted)
+    @Modifying @Query("DELETE FROM Actor a WHERE a.movie.id = :id")
+    void deleteActorsByMovieId(@Param("id") Integer id);
+
+    @Modifying @Query("DELETE FROM Crew c WHERE c.movie.id = :id")
+    void deleteCrewsByMovieId(@Param("id") Integer id);
+
+    @Modifying @Query("DELETE FROM Country co WHERE co.movie.id = :id")
+    void deleteCountriesByMovieId(@Param("id") Integer id);
+
+    @Modifying @Query("DELETE FROM Genre g WHERE g.movie.id = :id")
+    void deleteGenresByMovieId(@Param("id") Integer id);
+
+    @Modifying @Query("DELETE FROM Language l WHERE l.movie.id = :id")
+    void deleteLanguagesByMovieId(@Param("id") Integer id);
+
+    @Modifying @Query("DELETE FROM Posters p WHERE p.movie.id = :id")
+    void deletePostersByMovieId(@Param("id") Integer id);
+
+    @Modifying @Query("DELETE FROM Release r WHERE r.movie.id = :id")
+    void deleteReleasesByMovieId(@Param("id") Integer id);
+
+    @Modifying @Query("DELETE FROM Studio s WHERE s.movie.id = :id")
+    void deleteStudiosByMovieId(@Param("id") Integer id);
+
+    @Modifying @Query("DELETE FROM Theme t WHERE t.movie.id = :id")
+    void deleteThemesByMovieId(@Param("id") Integer id);
 }
